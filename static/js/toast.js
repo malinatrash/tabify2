@@ -34,8 +34,11 @@ class Toast {
     }
 }
 
-// Initialize toast instance
-const toast = new Toast();
+// Initialize toast instance after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize toast instance
+    const toast = new Toast();
 
-// Make toast available globally
-window.toast = toast;
+    // Make toast available globally
+    window.toast = toast;
+});
