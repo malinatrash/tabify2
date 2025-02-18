@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
 from .database import engine, get_db
-from .models import Base, User
+from .models import Base, User, Project
 from sqlalchemy.orm import Session
 from os import getenv
 from dotenv import load_dotenv
@@ -69,10 +69,21 @@ async def home_page(request: Request, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         return RedirectResponse(url="/auth/login")
+    
+    # Get user's projects
+    projects = db.query(Project).filter(Project.owner_id == user_id).all()
+    
+    # Get popular projects (sorted by likes count)
+    popular_projects = (
+        db.query(Project)
+        .filter(Project.is_public == True)
+        .all()
+    )
+    popular_projects.sort(key=lambda x: len(x.likes), reverse=True)
         
     return templates.TemplateResponse(
         "home.html",
-        {"request": request, "user": user}
+        {"request": request, "user": user, "projects": projects, "popular_projects": popular_projects}
     )
 
 # Error handlers

@@ -16,9 +16,9 @@
 				<p class="project-description">{{ project.description or 'No description provided' }}</p>
 				<div class="project-meta">
 					<span class="project-date">Created: {{ project.created_at.strftime('%B %d, %Y') }}</span>
-					<div class="project-likes">
-						<i class="fas fa-heart"></i>
-						<span>{{ project.likes_count|default(0) }}</span>
+					<div class="project-info">
+						<span class="likes-count">❤️ {{ project.likes|length }}</span>
+						<span class="author">by {{ project.owner.full_name }}</span>
 					</div>
 				</div>
 				<div class="project-actions">

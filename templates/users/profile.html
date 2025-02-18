@@ -4,32 +4,53 @@
 <div class="container mt-5 mb-5">
 	<div class="vision-glass-card fade-in profile-container">
 		<div class="profile-header">
-			<div class="profile-info-main">
-				<h2 class="vision-card-title">{{ user.full_name }}</h2>
-				{% if not is_own_profile %}
+			<div class="profile-avatar-section">
+				<div class="profile-avatar">
+					<img
+						src="{{ user.avatar_url|default('https://i.pinimg.com/736x/eb/5a/30/eb5a30ad31715a9848fceba287e46fed.jpg') }}"
+						alt="{{ user.full_name }}">
+				</div>
+				<div class="profile-info-main">
+					<h2 class="vision-card-title">{{ user.full_name }}</h2>
+					<p class="member-since">Member since {{ user.created_at.strftime('%B %d, %Y') }}</p>
+					<div class="profile-stats">
+						<span><strong>{{ public_projects|length }}</strong> projects</span>
+						<span><strong>{{ user.followers|length }}</strong> followers</span>
+						<span><strong>{{ user.following|length }}</strong> following</span>
+					</div>
+				</div>
+			</div>
+			{% if current_user and not is_own_profile %}
+			<div class="profile-actions">
 				<button class="vision-btn vision-btn-primary follow-btn" onclick="followUser({{user.id}})">
 					{% if is_following %}Unfollow{% else %}Follow{% endif %}
 				</button>
-				{% endif %}
 			</div>
-			<p class="member-since">Member since {{ user.created_at.strftime('%B %d, %Y') }}</p>
+			{% endif %}
 		</div>
 
 		{% if is_own_profile %}
 		<form action="/users/profile/update" method="POST" class="vision-form">
 			<div class="profile-info">
-				<div class="info-group">
-					<label for="full_name">Full Name</label>
-					<input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" class="vision-input" required>
+				<div class="info-row">
+					<div class="info-group">
+						<label for="email">Email</label>
+						<input type="email" id="email" name="email" value="{{ user.email }}" class="vision-input" required>
+					</div>
 				</div>
-				<div class="info-group">
-					<label>Email</label>
-					<p class="static-field">{{ user.email }}</p>
+				<div class="info-row">
+					<div class="info-group">
+						<label for="full_name">Full Name</label>
+						<input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" class="vision-input"
+							required>
+					</div>
+					<div class="info-group">
+						<label for="phone_number">Phone Number</label>
+						<input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}"
+							class="vision-input">
+					</div>
 				</div>
-				<div class="info-group">
-					<label for="phone_number">Phone Number</label>
-					<input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}" class="vision-input">
-				</div>
+
 				<div class="info-group checkbox-group">
 					<label class="checkbox-container">
 						<input type="checkbox" name="is_public_profile" {% if user.is_public_profile %}checked{% endif %}>
@@ -56,13 +77,19 @@
 	{% if user.is_public_profile or is_own_profile %}
 	<div class="vision-glass-card fade-in mt-4">
 		<h3 class="section-title">Public Projects</h3>
-		<div class="projects-scroll-container">
+		<div class="projects-grid">
 			{% for project in public_projects %}
-			<div class="project-card">
-				<h4>{{ project.title }}</h4>
-				<p>{{ project.description }}</p>
-				<div class="project-stats">
-					<span>{{ project.likes|length }} likes</span>
+			<div class="vision-glass-card project-card fade-in">
+				<h3 class="project-title">{{ project.title }}</h3>
+				<p class="project-description">{{ project.description or 'No description provided' }}</p>
+				<div class="project-meta">
+					<span class="project-date">Created: {{ project.created_at.strftime('%B %d, %Y') }}</span>
+					<div class="project-info">
+						<span class="likes-count">❤️ {{ project.likes|length }}</span>
+					</div>
+				</div>
+				<div class="project-actions">
+					<a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Project</a>
 				</div>
 			</div>
 			{% endfor %}

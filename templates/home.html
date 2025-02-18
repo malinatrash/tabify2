@@ -2,60 +2,71 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="vision-glass-card fade-in">
-        <h1>Welcome, {{ user.full_name }}!</h1>
-        <div class="hero-subtitle">Manage your projects and tabs efficiently.</div>
-    </div>
+	<div class="dashboard-header">
+		<div class="vision-glass-card hero-section fade-in">
+			<div class="hero-content">
+				<h1>Welcome back, {{ user.full_name }}! 👋</h1>
+				<div class="hero-subtitle">Your musical journey continues here.</div>
+				<div class="hero-actions">
+					<a href="/projects/new" class="vision-btn vision-btn-primary">Create New Tab</a>
+					<a href="/projects" class="vision-btn vision-btn-secondary">View Your Tabs</a>
+				</div>
+			</div>
+		</div>
+		<div class="vision-glass-card quick-stats fade-in">
+			<h3>Your Stats</h3>
+			<div class="stats-grid">
+				<div class="stat-item">
+					<span class="stat-value">{{ projects|length }}</span>
+					<span class="stat-label">Tabs Created</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-value">{{ user.followers|length }}</span>
+					<span class="stat-label">Followers</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="vision-glass-card mt-5">
+		<h3>Popular Public Tabs</h3>
+		{% if popular_projects %}
+		<div class="user-projects-scroll">
+			{% for project in popular_projects %}
+			<div class="project-card">
+				<h4>{{ project.title }}</h4>
+				<p>{{ project.description }}</p>
+				<div class="project-meta">
+					<span class="likes-count">❤️ {{ project.likes|length }}</span>
+					<span class="author">by {{ project.owner.full_name }}</span>
+				</div>
+				<a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Tab</a>
+			</div>
+			{% endfor %}
+		</div>
+		{% else %}
+		<p>No popular tabs available yet.</p>
+		{% endif %}
+	</div>
 
-    <div class="feature-grid mt-5">
-        <div class="feature-card vision-glass-card">
-            <h3>Your Projects</h3>
-            {% if projects %}
-            <div class="projects-grid">
-                {% for project in projects %}
-                <div class="project-item">
-                    <h4>{{ project.name }}</h4>
-                    <p>{{ project.description }}</p>
-                    <a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Project</a>
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="empty-state">
-                <p>No projects yet. Start creating one!</p>
-                <a href="/projects/new" class="vision-btn vision-btn-primary">Create Project</a>
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="feature-card vision-glass-card">
-            <h3>Quick Actions</h3>
-            <div class="quick-actions">
-                <a href="/projects/new" class="vision-btn vision-btn-primary">New Project</a>
-                <a href="/users/profile" class="vision-btn vision-btn-secondary">View Profile</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="vision-glass-card mt-5">
-        <h3>Popular Public Tabs</h3>
-        {% if popular_projects %}
-        <div class="popular-projects-grid">
-            {% for project in popular_projects %}
-            <div class="project-card">
-                <h4>{{ project.title }}</h4>
-                <p>{{ project.description }}</p>
-                <div class="project-meta">
-                    <span class="likes-count">❤️ {{ project.likes|length }}</span>
-                    <span class="author">by {{ project.owner.full_name }}</span>
-                </div>
-                <a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Tab</a>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p>No popular tabs available yet.</p>
-        {% endif %}
-    </div>
+	<div class="vision-glass-card mt-5">
+		<h3>Your Projects</h3>
+		{% if projects %}
+		<div class="user-projects-scroll">
+			{% for project in projects %}
+			<div class="project-card">
+				<h4>{{ project.title }}</h4>
+				<p>{{ project.description }}</p>
+				<div class="project-meta">
+					<span class="likes-count"><i class="fas fa-heart"></i> {{ project.likes|length }}</span>
+					<span class="author">by {{ project.owner.full_name }}</span>
+				</div>
+				<a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Tab</a>
+			</div>
+			{% endfor %}
+		</div>
+		{% else %}
+		<p>You haven't created any tabs yet.</p>
+		{% endif %}
+	</div>
 </div>
 {% endblock %}
