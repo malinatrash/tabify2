@@ -1,0 +1,36 @@
+:root {
+	--primary: #00a896;
+	--secondary: #017e5d;
+	--accent: #00a896;
+	--highlight: #02c39a;
+	--background: rgba(255, 255, 255, 0.05);
+	--text-primary: #ffffff;
+	--text-secondary: rgba(255, 255, 255, 0.7);
+	--glass-bg: rgba(255, 255, 255, 0.1);
+	--glass-border: rgba(255, 255, 255, 0.2);
+	--glass-shadow: rgba(0, 0, 0, 0.1);
+	--blur-strength: 12px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+		Roboto, sans-serif;
+	background: linear-gradient(135deg, var(--primary), var(--secondary));
+	color: var(--text-primary);
+	line-height: 1.6;
+	min-height: 100vh;
+}
+
+.container {
+	width: 100%;
+	max-width: 1440px;
+	margin: 0 auto;
+	margin-bottom: 2rem;
+	padding: 0 32px;
+}

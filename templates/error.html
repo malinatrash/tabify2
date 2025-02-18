@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="vision-glass-card error-container">
+        <div class="error-content">
+            <h1 class="error-code">{{ error_code }}</h1>
+            <div class="error-divider"></div>
+            <h2 class="error-title">{{ error_title }}</h2>
+            <p class="error-message">{{ error_message }}</p>
+            <div class="error-actions">
+                <a href="{{ back_url|default('/') }}" class="vision-btn vision-btn-primary">Go Back</a>
+                <a href="/" class="vision-btn vision-btn-secondary">Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

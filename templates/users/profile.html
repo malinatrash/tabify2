@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+	<div class="vision-glass-card fade-in profile-container">
+		<div class="profile-header">
+			<div class="profile-info-main">
+				<h2 class="vision-card-title">{{ user.full_name }}</h2>
+				{% if not is_own_profile %}
+				<button class="vision-btn vision-btn-primary follow-btn" onclick="followUser({{user.id}})">
+					{% if is_following %}Unfollow{% else %}Follow{% endif %}
+				</button>
+				{% endif %}
+			</div>
+			<p class="member-since">Member since {{ user.created_at.strftime('%B %d, %Y') }}</p>
+		</div>
+
+		{% if is_own_profile %}
+		<form action="/users/profile/update" method="POST" class="vision-form">
+			<div class="profile-info">
+				<div class="info-group">
+					<label for="full_name">Full Name</label>
+					<input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" class="vision-input" required>
+				</div>
+				<div class="info-group">
+					<label>Email</label>
+					<p class="static-field">{{ user.email }}</p>
+				</div>
+				<div class="info-group">
+					<label for="phone_number">Phone Number</label>
+					<input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}" class="vision-input">
+				</div>
+				<div class="info-group checkbox-group">
+					<label class="checkbox-container">
+						<input type="checkbox" name="is_public_profile" {% if user.is_public_profile %}checked{% endif %}>
+						<span class="checkmark"></span>
+						Make my profile public
+					</label>
+				</div>
+				<div class="info-group checkbox-group">
+					<label class="checkbox-container">
+						<input type="checkbox" name="is_email_notifications_enabled" {% if user.is_email_notifications_enabled
+							%}checked{% endif %}>
+						<span class="checkmark"></span>
+						Enable email notifications
+					</label>
+				</div>
+			</div>
+			<div class="profile-actions">
+				<button type="submit" class="vision-btn vision-btn-primary">Save Changes</button>
+			</div>
+		</form>
+		{% endif %}
+	</div>
+
+	{% if user.is_public_profile or is_own_profile %}
+	<div class="vision-glass-card fade-in mt-4">
+		<h3 class="section-title">Public Projects</h3>
+		<div class="projects-scroll-container">
+			{% for project in public_projects %}
+			<div class="project-card">
+				<h4>{{ project.title }}</h4>
+				<p>{{ project.description }}</p>
+				<div class="project-stats">
+					<span>{{ project.likes|length }} likes</span>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% endif %}
+</div>
+
+<script>
+	function followUser(userId) {
+		fetch(`/api/users/${userId}/follow`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					window.toast.success(data.message)
+					location.reload()
+				} else {
+					window.toast.error(data.message)
+				}
+			})
+			.catch(error => {
+				window.toast.error('An error occurred while processing your request.')
+			})
+	}
+</script>
+{% endblock %}

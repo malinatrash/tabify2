@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="vision-glass-card fade-in">
+        <h2 class="vision-card-title">Create New Project</h2>
+        <form action="/projects/create" method="POST" class="vision-form">
+            <div class="form-group">
+                <label for="title">Project Title</label>
+                <input type="text" id="title" name="title" class="vision-input" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="vision-input" rows="4"></textarea>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <label class="checkbox-container">
+                    <input type="checkbox" name="is_public" checked>
+                    <span class="checkmark"></span>
+                    Make this project public
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Initial Track</label>
+                <div class="track-form">
+                    <div class="track-input-group">
+                        <input type="text" name="track_name" class="vision-input" placeholder="Track Name" required>
+                        <select name="track_instrument" class="vision-input" required>
+                            <option value="guitar">Guitar</option>
+                            <option value="bass">Bass</option>
+                            <option value="ukulele">Ukulele</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-text">You can add more tracks after creating the project</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="vision-btn vision-btn-primary">Create Project</button>
+                <a href="/projects" class="vision-btn vision-btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

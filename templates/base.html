@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}Tabify{% endblock %}</title>
+	<link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="/static/css/base.css" type="text/css">
+	<link rel="stylesheet" href="/static/css/components.css" type="text/css">
+	<link rel="stylesheet" href="/static/css/layout.css" type="text/css">
+	<link rel="stylesheet" href="/static/css/pages.css" type="text/css">
+	<link rel="stylesheet" href="/static/css/toast.css" type="text/css">
+
+	<script src="/static/js/toast.js"></script>
+</head>
+
+<body>
+	<nav class="vision-glass-card">
+		<div class="container">
+			<a href="/" class="vision-btn">Tabify</a>
+			<div class="nav-links">
+				{% if user %}
+				<a href="/projects" class="vision-btn">Projects</a>
+				<a href="/users/profile" class="vision-btn">Profile</a>
+				<a href="/auth/logout" class="vision-btn vision-btn-secondary">Logout</a>
+				{% else %}
+				<a href="/auth/login" class="vision-btn">Login</a>
+				<a href="/auth/register" class="vision-btn vision-btn-primary">Sign Up</a>
+				{% endif %}
+			</div>
+		</div>
+	</nav>
+
+	<main class="container">
+		{% block content %}{% endblock %}
+	</main>
+
+	<footer class="footer">
+		<div class="footer-content">
+			<div class="footer-section">
+				<h3>Company</h3>
+				<ul class="footer-links">
+					<li><a href="/about">About Us</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/careers">Careers</a></li>
+				</ul>
+			</div>
+			<div class="footer-section">
+				<h3>Legal</h3>
+				<ul class="footer-links">
+					<li><a href="/privacy">Privacy Policy</a></li>
+					<li><a href="/terms">Terms of Service</a></li>
+					<li><a href="/cookies">Cookie Policy</a></li>
+				</ul>
+			</div>
+			<div class="footer-section">
+				<h3>Support</h3>
+				<ul class="footer-links">
+					<li><a href="/help">Help Center</a></li>
+					<li><a href="/faq">FAQ</a></li>
+					<li><a href="/community">Community</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="footer-bottom">
+			<p>&copy; 2024 Tabify. All rights reserved.</p>
+		</div>
+	</footer>
+</body>
+
+</html>

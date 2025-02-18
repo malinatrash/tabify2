@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Tabify - Transform Your Music{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Transform Your Music into Tablature</h1>
+        <p class="hero-subtitle">Convert audio recordings into accurate guitar tablature using AI technology</p>
+        <div class="hero-buttons">
+            <a href="/auth/register" class="neo-btn neo-btn-primary">Get Started</a>
+            <a href="#features" class="neo-btn neo-btn-outline">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="features">
+    <h2>Why Choose Tabify?</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🎵</div>
+            <h3>AI-Powered Conversion</h3>
+            <p>Advanced audio processing technology that accurately converts your recordings into tablature</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎸</div>
+            <h3>Multiple Instruments</h3>
+            <p>Support for guitar, bass, and other string instruments</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💾</div>
+            <h3>Project Management</h3>
+            <p>Organize your tablatures into projects and collaborate with others</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h3>Real-time Updates</h3>
+            <p>See your tablature generate in real-time as the audio processes</p>
+        </div>
+    </div>
+</section>
+
+<section class="pricing">
+    <h2>Choose Your Plan</h2>
+    <div class="pricing-grid">
+        <div class="pricing-card">
+            <h3>Basic</h3>
+            <div class="price">$9.99<span>/month</span></div>
+            <ul class="features-list">
+                <li>5 projects</li>
+                <li>Basic audio processing</li>
+                <li>Standard support</li>
+            </ul>
+            <a href="/auth/register?plan=basic" class="neo-btn neo-btn-outline">Choose Basic</a>
+        </div>
+        <div class="pricing-card featured">
+            <h3>Pro</h3>
+            <div class="price">$19.99<span>/month</span></div>
+            <ul class="features-list">
+                <li>Unlimited projects</li>
+                <li>Advanced audio processing</li>
+                <li>Priority support</li>
+                <li>Collaboration tools</li>
+            </ul>
+            <a href="/auth/register?plan=pro" class="neo-btn neo-btn-primary">Choose Pro</a>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <h2>Ready to Transform Your Music?</h2>
+    <p>Join thousands of musicians who are already using Tabify</p>
+    <a href="/auth/register" class="neo-btn neo-btn-primary">Get Started Now</a>
+</section>
+{% endblock %}

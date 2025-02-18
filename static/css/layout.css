@@ -1,0 +1,136 @@
+/* Navigation */
+nav.vision-glass-card {
+  position: sticky;
+  top: 16px;
+  z-index: 1000;
+  margin: 16px auto;
+  max-width: calc(100% - 32px);
+}
+
+nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Main Content */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+main.container {
+  flex: 1;
+  padding-bottom: 0;
+}
+
+/* Footer */
+.footer {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-strength));
+  border-top: 1px solid var(--glass-border);
+  padding: 48px 0;
+  width: 100%;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.footer-section h3 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--highlight);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 32px;
+  margin-top: 32px;
+  border-top: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+}
+
+/* Popular Projects Grid */
+.popular-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.project-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-strength));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+}
+
+.project-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  nav .container {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .vision-btn {
+    width: 100%;
+  }
+
+  .popular-projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
