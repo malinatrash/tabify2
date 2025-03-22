@@ -1,29 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
 	<div class="row justify-content-center">
 		<div class="col-md-6">
-			<div class="card">
-				<div class="card-header">
-					<h3 class="text-center">Login</h3>
+			<div class="vision-glass-card fade-in auth-card">
+				<div class="auth-header">
+					<h2 class="vision-card-title text-center">Welcome Back</h2>
+					<p class="text-center auth-subtitle">Sign in to your account to continue</p>
 				</div>
-				<div class="card-body">
-					<form method="POST" action="/auth/token">
-						<div class="form-group mb-3">
-							<label for="username">Email</label>
-							<input type="email" class="form-control" id="username" name="username" required>
+				<div class="auth-body">
+					<form method="POST" action="/auth/token" class="auth-form">
+						<div class="form-group">
+							<label for="username" class="form-label">Email Address</label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="fas fa-envelope"></i></span>
+								<input type="email" class="vision-input" id="username" name="username" placeholder="your.email@example.com" required>
+							</div>
 						</div>
-						<div class="form-group mb-3">
-							<label for="password">Password</label>
-							<input type="password" class="form-control" id="password" name="password" required>
+						<div class="form-group">
+							<label for="password" class="form-label">Password</label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="fas fa-lock"></i></span>
+								<input type="password" class="vision-input" id="password" name="password" placeholder="Your password" required>
+							</div>
+							<div class="form-help-text">Forgot password? <a href="#" class="help-link">Reset it here</a></div>
 						</div>
-						<div class="d-grid gap-2">
-							<button type="submit" class="vision-btn vision-btn-primary">Login</button>
+						<div class="form-action">
+							<button type="submit" class="vision-btn vision-btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Sign In</button>
 						</div>
 					</form>
-					<div class="text-center mt-3">
-						<p>Don't have an account? <a href="/auth/register">Register here</a></p>
+					<div class="auth-footer">
+						<p>Don't have an account? <a href="/auth/register" class="register-link">Create one now</a></p>
 					</div>
 				</div>
 			</div>

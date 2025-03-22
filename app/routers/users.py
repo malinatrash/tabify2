@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import User
@@ -12,47 +13,60 @@ from PIL import Image
 router = APIRouter(prefix="/users", tags=["users"])
 templates = Jinja2Templates(directory="templates")
 
+# Перенаправление /profile на /profile/{id}
 @router.get("/profile")
-@router.get("/profile/edit")
-async def edit_profile_page(request: Request, current_user: User = Depends(get_current_user)):
-    return templates.TemplateResponse(
-        "users/profile.html",
-        {"request": request, "user": current_user, "is_own_profile": True}
-    )
+async def profile_redirect(request: Request, current_user: User = Depends(get_current_user)):
+    return RedirectResponse(url=f"/users/profile/{current_user.id}")
 
-@router.post("/profile/update")
+@router.post("/profile/{user_id}/update")
 async def update_profile(
+    user_id: int,
     request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    # Проверка, что пользователь обновляет свой профиль
+    if current_user.id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only update your own profile"
+        )
+    
     form = await request.form()
     
-    # Update user information
+    # Обновление информации о пользователе
     current_user.full_name = form.get("full_name", current_user.full_name)
     current_user.phone_number = form.get("phone_number", current_user.phone_number)
-    current_user.is_public_profile = form.get("is_public_profile", "false").lower() == "true"
-    current_user.is_email_notifications_enabled = form.get("is_email_notifications_enabled", "true").lower() == "true"
+    
+    # Правильная обработка чекбоксов
+    # Если чекбокс отмечен, его значение будет в form, если не отмечен - его не будет
+    current_user.is_public_profile = "is_public_profile" in form
+    current_user.is_email_notifications_enabled = "is_email_notifications_enabled" in form
     
     db.commit()
-    return templates.TemplateResponse(
-        "users/profile.html",
-        {
-            "request": request,
-            "user": current_user,
-            "toast": {
-                "message": "Profile updated successfully",
-                "type": "success"
-            }
+    
+    # Перенаправляем на страницу профиля с уведомлением об успешном обновлении
+    return RedirectResponse(
+        url=f"/users/profile/{user_id}",
+        status_code=status.HTTP_303_SEE_OTHER,
+        headers={
+            "HX-Trigger": '{"showToast": {"message": "Profile updated successfully", "type": "success"}}'
         }
     )
 
-@router.post("/profile/avatar")
+@router.post("/profile/{user_id}/avatar")
 async def update_avatar(
+    user_id: int,
     avatar: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    # Проверка, что пользователь обновляет свою аватарку
+    if current_user.id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only update your own avatar"
+        )
     # Validate file type
     if not avatar.content_type.startswith("image/"):
         raise HTTPException(
@@ -60,9 +74,9 @@ async def update_avatar(
             detail="File must be an image"
         )
     
-    # Create uploads directory if it doesn't exist
-    upload_dir = os.getenv("UPLOAD_DIR", "uploads")
-    avatar_dir = os.path.join(upload_dir, "avatars")
+    # Создаём директорию static/avatars
+    static_dir = "static"
+    avatar_dir = os.path.join(static_dir, "avatars")
     os.makedirs(avatar_dir, exist_ok=True)
     
     # Save and process avatar
@@ -73,7 +87,15 @@ async def update_avatar(
     # Save and resize image
     image = Image.open(avatar.file)
     image.thumbnail((200, 200))  # Resize to maximum dimensions
-    image.save(filepath, "JPEG")
+    
+    # Конвертируем RGBA в RGB, если необходимо
+    if image.mode == 'RGBA':
+        # Создаём новое изображение RGB и смешиваем с белым фоном
+        rgb_img = Image.new('RGB', image.size, (255, 255, 255))
+        rgb_img.paste(image, mask=image.split()[3])  # 3 - это альфа-канал
+        image = rgb_img
+    
+    image.save(filepath, "JPEG", quality=90)
     
     # Update user avatar URL
     current_user.avatar_url = f"/static/avatars/{filename}"
@@ -114,9 +136,15 @@ async def mark_notification_read(
 async def view_user_profile(
     user_id: int,
     request: Request,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    is_edit_mode: bool = False
 ):
+    # Проверка авторизации пользователя
+    if not current_user:
+        return RedirectResponse(url="/auth/login")
+    
+    # Получение пользователя по ID
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         return templates.TemplateResponse(
@@ -131,7 +159,7 @@ async def view_user_profile(
             status_code=404
         )
     
-    # Check if profile is public or if it's the current user
+    # Проверка, является ли это собственным профилем или публичным
     is_own_profile = current_user.id == user_id
     if not is_own_profile and not user.is_public_profile:
         return templates.TemplateResponse(
@@ -146,10 +174,10 @@ async def view_user_profile(
             status_code=403
         )
     
-    # Get public projects
+    # Получение публичных проектов
     public_projects = [p for p in user.projects if p.is_public]
     
-    # Check if current user is following this user
+    # Проверка, подписан ли текущий пользователь на просматриваемого
     is_following = any(follow.followed_id == user_id for follow in current_user.following)
     
     return templates.TemplateResponse(
@@ -160,6 +188,17 @@ async def view_user_profile(
             "is_own_profile": is_own_profile,
             "public_projects": public_projects,
             "is_following": is_following,
-            "current_user": current_user
+            "current_user": current_user,
+            "is_edit_mode": is_edit_mode
         }
     )
+
+# Маршрут для редактирования профиля
+@router.get("/profile/{user_id}/edit")
+async def edit_profile(user_id: int, request: Request, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    # Редактировать можно только свой профиль
+    if current_user.id != user_id:
+        return RedirectResponse(url=f"/users/profile/{user_id}")
+    
+    # Используем тот же обработчик, но с флагом редактирования
+    return await view_user_profile(user_id, request, current_user, db, is_edit_mode=True)

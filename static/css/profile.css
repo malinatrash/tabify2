@@ -1,0 +1,261 @@
+/* Profile Page Styles */
+.profile-header {
+  margin-bottom: 36px;
+}
+
+/* Заголовки разделов профиля */
+.profile-section-title {
+  font-size: 1.2rem;
+  margin-top: 28px;
+  margin-bottom: 16px;
+  color: #f0f0f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.profile-avatar-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* Avatar styles */
+.profile-avatar {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.profile-avatar-editable {
+  cursor: pointer;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease;
+}
+
+.profile-avatar:hover .avatar-image {
+  filter: brightness(0.9);
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.avatar-upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+}
+
+.profile-avatar:hover .avatar-upload-overlay {
+  opacity: 1;
+}
+
+.upload-icon {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.profile-info-main {
+  padding-left: 24px;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+  margin-top: 16px;
+}
+
+.save-changes-btn {
+  position: relative;
+  transition: all 0.3s ease;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.save-changes-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.save-changes-btn i {
+  margin-right: 8px;
+}
+
+.profile-info {
+  margin-bottom: 36px;
+}
+
+.info-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.info-group {
+  flex: 1;
+  min-width: 250px;
+  margin-bottom: 16px;
+}
+
+.field-help {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4px;
+}
+
+.field-status {
+  margin-left: 8px;
+}
+
+.verified-badge {
+  color: #4caf50;
+}
+
+.unverified-badge {
+  color: #ff9800;
+}
+
+.checkbox-group {
+  margin-top: 16px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  cursor: pointer;
+  padding-left: 35px;
+}
+
+.checkbox-label {
+  font-weight: 500;
+}
+
+.checkbox-tooltip {
+  display: none;
+  position: absolute;
+  background-color: rgba(30, 30, 30, 0.9);
+  color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  width: 250px;
+  top: -5px;
+  left: calc(100% + 10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.tooltip-container:hover .checkbox-tooltip {
+  display: block;
+}
+
+.checkbox-tooltip::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 10px;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid rgba(30, 30, 30, 0.9);
+}
+
+.profile-bio {
+  margin-bottom: 32px;
+}
+
+/* Account info section */
+.account-info {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.account-info p {
+  margin: 8px 0;
+}
+
+.profile-projects {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.profile-projects-header {
+  margin-bottom: 24px;
+}
+
+/* Spacing for cards and sections */
+.section {
+  margin-bottom: 48px;
+}
+
+.card {
+  margin-bottom: 28px;
+}
+
+/* Add space between elements */
+.vision-btn {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.vision-form {
+  margin-bottom: 32px;
+}
+
+/* Fix spacing for inputs */
+.vision-input {
+  margin-bottom: 16px;
+}
+
+/* Add spacing for all container elements */
+.container > * + * {
+  margin-top: 24px;
+}

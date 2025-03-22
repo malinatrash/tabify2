@@ -1,0 +1,271 @@
+/* Стили для страниц авторизации и регистрации */
+.auth-card {
+  max-width: 100%;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.auth-header {
+  padding: 28px 24px 12px;
+  text-align: center;
+}
+
+.auth-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+.auth-body {
+  padding: 12px 24px 32px;
+}
+
+.auth-form {
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 22px;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.input-group {
+  display: flex;
+  position: relative;
+  align-items: stretch; /* Для выравнивания элементов по высоте */
+}
+
+.input-group-text {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: none;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  font-size: 16px;
+  height: 46px; /* Фиксированная высота для соответствия полям ввода */
+}
+
+.vision-input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top-right-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  color: white;
+  padding: 12px 16px;
+  font-size: 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+  height: 46px; /* Фиксированная высота для соответствия иконкам */
+  box-sizing: border-box; /* Чтобы padding не увеличивал общую высоту */
+}
+
+.vision-input:focus {
+  outline: none;
+  border-color: rgba(100, 100, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(100, 100, 255, 0.15);
+}
+
+.vision-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.form-help-text {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 6px;
+  margin-left: 4px;
+}
+
+.form-action {
+  margin-top: 32px;
+}
+
+.btn-block {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.auth-footer a {
+  color: rgba(100, 100, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.auth-footer a:hover {
+  color: rgba(120, 120, 255, 1);
+  text-decoration: underline;
+}
+
+.optional-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: normal;
+}
+
+.terms-link, .help-link {
+  color: rgba(100, 100, 255, 0.9);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.terms-link:hover, .help-link:hover {
+  color: rgba(120, 120, 255, 1);
+  text-decoration: underline;
+}
+
+/* Стилизация чекбоксов */
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 24px;
+  width: 24px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: rgba(100, 100, 255, 0.7);
+  border-color: rgba(100, 100, 255, 0.7);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-tooltip {
+  display: none;
+  position: absolute;
+  background-color: rgba(30, 30, 30, 0.9);
+  color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  width: 250px;
+  top: -5px;
+  left: calc(100% + 10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.tooltip-container:hover .checkbox-tooltip {
+  display: block;
+}
+
+.checkbox-tooltip::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 10px;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid rgba(30, 30, 30, 0.9);
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+  .auth-card {
+    border-radius: 12px;
+  }
+  
+  .auth-header {
+    padding: 20px 16px 8px;
+  }
+  
+  .auth-body {
+    padding: 8px 16px 24px;
+  }
+  
+  .checkbox-tooltip {
+    left: 0;
+    top: 100%;
+    margin-top: 6px;
+    width: 100%;
+  }
+  
+  .checkbox-tooltip::before {
+    left: 12px;
+    top: -6px;
+    border-top: none;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    border-bottom: 6px solid rgba(30, 30, 30, 0.9);
+  }
+}

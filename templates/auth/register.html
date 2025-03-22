@@ -1,44 +1,67 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
 	<div class="row justify-content-center">
 		<div class="col-md-6">
-			<div class="card">
-				<div class="card-header">
-					<h3 class="text-center">Register</h3>
+			<div class="vision-glass-card fade-in auth-card">
+				<div class="auth-header">
+					<h2 class="vision-card-title text-center">Create Account</h2>
+					<p class="text-center auth-subtitle">Join our community today</p>
 				</div>
-				<div class="card-body">
-					<form method="POST" action="/auth/register">
-						<div class="form-group mb-3">
-							<label for="email">Email</label>
-							<input type="email" class="form-control" id="email" name="email" required>
+				<div class="auth-body">
+					<form method="POST" action="/auth/register" class="auth-form">
+						<div class="form-group">
+							<label for="email" class="form-label">Email Address</label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="fas fa-envelope"></i></span>
+								<input type="email" class="vision-input" id="email" name="email" placeholder="your.email@example.com" required>
+							</div>
+							<div class="form-help-text">We'll never share your email with anyone else</div>
 						</div>
-						<div class="form-group mb-3">
-							<label for="password">Password</label>
-							<input type="password" class="form-control" id="password" name="password" required>
+						<div class="form-group">
+							<label for="password" class="form-label">Password</label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="fas fa-lock"></i></span>
+								<input type="password" class="vision-input" id="password" name="password" placeholder="Choose a secure password" required>
+							</div>
+							<div class="form-help-text">Use at least 8 characters with letters and numbers</div>
 						</div>
-						<div class="form-group mb-3">
-							<label for="full_name">Full Name</label>
-							<input type="text" class="form-control" id="full_name" name="full_name" required>
+						<div class="form-group">
+							<label for="full_name" class="form-label">Full Name</label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="fas fa-user"></i></span>
+								<input type="text" class="vision-input" id="full_name" name="full_name" placeholder="John Smith" required>
+							</div>
 						</div>
-						<div class="form-group mb-3">
-							<label for="phone_number">Phone Number</label>
-							<input type="tel" class="form-control" id="phone_number" name="phone_number" required>
+						<div class="form-group">
+							<label for="phone_number" class="form-label">Phone Number <span class="optional-label">(Optional)</span></label>
+							<div class="input-group">
+								<span class="input-group-text"><i class="fas fa-phone"></i></span>
+								<input type="tel" class="vision-input" id="phone_number" name="phone_number" placeholder="+1 (XXX) XXX-XXXX">
+							</div>
 						</div>
-						<div class="form-group mb-3 checkbox-group">
-							<label class="checkbox-container">
-								<input type="checkbox" name="is_public_profile" checked>
+						<div class="form-group checkbox-group">
+							<label class="checkbox-container tooltip-container">
+								<input type="checkbox" id="is_public_profile" name="is_public_profile" checked>
 								<span class="checkmark"></span>
-								Make my profile public
+								<span class="checkbox-label">Make my profile public</span>
+								<span class="checkbox-tooltip">Other users will be able to see your public projects</span>
 							</label>
 						</div>
-						<div class="d-grid gap-2">
-							<button type="submit" class="vision-btn vision-btn-primary">Register</button>
+						<div class="form-group checkbox-group">
+							<label class="checkbox-container">
+								<input type="checkbox" id="terms" name="terms" required>
+								<span class="checkmark"></span>
+								<span class="checkbox-label">I agree to the <a href="#" class="terms-link">Terms and Conditions</a></span>
+							</label>
+						</div>
+						<div class="form-action">
+							<button type="submit" class="vision-btn vision-btn-primary btn-block"><i class="fas fa-user-plus"></i> Create Account</button>
 						</div>
 					</form>
-					<div class="text-center mt-3">
-						<p>Already have an account? <a href="/auth/login">Login here</a></p>
+					<div class="auth-footer">
+						<p>Already have an account? <a href="/auth/login" class="login-link">Sign in here</a></p>
 					</div>
 				</div>
 			</div>

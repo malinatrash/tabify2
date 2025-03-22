@@ -5,10 +5,24 @@
 	<div class="vision-glass-card fade-in profile-container">
 		<div class="profile-header">
 			<div class="profile-avatar-section">
-				<div class="profile-avatar">
-					<img
-						src="{{ user.avatar_url|default('https://i.pinimg.com/736x/eb/5a/30/eb5a30ad31715a9848fceba287e46fed.jpg') }}"
-						alt="{{ user.full_name }}">
+				<div class="profile-avatar{% if is_own_profile %} profile-avatar-editable{% endif %}">
+					{% if user.avatar_url %}
+					<img src="{{ user.avatar_url }}" alt="{{ user.full_name }}" class="avatar-image">
+					{% else %}
+					<div class="avatar-placeholder">
+						<span>{{ user.full_name[:1] }}</span>
+					</div>
+					{% endif %}
+					{% if is_own_profile %}
+					<div class="avatar-upload-overlay" id="avatarUploadOverlay">
+						<span class="upload-icon"><i class="fas fa-camera"></i></span>
+					</div>
+					{% endif %}
+				{% if is_own_profile %}
+					<form id="avatarForm" action="/users/profile/{{ user.id }}/avatar" method="POST" enctype="multipart/form-data" style="display: none;">
+						<input type="file" id="avatarInput" name="avatar" accept="image/*">
+					</form>
+				{% endif %}
 				</div>
 				<div class="profile-info-main">
 					<h2 class="vision-card-title">{{ user.full_name }}</h2>
@@ -22,7 +36,7 @@
 			</div>
 			{% if current_user and not is_own_profile %}
 			<div class="profile-actions">
-				<button class="vision-btn vision-btn-primary follow-btn" onclick="followUser({{user.id}})">
+				<button class="vision-btn vision-btn-primary follow-btn" data-user-id="{{ user.id }}">
 					{% if is_following %}Unfollow{% else %}Follow{% endif %}
 				</button>
 			</div>
@@ -30,12 +44,14 @@
 		</div>
 
 		{% if is_own_profile %}
-		<form action="/users/profile/update" method="POST" class="vision-form">
+		<form action="/users/profile/{{ user.id }}/update" method="POST" class="vision-form">
 			<div class="profile-info">
+				<h3 class="profile-section-title">Basic Information</h3>
 				<div class="info-row">
 					<div class="info-group">
-						<label for="email">Email</label>
+						<label for="email">Email <span class="field-status">{% if user.is_email_verified %}<span class="verified-badge" title="Verified"><i class="fas fa-check-circle"></i></span>{% else %}<span class="unverified-badge" title="Not Verified"><i class="fas fa-exclamation-circle"></i></span>{% endif %}</span></label>
 						<input type="email" id="email" name="email" value="{{ user.email }}" class="vision-input" required>
+						<div class="field-help">This address is used for login and notifications</div>
 					</div>
 				</div>
 				<div class="info-row">
@@ -43,32 +59,45 @@
 						<label for="full_name">Full Name</label>
 						<input type="text" id="full_name" name="full_name" value="{{ user.full_name }}" class="vision-input"
 							required>
+						<div class="field-help">Will be displayed in your profile</div>
 					</div>
 					<div class="info-group">
 						<label for="phone_number">Phone Number</label>
 						<input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}"
-							class="vision-input">
+							class="vision-input" placeholder="+1 (XXX) XXX-XXXX">
+						<div class="field-help">Optional, for emergency contact</div>
 					</div>
 				</div>
 
+				<h3 class="profile-section-title">Privacy Settings</h3>
 				<div class="info-group checkbox-group">
-					<label class="checkbox-container">
-						<input type="checkbox" name="is_public_profile" {% if user.is_public_profile %}checked{% endif %}>
+					<label class="checkbox-container tooltip-container">
+						<input type="checkbox" name="is_public_profile" id="is_public_profile" {% if user.is_public_profile %}checked{% endif %}>
 						<span class="checkmark"></span>
-						Make my profile public
+						<span class="checkbox-label">Make my profile public</span>
+						<span class="checkbox-tooltip">Other users will be able to see your public projects</span>
 					</label>
 				</div>
 				<div class="info-group checkbox-group">
-					<label class="checkbox-container">
-						<input type="checkbox" name="is_email_notifications_enabled" {% if user.is_email_notifications_enabled
-							%}checked{% endif %}>
+					<label class="checkbox-container tooltip-container">
+						<input type="checkbox" name="is_email_notifications_enabled" id="is_email_notifications_enabled" {% if user.is_email_notifications_enabled %}checked{% endif %}>
 						<span class="checkmark"></span>
-						Enable email notifications
+						<span class="checkbox-label">Enable email notifications</span>
+						<span class="checkbox-tooltip">Receive notifications about new followers and comments</span>
 					</label>
+				</div>
+
+				<h3 class="profile-section-title">Account Information</h3>
+				<div class="account-info">
+					<p><strong>Registration Date:</strong> {{ user.created_at.strftime('%m/%d/%Y') }}</p>
+					<p><strong>Last Login:</strong> {{ user.last_login.strftime('%m/%d/%Y %H:%M') }}</p>
+					<p><strong>Last Update:</strong> {{ user.updated_at.strftime('%m/%d/%Y') }}</p>
 				</div>
 			</div>
 			<div class="profile-actions">
-				<button type="submit" class="vision-btn vision-btn-primary">Save Changes</button>
+				<button type="submit" class="vision-btn vision-btn-primary save-changes-btn">
+					<i class="fas fa-save"></i> Save Changes
+				</button>
 			</div>
 		</form>
 		{% endif %}
@@ -100,6 +129,10 @@
 
 <script>
 	function followUser(userId) {
+		// Преобразуем userId в число, если это строка
+		if (typeof userId === 'string') {
+			userId = parseInt(userId, 10);
+		}
 		fetch(`/api/users/${userId}/follow`, {
 			method: 'POST',
 			headers: {
@@ -119,5 +152,53 @@
 				window.toast.error('An error occurred while processing your request.')
 			})
 	}
+
+	// Обработка загрузки аватарки
+	document.addEventListener('DOMContentLoaded', function() {
+		const avatarOverlay = document.getElementById('avatarUploadOverlay');
+		const avatarInput = document.getElementById('avatarInput');
+		const avatarForm = document.getElementById('avatarForm');
+
+		// Обработчик для кнопки подписки
+		const followBtn = document.querySelector('.follow-btn');
+		if (followBtn) {
+			followBtn.addEventListener('click', function() {
+				const userId = this.getAttribute('data-user-id');
+				followUser(userId);
+			});
+		}
+
+		if (avatarOverlay && avatarInput) {
+			avatarOverlay.addEventListener('click', function() {
+				avatarInput.click();
+			});
+
+			avatarInput.addEventListener('change', function() {
+				if (this.files && this.files[0]) {
+					// Используем существующий URL формы вместо жестко закодированного пути
+					const formAction = avatarForm.getAttribute('action');
+					const formData = new FormData(avatarForm);
+					
+					fetch(formAction, {
+						method: 'POST',
+						body: formData
+					})
+					.then(response => response.json())
+					.then(data => {
+						if (data.message) {
+							window.toast.success(data.message);
+							// Обновить изображение на странице без перезагрузки
+							setTimeout(() => {
+								location.reload();
+							}, 1000);
+						}
+					})
+					.catch(error => {
+						window.toast.error('Ошибка при загрузке аватарки');
+					});
+				}
+			});
+		}
+	});
 </script>
 {% endblock %}

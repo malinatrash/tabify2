@@ -11,24 +11,27 @@
 	<link rel="stylesheet" href="/static/css/layout.css" type="text/css">
 	<link rel="stylesheet" href="/static/css/pages.css" type="text/css">
 	<link rel="stylesheet" href="/static/css/toast.css" type="text/css">
+	<link rel="stylesheet" href="/static/css/profile.css" type="text/css">
+	<link rel="stylesheet" href="/static/css/auth.css" type="text/css">
+	
+	<!-- Font Awesome для иконок -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 	<script src="/static/js/toast.js"></script>
 </head>
 
 <body>
 	<nav class="vision-glass-card">
-		<div class="container">
+		<div class="nav-links">
 			<a href="/" class="vision-btn">Tabify</a>
-			<div class="nav-links">
-				{% if user %}
-				<a href="/projects" class="vision-btn">Projects</a>
-				<a href="/users/profile" class="vision-btn">Profile</a>
-				<a href="/auth/logout" class="vision-btn vision-btn-secondary">Logout</a>
-				{% else %}
-				<a href="/auth/login" class="vision-btn">Login</a>
-				<a href="/auth/register" class="vision-btn vision-btn-primary">Sign Up</a>
-				{% endif %}
-			</div>
+			{% if user %}
+			<a href="/projects" class="vision-btn">Projects</a>
+			<a href="/users/profile" class="vision-btn">Profile</a>
+			<a href="/auth/logout" class="vision-btn vision-btn-secondary">Logout</a>
+			{% else %}
+			<a href="/auth/login" class="vision-btn">Login</a>
+			<a href="/auth/register" class="vision-btn vision-btn-primary">Sign Up</a>
+			{% endif %}
 		</div>
 	</nav>
 
