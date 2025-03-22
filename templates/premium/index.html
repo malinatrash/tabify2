@@ -1,0 +1,573 @@
+{% extends "base.html" %}
+
+{% block title %}Tabify Premium{% endblock %}
+
+{% block head_scripts %}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block content_data %}
+<div id="premium-data" 
+     data-is-premium="{{ user.is_premium|lower }}" 
+     {% if user.active_subscription %}
+     data-subscription-plan="{{ user.active_subscription.plan.description }}" 
+     data-subscription-end-date="{{ user.active_subscription.end_date.strftime('%d.%m.%Y') }}"
+     {% endif %}
+></div>
+{% endblock %}
+
+{% block content %}
+{{ self.content_data() }}
+<div class="container mt-5 mb-5">
+    <!-- Заголовок секции -->
+    <div class="premium-header vision-glass-card fade-in">
+        <div class="premium-header-content">
+            <div class="premium-logo">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h1>Open up your full potential with Tabify Premium</h1>
+            <p class="premium-tagline">Expand your musical talent with expanded features and exclusive functions</p>
+            {% if not user.active_subscription %}
+            <div class="cta-buttons">
+                <a href="#pricing" class="vision-btn vision-btn-primary premium-cta-btn">Select Plan</a>
+                <a href="#features" class="vision-btn vision-btn-secondary">Learn More</a>
+            </div>
+            {% else %}
+            <div class="premium-active-status">
+                <div class="user-premium-badge">
+                    <i class="fas fa-crown premium-icon"></i> PREMIUM
+                </div>
+                <p class="premium-status-message">You are a premium user! Enjoy all the benefits.</p>
+                <p class="subscription-details">Plan: <strong>{{ user.active_subscription.plan.description }}</strong> |
+                    Expires: <strong>{{ user.active_subscription.end_date.strftime('%d.%m.%Y') }}</strong></p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Section with benefits -->
+    <div id="features" class="premium-features-section fade-in">
+        <h2 class="section-title">Premium Benefits</h2>
+        <div class="features-grid">
+            <div class="feature-card vision-glass-card">
+                <div class="feature-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <h3>Unlimited Projects</h3>
+                <p>Create as many tabs and projects as you need. No limits.</p>
+            </div>
+            <div class="feature-card vision-glass-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-export"></i>
+                </div>
+                <h3>Export in any format</h3>
+                <p>Export tabs in PDF, MusicXML, MIDI, and other formats.</p>
+            </div>
+            <div class="feature-card vision-glass-card">
+                <div class="feature-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Expanded Storage</h3>
+                <p>Get 20 GB of cloud storage for your projects and files.</p>
+            </div>
+            <div class="feature-card vision-glass-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Collaboration</h3>
+                <p>Work on projects together with other musicians in real-time.</p>
+            </div>
+            <div class="feature-card vision-glass-card">
+                <div class="feature-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3>AI chord selection</h3>
+                <p>Use artificial intelligence to analyze and select chords for your melody.</p>
+            </div>
+            <div class="feature-card vision-glass-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headphones-alt"></i>
+                </div>
+                <h3>High-quality sound</h3>
+                <p>Listen to your projects in high quality with professional sound banks.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Секция с ценами -->
+    <div id="pricing" class="premium-pricing-section fade-in">
+        <h2 class="section-title">Select your plan</h2>
+        <div class="pricing-cards">
+            <div class="pricing-card vision-glass-card">
+                <div class="pricing-header">
+                    <h3>Monthly</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">7</span>
+                        <span class="period">/month</span>
+                    </div>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li><i class="fas fa-check"></i> All premium features</li>
+                        <li><i class="fas fa-check"></i> 20 GB storage</li>
+                        <li><i class="fas fa-check"></i> Export in any format</li>
+                        <li><i class="fas fa-check"></i> Cancel at any time</li>
+                    </ul>
+                </div>
+                <div class="pricing-footer">
+                    {% if not user.active_subscription %}
+                    <button class="vision-btn vision-btn-accent buy-premium-btn" data-plan="monthly">Buy
+                        Subscription</button>
+                    {% else %}
+                    <button class="vision-btn vision-btn-outline" disabled>Already activated</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="pricing-card vision-glass-card featured-plan">
+                <div class="pricing-badge">Popular</div>
+                <div class="pricing-header">
+                    <h3>Yearly</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">59</span>
+                        <span class="period">/year</span>
+                    </div>
+                    <div class="price-savings">Economy 32%</div>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li><i class="fas fa-check"></i> All premium features</li>
+                        <li><i class="fas fa-check"></i> 50 GB storage</li>
+                        <li><i class="fas fa-check"></i> Export in any format</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> 2 free master classes</li>
+                    </ul>
+                </div>
+                <div class="pricing-footer">
+                    {% if not user.active_subscription %}
+                    <button class="vision-btn vision-btn-accent buy-premium-btn" data-plan="yearly">Buy
+                        Subscription</button>
+                    {% else %}
+                    <button class="vision-btn vision-btn-outline" disabled>Already activated</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="pricing-card vision-glass-card">
+                <div class="pricing-header">
+                    <h3>Lifetime</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">200</span>
+                        <span class="period">one time</span>
+                    </div>
+                </div>
+                <div class="pricing-features">
+                    <ul>
+                        <li><i class="fas fa-check"></i> All premium features</li>
+                        <li><i class="fas fa-check"></i> 100 GB storage</li>
+                        <li><i class="fas fa-check"></i> No monthly payments</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> Early access to new features</li>
+                    </ul>
+                </div>
+                <div class="pricing-footer">
+                    {% if not user.active_subscription %}
+                    <button class="vision-btn vision-btn-accent buy-premium-btn" data-plan="lifetime">Buy
+                        Subscription</button>
+                    {% else %}
+                    <button class="vision-btn vision-btn-outline" disabled>Already activated</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section with testimonials -->
+    <div class="premium-testimonials-section fade-in">
+        <h2 class="section-title">What our users say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card vision-glass-card">
+                <div class="testimonial-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                </div>
+                <div class="testimonial-content">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Tabify Premium completely changed my approach to creating tabs.
+                        The AI chord selection function saved me hours of work!"</p>
+                    <p class="testimonial-author">— Alexander P., professional guitarist</p>
+                </div>
+            </div>
+            <div class="testimonial-card vision-glass-card">
+                <div class="testimonial-avatar">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                </div>
+                <div class="testimonial-content">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Collaboration in real-time allows our group to effectively
+                        collaborate on new tracks, even when we are in different cities."</p>
+                    <p class="testimonial-author">— Elena M., bass guitarist</p>
+                </div>
+            </div>
+            <div class="testimonial-card vision-glass-card">
+                <div class="testimonial-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/62.jpg" alt="User">
+                </div>
+                <div class="testimonial-content">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="testimonial-text">"The ability to export in various formats made my work as a guitar
+                        teacher much easier. Students receive professional materials."</p>
+                    <p class="testimonial-author">— Dmitry K., music teacher</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ section -->
+    <div class="premium-faq-section fade-in">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-container vision-glass-card">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h4>How long is the subscription active?</h4>
+                    <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Monthly subscription is active for 30 days from the payment date. Yearly subscription is active
+                        for 365 days. Lifetime subscription never expires.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h4>Can I cancel the subscription?</h4>
+                    <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, you can cancel monthly or yearly subscription at any time. After cancellation, you will
+                        continue to use premium features until the end of the paid period.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h4>Can I switch from monthly to yearly subscription?</h4>
+                    <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, you can change your subscription type. When switching to yearly subscription, we will
+                        account for the remaining days of your current subscription and make the appropriate adjustment.
+                    </p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h4>What happens to my projects after the subscription ends?</h4>
+                    <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Your projects will remain available, but some premium features will be limited. You will be able
+                        to view and edit existing projects, but creating new projects will be limited.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h4>What payment methods do you accept?</h4>
+                    <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>We accept all major credit cards (Visa, MasterCard, American Express), as well as payments
+                        through PayPal, Apple Pay and Google Pay.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA section -->
+    <div class="premium-cta-section vision-glass-card fade-in">
+        <div class="cta-content">
+            <h2>Ready to unlock your musical potential?</h2>
+            <p>Join thousands of musicians who already use Tabify Premium.</p>
+            {% if not user.active_subscription %}
+            <a href="#pricing" class="vision-btn vision-btn-accent">Become a Premium User</a>
+            {% else %}
+            <a href="/projects/new" class="vision-btn vision-btn-accent">Create a New Project</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Обработка вопросов FAQ
+    document.addEventListener('DOMContentLoaded', function () {
+        const faqItems = document.querySelectorAll('.faq-item')
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question')
+
+            question.addEventListener('click', () => {
+                const answer = item.querySelector('.faq-answer')
+                const toggle = item.querySelector('.faq-toggle i')
+
+                // Плавное переключение видимости ответа
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null
+                    toggle.classList.remove('fa-chevron-up')
+                    toggle.classList.add('fa-chevron-down')
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + 'px'
+                    toggle.classList.remove('fa-chevron-down')
+                    toggle.classList.add('fa-chevron-up')
+                }
+            })
+        })
+
+        // Функция для обновления интерфейса в зависимости от премиум-статуса
+        function updatePremiumInterface(isPremium, details = null) {
+            const premiumHeader = document.querySelector('.premium-header-content');
+            const pricingCards = document.querySelectorAll('.pricing-card');
+            const ctaSection = document.querySelector('.premium-cta-section .cta-content');
+            
+            // Обновляем заголовок страницы
+            if (premiumHeader) {
+                if (isPremium) {
+                    // Пользователь с премиумом - показываем информацию о статусе
+                    premiumHeader.innerHTML = `
+                        <div class="premium-logo">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h1>Open up your full potential with Tabify Premium</h1>
+                        <p class="premium-tagline">Expand your musical talent with expanded features and exclusive functions</p>
+                        <div class="premium-active-status">
+                            <div class="user-premium-badge">
+                                <i class="fas fa-crown premium-icon"></i> PREMIUM
+                            </div>
+                            <p class="premium-status-message">You are a premium user! Enjoy all the benefits.</p>
+                            <p class="subscription-details">Plan: <strong>${details?.plan || 'Premium'}</strong> |
+                                Expires: <strong>${details?.endDate || 'Never'}</strong></p>
+                        </div>
+                    `;
+                } else {
+                    // Пользователь без премиума - показываем кнопки выбора плана
+                    premiumHeader.innerHTML = `
+                        <div class="premium-logo">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h1>Open up your full potential with Tabify Premium</h1>
+                        <p class="premium-tagline">Expand your musical talent with expanded features and exclusive functions</p>
+                        <div class="cta-buttons">
+                            <a href="#pricing" class="vision-btn vision-btn-primary premium-cta-btn">Select Plan</a>
+                            <a href="#features" class="vision-btn vision-btn-secondary">Learn More</a>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Обновляем карточки с ценами
+            if (pricingCards) {
+                pricingCards.forEach(card => {
+                    const buyButton = card.querySelector('.buy-premium-btn');
+                    const disabledButton = card.querySelector('button[disabled]');
+                    
+                    if (isPremium) {
+                        // Заменяем кнопки покупки на неактивные для пользователей с премиумом
+                        if (buyButton) {
+                            const footerDiv = buyButton.parentElement;
+                            const planType = buyButton.getAttribute('data-plan');
+                            buyButton.remove();
+                            
+                            const newButton = document.createElement('button');
+                            newButton.className = 'vision-btn vision-btn-outline';
+                            newButton.disabled = true;
+                            newButton.textContent = 'Already activated';
+                            footerDiv.appendChild(newButton);
+                        }
+                    } else {
+                        // Заменяем неактивные кнопки на активные для пользователей без премиума
+                        if (disabledButton) {
+                            const footerDiv = disabledButton.parentElement;
+                            const planTypes = ['monthly', 'yearly', 'lifetime'];
+                            const planIndex = Array.from(pricingCards).indexOf(card);
+                            const planType = planTypes[planIndex] || 'monthly';
+                            disabledButton.remove();
+                            
+                            const newButton = document.createElement('button');
+                            newButton.className = 'vision-btn vision-btn-accent buy-premium-btn';
+                            newButton.setAttribute('data-plan', planType);
+                            newButton.textContent = 'Buy Subscription';
+                            footerDiv.appendChild(newButton);
+                            
+                            // Добавляем обработчик события для новой кнопки
+                            newButton.addEventListener('click', handlePremiumPurchase);
+                        }
+                    }
+                });
+            }
+            
+            // Обновляем CTA раздел
+            if (ctaSection) {
+                const ctaButton = ctaSection.querySelector('a.vision-btn');
+                if (ctaButton) {
+                    if (isPremium) {
+                        ctaButton.href = '/projects/new';
+                        ctaButton.textContent = 'Create a New Project';
+                    } else {
+                        ctaButton.href = '#pricing';
+                        ctaButton.textContent = 'Become a Premium User';
+                    }
+                }
+            }
+            
+            // Обновляем глобальную переменную состояния
+            isPremiumUser = isPremium;
+        }
+        
+        // Функция обработки покупки премиум-подписки
+        function handlePremiumPurchase() {
+            const plan = this.getAttribute('data-plan');
+            
+            // Показываем индикатор загрузки на кнопке
+            const originalText = this.textContent;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            this.disabled = true;
+            
+            // Эмуляция запроса на сервер
+            fetch('/premium/activate-demo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ plan: plan })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.toast.success('Поздравляем! Премиум-подписка активирована.', {
+                        duration: 5000,
+                        style: {
+                            background: 'rgba(15, 25, 40, 0.97)', // Повышаем контрастность
+                            color: '#ffffff',
+                            borderColor: 'rgba(255, 209, 102, 0.8)'
+                        }
+                    });
+                    
+                    // Обновляем информацию о подписке
+                    fetch('/premium/status')
+                        .then(response => response.json())
+                        .then(statusData => {
+                            // Получаем детали подписки
+                            if (statusData.is_premium) {
+                                // Обновляем интерфейс, чтобы отразить премиум-статус
+                                updatePremiumInterface(true, {
+                                    plan: statusData.plan || getPlanDescription(plan),
+                                    endDate: statusData.end_date || getEndDateFromPlan(plan)
+                                });
+                                
+                                // Обновляем премиум-статус в навигационной панели
+                                const premiumLink = document.querySelector('.premium-link');
+                                if (premiumLink) {
+                                    premiumLink.classList.add('premium-active');
+                                    
+                                    if (!premiumLink.querySelector('.premium-badge')) {
+                                        const badge = document.createElement('span');
+                                        badge.className = 'premium-badge';
+                                        badge.textContent = 'PRO';
+                                        premiumLink.appendChild(badge);
+                                    }
+                                }
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error fetching premium status:', err);
+                            // В случае ошибки все равно обновляем интерфейс на основе локальных данных
+                            updatePremiumInterface(true, { 
+                                plan: getPlanDescription(plan),
+                                endDate: getEndDateFromPlan(plan)
+                            });
+                        });
+                } else {
+                    window.toast.error('Произошла ошибка при активации подписки.');
+                    this.textContent = originalText;
+                    this.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.toast.error('Произошла ошибка. Пожалуйста, попробуйте позже.');
+                this.textContent = originalText;
+                this.disabled = false;
+            });
+        }
+        
+        // Вспомогательные функции для получения описания плана и даты окончания
+        function getPlanDescription(planType) {
+            switch (planType) {
+                case 'monthly': return 'Monthly';
+                case 'yearly': return 'Yearly';
+                case 'lifetime': return 'Lifetime';
+                default: return 'Premium';
+            }
+        }
+        
+        function getEndDateFromPlan(planType) {
+            const now = new Date();
+            switch (planType) {
+                case 'monthly':
+                    now.setMonth(now.getMonth() + 1);
+                    return formatDate(now);
+                case 'yearly':
+                    now.setFullYear(now.getFullYear() + 1);
+                    return formatDate(now);
+                case 'lifetime':
+                    return 'Never';
+                default:
+                    return 'Unknown';
+            }
+        }
+        
+        function formatDate(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+        
+        // Проверка и обновление статуса премиума при загрузке страницы
+        fetch('/premium/status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_premium !== isPremiumUser) {
+                    // Если статус изменился, обновляем интерфейс
+                    updatePremiumInterface(data.is_premium, {
+                        plan: data.plan || subscriptionDetails.plan,
+                        endDate: data.end_date || subscriptionDetails.endDate
+                    });
+                }
+            })
+            .catch(err => console.error('Error checking premium status:', err));
+        
+        // Назначаем обработчики событий кнопкам покупки
+        const buyButtons = document.querySelectorAll('.buy-premium-btn');
+        buyButtons.forEach(button => {
+            button.addEventListener('click', handlePremiumPurchase);
+        });
+
+    });
+</script>
+{% endblock %}

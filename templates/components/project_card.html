@@ -1,0 +1,67 @@
+{% macro project_card(project, current_user) %}
+<div class="project-card vision-glass-card">
+    <div class="project-card-header"
+        style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="project-title" style="flex: 1; min-width: 0; margin-right: 10px;">
+            <h4 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; margin: 0;"
+                title="{{ project.title }}">{{ project.title }}</h4>
+            {% if project.owner.is_premium %}
+            <span class="project-premium-badge" title="Premium User">
+                <i class="fas fa-crown"></i>
+            </span>
+            {% endif %}
+        </div>
+
+        <div class="project-actions" style="display: flex; align-items: center; flex-shrink: 0;">
+            <button class="like-btn" data-project-id="{{ project.id }}"
+                title="{% if is_liked(project, current_user) %}Unlike{% else %}Like{% endif %}">
+                <i
+                    class="fa{% if is_liked(project, current_user) %}s{% else %}r{% endif %} fa-heart{% if is_liked(project, current_user) %} liked{% endif %}"></i>
+                <span class="like-count">{{ project.likes|length }}</span>
+            </button>
+            <a href="/projects/{{ project.id }}/likes" class="view-likes-btn" title="View who liked this project">
+                <i class="fas fa-users"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="project-content">
+        <p class="project-description">{{ project.description or 'No description provided' }}</p>
+    </div>
+
+    <div class="project-footer">
+        <div class="project-meta">
+            <div class="project-info-line">
+                <a href="/users/profile/{{ project.owner.id }}" class="project-author">
+                    <div class="author-avatar">
+                        {% if project.owner.avatar_url %}
+                        <img src="{{ project.owner.avatar_url }}" alt="{{ project.owner.full_name }}">
+                        {% else %}
+                        <span class="avatar-placeholder">{{ project.owner.full_name[:1] }}</span>
+                        {% endif %}
+                    </div>
+                    <span>{{ project.owner.full_name }}</span>
+                </a>
+                <span class="meta-separator">•</span>
+                <div class="project-date">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>{{ project.created_at.strftime('%b %d, %Y') }}</span>
+                </div>
+            </div>
+            <a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View</a>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro is_liked(project, current_user) %}
+{% set liked = false %}
+{% if current_user %}
+{% for like in project.likes %}
+{% if like.user_id == current_user.id %}
+{% set liked = true %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{{ liked }}
+{% endmacro %}

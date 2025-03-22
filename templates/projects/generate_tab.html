@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Generate Tablature - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/projects">Projects</a></li>
+            <li class="breadcrumb-item"><a href="/projects/{{ project.id }}">{{ project.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Generate Tablature</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h3 mb-0">Generate Tablature</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <h5 class="alert-heading">MIDI file loaded!</h5>
+                <p>For the file <strong>{{ midi_file.original_filename }}</strong>, tablature has not been created yet. Click the button below to generate tablature for this MIDI file.</p>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button id="generateTabBtn" class="btn btn-primary btn-lg" data-project-id="{{ project.id }}" data-midi-id="{{ midi_file.id }}">
+                    <i class="fas fa-guitar me-2"></i> Generate Tablature
+                </button>
+            </div>
+
+            <div id="loadingTab" style="display: none;" class="text-center my-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Generating tablature, this may take some time...</p>
+            </div>
+
+            <div id="tabError" class="alert alert-danger mt-3" style="display: none;">
+                <h5 class="alert-heading">Generation Error</h5>
+                <p id="errorText"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/tab-functions.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, setting up event handler for button');
+        const generateTabBtn = document.getElementById('generateTabBtn');
+        if (generateTabBtn) {
+            console.log('Button found:', generateTabBtn);
+            console.log('Button attributes:', {
+                'data-project-id': generateTabBtn.getAttribute('data-project-id'),
+                'data-midi-id': generateTabBtn.getAttribute('data-midi-id')
+            });
+            
+            generateTabBtn.addEventListener('click', function() {
+                console.log('Button clicked!');
+                const projectId = generateTabBtn.getAttribute('data-project-id');
+                const midiId = generateTabBtn.getAttribute('data-midi-id');
+                console.log(`Calling generateTab with projectId=${projectId}, midiId=${midiId}`);
+                generateTab(projectId, midiId);
+            });
+        } else {
+            console.error('Button #generateTabBtn not found!');
+        }
+    });
+</script>
+{% endblock %}

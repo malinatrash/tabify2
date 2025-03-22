@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{# Импортируем макрос для карточки проекта #}
+{% from "components/project_card.html" import project_card, is_liked %}
+
 {% block content %}
 <div class="container mt-5">
 	<div class="vision-glass-card fade-in">
@@ -11,20 +14,7 @@
 		{% if projects %}
 		<div class="projects-grid">
 			{% for project in projects %}
-			<div class="vision-glass-card project-card fade-in">
-				<h3 class="project-title">{{ project.title }}</h3>
-				<p class="project-description">{{ project.description or 'No description provided' }}</p>
-				<div class="project-meta">
-					<span class="project-date">Created: {{ project.created_at.strftime('%B %d, %Y') }}</span>
-					<div class="project-info">
-						<a href="/projects/{{ project.id }}/likes" class="likes-link"><span class="likes-count">❤️ {{ project.likes|length }}</span></a>
-						<a href="/users/profile/{{ project.owner.id }}" class="author-link"><span class="author">by {{ project.owner.full_name }}</span></a>
-					</div>
-				</div>
-				<div class="project-actions">
-					<a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Project</a>
-				</div>
-			</div>
+				{{ project_card(project, user) }}
 			{% endfor %}
 		</div>
 		{% else %}

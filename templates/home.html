@@ -1,9 +1,73 @@
 {% extends "base.html" %}
 
+{# Импортируем макрос для карточки проекта #}
+{% from "components/project_card.html" import project_card, is_liked %}
+
 {% block head_extra %}
 <style>
-	/* Стили для блока популярных пользователей */
-	/* Стили для кнопки лайка */
+	/* Styles for welcome section with avatar */
+	.welcome-header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+
+	.hero-user-avatar {
+		width: 70px;
+		height: 70px;
+		border-radius: 50%;
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.1);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		border: 2px solid var(--primary-color);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+		float: left;
+		/* Ensure it stays left */
+		margin-right: 16px;
+	}
+
+	.hero-avatar-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.hero-avatar-placeholder {
+		font-size: 2rem;
+		font-weight: bold;
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.hero-premium-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background: linear-gradient(135deg, var(--accent-gold), #ffb600);
+		color: #000;
+		font-size: 0.9rem;
+		font-weight: 700;
+		padding: 4px 10px;
+		border-radius: 12px;
+		margin-left: 12px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+		vertical-align: middle;
+		opacity: 0.97;
+	}
+
+	.welcome-header h1 {
+		margin: 0;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		flex: 1;
+	}
+
+	/* Styles for popular users block */
+	/* Styles for like button */
 	.like-btn {
 		background: none;
 		border: none;
@@ -15,30 +79,35 @@
 		transition: all 0.2s ease;
 		border-radius: 20px;
 	}
-	
+
 	.like-btn:hover {
 		background: rgba(255, 255, 255, 0.1);
 	}
-	
+
 	.like-btn i.fas.fa-heart.liked {
 		color: #ff4c4c;
 	}
-	
+
 	.like-btn i.far.fa-heart {
 		color: rgba(255, 255, 255, 0.8);
 	}
-	
+
 	/* Стили для тегов a в карточках */
-	.project-card a, .user-card a, .user-info a {
+	.project-card a,
+	.user-card a,
+	.user-info a {
 		color: var(--primary-color);
 		text-decoration: none;
 		transition: color 0.3s ease;
 	}
-	
-	.project-card a:hover, .user-card a:hover, .user-info a:hover {
+
+	.project-card a:hover,
+	.user-card a:hover,
+	.user-info a:hover {
 		color: var(--primary-color-light);
 		text-decoration: underline;
 	}
+
 	.popular-users-scroll {
 		display: flex;
 		overflow-x: auto;
@@ -48,11 +117,11 @@
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
-	
+
 	.popular-users-scroll::-webkit-scrollbar {
 		display: none;
 	}
-	
+
 	.user-card {
 		background: rgba(255, 255, 255, 0.1);
 		border-radius: 12px;
@@ -64,19 +133,19 @@
 		flex-shrink: 0;
 		border: 1px solid rgba(255, 255, 255, 0.1);
 	}
-	
+
 	.user-card:hover {
 		transform: translateY(-5px);
 		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 		border-color: rgba(255, 255, 255, 0.3);
 	}
-	
+
 	.user-card-header {
 		display: flex;
 		align-items: center;
 		margin-bottom: 15px;
 	}
-	
+
 	.user-avatar {
 		width: 60px;
 		height: 60px;
@@ -90,44 +159,44 @@
 		flex-shrink: 0;
 		border: 2px solid var(--primary-color);
 	}
-	
+
 	.user-avatar img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 	}
-	
+
 	.avatar-placeholder {
 		font-size: 24px;
 		color: rgba(255, 255, 255, 0.7);
 	}
-	
+
 	.user-info {
 		flex: 1;
 	}
-	
+
 	.user-info h4 {
 		margin: 0 0 5px 0;
 		font-size: 1.1rem;
 	}
-	
+
 	.user-stats {
 		display: flex;
 		gap: 15px;
 		font-size: 0.9rem;
 		color: rgba(255, 255, 255, 0.8);
 	}
-	
+
 	.user-stats span i {
 		margin-right: 5px;
 	}
-	
+
 	.user-card-actions {
 		display: flex;
 		gap: 10px;
 		margin-top: 15px;
 	}
-	
+
 	.user-card-actions .vision-btn {
 		flex: 1;
 		font-size: 0.9rem;
@@ -189,7 +258,24 @@
 	<div class="dashboard-header">
 		<div class="vision-glass-card hero-section fade-in">
 			<div class="hero-content">
-				<h1>Welcome back, {{ user.full_name }}! 👋</h1>
+				<div class="welcome-header">
+					<div class="hero-user-avatar">
+						{% if user.avatar_url %}
+						<img src="{{ user.avatar_url }}" alt="{{ user.full_name }}" class="hero-avatar-image">
+						{% else %}
+						<div class="hero-avatar-placeholder">
+							<span>{{ user.full_name[:1] }}</span>
+						</div>
+						{% endif %}
+					</div>
+					<h1>Welcome back, {{ user.full_name }}! 👋
+						{% if user.is_premium %}
+						<span class="hero-premium-badge">
+							<i class="fas fa-crown premium-icon"></i>Premium
+						</span>
+						{% endif %}
+					</h1>
+				</div>
 				<div class="hero-subtitle">Your musical journey continues here.</div>
 				<div class="hero-actions">
 					<a href="/projects/new" class="vision-btn vision-btn-primary">Create New Tab</a>
@@ -212,37 +298,11 @@
 		</div>
 	</div>
 	<div class="vision-glass-card mt-5">
-		<h3>Popular Tabs</h3>
+		<h3>Popular Projects</h3>
 		{% if popular_projects %}
 		<div class="projects-grid">
 			{% for project in popular_projects %}
-			<div class="vision-glass-card project-card fade-in">
-				<h3 class="project-title">{{ project.title }}</h3>
-				<p class="project-description">{{ project.description or 'No description provided' }}</p>
-				<div class="project-meta">
-					<span class="project-date">Created: {{ project.created_at|dateformat }}</span>
-					<div class="project-info">
-						<button class="like-btn" data-project-id="{{ project.id }}" title="Like/Unlike">
-							{% set is_liked = false %}
-							{% for like in project.likes %}
-								{% if like.user_id == user.id %}
-									{% set is_liked = true %}
-								{% endif %}
-							{% endfor %}
-							
-							{% if is_liked %}
-							<i class="fas fa-heart liked"></i> <span class="likes-count">{{ project.likes|length }}</span>
-							{% else %}
-							<i class="far fa-heart"></i> <span class="likes-count">{{ project.likes|length }}</span>
-							{% endif %}
-						</button>
-						<a href="/users/profile/{{ project.owner.id }}" class="author-link"><span class="author">by {{ project.owner.full_name }}</span></a>
-					</div>
-				</div>
-				<div class="project-actions">
-					<a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Project</a>
-				</div>
-			</div>
+				{{ project_card(project, user) }}
 			{% endfor %}
 		</div>
 		{% else %}
@@ -252,7 +312,7 @@
 
 	<!-- Блок с популярными пользователями -->
 	<div class="vision-glass-card mt-5">
-		<h3>Popular Users</h3>
+		<h3>Popular Authors</h3>
 		{% if popular_users %}
 		<div class="popular-users-scroll">
 			{% for user_item in popular_users %}
@@ -281,15 +341,15 @@
 					<button class="vision-btn vision-btn-outline follow-btn" data-user-id="{{ user_item.id }}">
 						{% set is_following = false %}
 						{% for follow in user.following %}
-							{% if follow.followed_id == user_item.id %}
-								{% set is_following = true %}
-							{% endif %}
+						{% if follow.followed_id == user_item.id %}
+						{% set is_following = true %}
+						{% endif %}
 						{% endfor %}
-						
+
 						{% if is_following %}
-						<i class="fas fa-user-minus"></i> Отписаться
+						<i class="fas fa-user-minus"></i> Unfollow
 						{% else %}
-						<i class="fas fa-user-plus"></i> Подписаться
+						<i class="fas fa-user-plus"></i> Follow
 						{% endif %}
 					</button>
 					{% endif %}
@@ -301,51 +361,30 @@
 		<p>No popular users available yet.</p>
 		{% endif %}
 	</div>
-
-	<div class="vision-glass-card mt-5">
-		<h3>Your Projects</h3>
-		{% if projects %}
-		<div class="user-projects-scroll">
-			{% for project in projects %}
-			<div class="project-card">
-				<h4>{{ project.title }}</h4>
-				<p>{{ project.description }}</p>
-				<div class="project-meta">
-					<span class="likes-count"><i class="fas fa-heart"></i> {{ project.likes|length }}</span>
-					<span class="author">by {{ project.owner.full_name }}</span>
-				</div>
-				<a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Tab</a>
-			</div>
-			{% endfor %}
-		</div>
-		{% else %}
-		<p>You haven't created any tabs yet.</p>
-		{% endif %}
-	</div>
 </div>
 
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
-		// Обработка кнопок подписки
-		const followButtons = document.querySelectorAll('.follow-btn');
+	document.addEventListener('DOMContentLoaded', function () {
+		// Handling follow buttons
+		const followButtons = document.querySelectorAll('.follow-btn')
 		followButtons.forEach(button => {
-			button.addEventListener('click', function() {
-				const userId = this.dataset.userId;
-				followUser(userId, this);
-			});
-		});
+			button.addEventListener('click', function () {
+				const userId = this.dataset.userId
+				followUser(userId, this)
+			})
+		})
 
 		// Обработка кнопок лайка
-		const likeButtons = document.querySelectorAll('.like-btn');
+		const likeButtons = document.querySelectorAll('.like-btn')
 		likeButtons.forEach(button => {
-			button.addEventListener('click', function() {
-				const projectId = this.dataset.projectId;
-				likeProject(projectId, this);
-			});
-		});
-	});
+			button.addEventListener('click', function () {
+				const projectId = this.dataset.projectId
+				likeProject(projectId, this)
+			})
+		})
+	})
 
-	// Функция для подписки/отписки
+	// Function for follow/unfollow
 	function followUser(userId, buttonElement) {
 		fetch(`/users/${userId}/follow`, {
 			method: 'POST',
@@ -353,41 +392,41 @@
 				'Content-Type': 'application/json'
 			}
 		})
-		.then(response => response.json())
-		.then(data => {
-			if (data.success) {
-				// Обновляем интерфейс после успешной подписки/отписки
-				const buttons = document.querySelectorAll(`.follow-btn[data-user-id="${userId}"]`);
-				buttons.forEach(btn => {
-					if (data.action === 'followed') {
-						btn.innerHTML = '<i class="fas fa-user-minus"></i> Отписаться';
-					} else {
-						btn.innerHTML = '<i class="fas fa-user-plus"></i> Подписаться';
-					}
-				});
-				
-				// Показываем уведомление
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					// Update interface after successful follow/unfollow
+					const buttons = document.querySelectorAll(`.follow-btn[data-user-id="${userId}"]`)
+					buttons.forEach(btn => {
+						if (data.action === 'followed') {
+							btn.innerHTML = '<i class="fas fa-user-minus"></i> Unfollow'
+						} else {
+							btn.innerHTML = '<i class="fas fa-user-plus"></i> Follow'
+						}
+					})
+
+					// Показываем уведомление
+					showToast({
+						message: data.message,
+						type: 'success'
+					})
+				} else {
+					showToast({
+						message: data.message || 'An error occurred',
+						type: 'error'
+					})
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error)
 				showToast({
-					message: data.message,
-					type: 'success'
-				});
-			} else {
-				showToast({
-					message: data.message || 'Произошла ошибка',
+					message: 'An error occurred while processing the request',
 					type: 'error'
-				});
-			}
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			showToast({
-				message: 'Произошла ошибка при выполнении запроса',
-				type: 'error'
-			});
-		});
+				})
+			})
 	}
 
-	// Функция для лайка проекта
+	// Function for liking a project
 	function likeProject(projectId, buttonElement) {
 		fetch(`/projects/${projectId}/like`, {
 			method: 'POST',
@@ -395,41 +434,41 @@
 				'Content-Type': 'application/json'
 			}
 		})
-		.then(response => response.json())
-		.then(data => {
-			if (data.success) {
-				// Обновляем интерфейс после успешного лайка/анлайка
-				const buttons = document.querySelectorAll(`.like-btn[data-project-id="${projectId}"]`);
-				buttons.forEach(btn => {
-					const countSpan = btn.querySelector('.likes-count');
-					countSpan.textContent = data.likes_count;
-					
-					if (data.action === 'liked') {
-						btn.innerHTML = `<i class="fas fa-heart liked"></i> <span class="likes-count">${data.likes_count}</span>`;
-					} else {
-						btn.innerHTML = `<i class="far fa-heart"></i> <span class="likes-count">${data.likes_count}</span>`;
-					}
-				});
-				
-				// Показываем уведомление
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					// Обновляем интерфейс после успешного лайка/анлайка
+					const buttons = document.querySelectorAll(`.like-btn[data-project-id="${projectId}"]`)
+					buttons.forEach(btn => {
+						const countSpan = btn.querySelector('.likes-count')
+						countSpan.textContent = data.likes_count
+
+						if (data.action === 'liked') {
+							btn.innerHTML = `<i class="fas fa-heart liked"></i> <span class="likes-count">${data.likes_count}</span>`
+						} else {
+							btn.innerHTML = `<i class="far fa-heart"></i> <span class="likes-count">${data.likes_count}</span>`
+						}
+					})
+
+					// Показываем уведомление
+					showToast({
+						message: data.message,
+						type: 'success'
+					})
+				} else {
+					showToast({
+						message: data.message || 'An error occurred',
+						type: 'error'
+					})
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error)
 				showToast({
-					message: data.message,
-					type: 'success'
-				});
-			} else {
-				showToast({
-					message: data.message || 'Произошла ошибка',
+					message: 'An error occurred while processing the request',
 					type: 'error'
-				});
-			}
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			showToast({
-				message: 'Произошла ошибка при выполнении запроса',
-				type: 'error'
-			});
-		});
+				})
+			})
 	}
 </script>
 {% endblock %}

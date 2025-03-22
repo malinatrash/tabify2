@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="vision-card-title">{{ title }}</h2>
             <a href="/users/profile/{{ user_profile.id }}" class="vision-btn vision-btn-secondary">
-                <i class="fas fa-arrow-left"></i> Назад к профилю
+                <i class="fas fa-arrow-left"></i> Back to Profile
             </a>
         </div>
 
@@ -26,29 +26,29 @@
                     </div>
                     <div class="user-info">
                         <h3 class="user-name">{{ user_item.full_name }}</h3>
-                        <p class="user-since">С {{ user_item.created_at.strftime('%d.%m.%Y') }}</p>
+                        <p class="user-since">Since {{ user_item.created_at.strftime('%m/%d/%Y') }}</p>
                     </div>
                 </div>
-                
+
                 <div class="user-stats">
-                    <span><strong>{{ user_item.projects|selectattr('is_public')|list|length }}</strong> проектов</span>
-                    <span><strong>{{ user_item.followers|length }}</strong> подписчиков</span>
+                    <span><strong>{{ user_item.projects|selectattr('is_public')|list|length }}</strong> projects</span>
+                    <span><strong>{{ user_item.followers|length }}</strong> followers</span>
                 </div>
-                
+
                 <div class="user-card-actions">
                     <a href="/users/profile/{{ user_item.id }}" class="vision-btn vision-btn-primary btn-sm">
-                        <i class="fas fa-user"></i> Просмотреть профиль
+                        <i class="fas fa-user"></i> View Profile
                     </a>
-                    
+
                     {% if current_user and current_user.id != user_item.id %}
                     <button class="vision-btn vision-btn-outline follow-btn btn-sm" data-user-id="{{ user_item.id }}">
                         {% set is_following = false %}
                         {% for follow in current_user.following %}
-                            {% if follow.followed_id == user_item.id %}
-                                {% set is_following = true %}
-                            {% endif %}
+                        {% if follow.followed_id == user_item.id %}
+                        {% set is_following = true %}
+                        {% endif %}
                         {% endfor %}
-                        
+
                         {% if is_following %}
                         <i class="fas fa-user-minus"></i> Отписаться
                         {% else %}
@@ -70,16 +70,16 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Обработка кнопок подписки
-        const followButtons = document.querySelectorAll('.follow-btn');
+        const followButtons = document.querySelectorAll('.follow-btn')
         followButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const userId = this.dataset.userId;
-                followUser(userId);
-            });
-        });
-    });
+            button.addEventListener('click', function () {
+                const userId = this.dataset.userId
+                followUser(userId)
+            })
+        })
+    })
 
     // Функция для подписки/отписки
     function followUser(userId) {
@@ -89,38 +89,38 @@
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Обновляем интерфейс после успешной подписки/отписки
-                const buttons = document.querySelectorAll(`.follow-btn[data-user-id="${userId}"]`);
-                buttons.forEach(btn => {
-                    if (data.action === 'followed') {
-                        btn.innerHTML = '<i class="fas fa-user-minus"></i> Отписаться';
-                    } else {
-                        btn.innerHTML = '<i class="fas fa-user-plus"></i> Подписаться';
-                    }
-                });
-                
-                // Показываем уведомление
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Обновляем интерфейс после успешной подписки/отписки
+                    const buttons = document.querySelectorAll(`.follow-btn[data-user-id="${userId}"]`)
+                    buttons.forEach(btn => {
+                        if (data.action === 'followed') {
+                            btn.innerHTML = '<i class="fas fa-user-minus"></i> Unfollow'
+                        } else {
+                            btn.innerHTML = '<i class="fas fa-user-plus"></i> Follow'
+                        }
+                    })
+
+                    // Показываем уведомление
+                    showToast({
+                        message: data.message,
+                        type: 'success'
+                    })
+                } else {
+                    showToast({
+                        message: data.message || 'Произошла ошибка',
+                        type: 'error'
+                    })
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error)
                 showToast({
-                    message: data.message,
-                    type: 'success'
-                });
-            } else {
-                showToast({
-                    message: data.message || 'Произошла ошибка',
+                    message: 'Произошла ошибка при выполнении запроса',
                     type: 'error'
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast({
-                message: 'Произошла ошибка при выполнении запроса',
-                type: 'error'
-            });
-        });
+                })
+            })
     }
 </script>
 {% endblock %}

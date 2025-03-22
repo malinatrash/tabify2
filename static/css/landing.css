@@ -17,6 +17,7 @@
     font-size: 3.5rem;
     margin-bottom: 24px;
     background: linear-gradient(135deg, var(--primary), var(--highlight));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 1.2;
@@ -128,6 +129,20 @@
 .price span {
     font-size: 1.2rem;
     color: var(--text-secondary);
+}
+
+.price-savings {
+    background: linear-gradient(135deg, var(--accent-gold), #ffb600);
+    color: #000;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0.97;
 }
 
 .features-list {

@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="vision-card-title">{{ title }}</h2>
             <a href="/projects/{{ project.id }}" class="vision-btn vision-btn-secondary">
-                <i class="fas fa-arrow-left"></i> Назад к проекту
+                <i class="fas fa-arrow-left"></i> Back to Project
             </a>
         </div>
 
@@ -26,19 +26,19 @@
                     </div>
                     <div class="user-info">
                         <h3 class="user-name">{{ user_item.full_name }}</h3>
-                        <p class="user-since">Оценил {{ user_item.liked_projects|selectattr('project_id', 'equalto',
+                        <p class="user-since">Liked on {{ user_item.liked_projects|selectattr('project_id', 'equalto',
                             project.id)|map(attribute='created_at')|first|default(None)|dateformat }}</p>
                     </div>
                 </div>
 
                 <div class="user-stats">
-                    <span><strong>{{ user_item.projects|selectattr('is_public')|list|length }}</strong> проектов</span>
-                    <span><strong>{{ user_item.followers|length }}</strong> подписчиков</span>
+                    <span><strong>{{ user_item.projects|selectattr('is_public')|list|length }}</strong> projects</span>
+                    <span><strong>{{ user_item.followers|length }}</strong> followers</span>
                 </div>
 
                 <div class="user-card-actions">
                     <a href="/users/profile/{{ user_item.id }}" class="vision-btn vision-btn-primary btn-sm">
-                        <i class="fas fa-user"></i> Просмотреть профиль
+                        <i class="fas fa-user"></i> View Profile
                     </a>
 
                     {% if current_user and current_user.id != user_item.id %}
@@ -51,9 +51,9 @@
                         {% endfor %}
 
                         {% if is_following %}
-                        <i class="fas fa-user-minus"></i> Отписаться
+                        <i class="fas fa-user-minus"></i> Unfollow
                         {% else %}
-                        <i class="fas fa-user-plus"></i> Подписаться
+                        <i class="fas fa-user-plus"></i> Follow
                         {% endif %}
                     </button>
                     {% endif %}
@@ -84,7 +84,18 @@
 
     // Функция для подписки/отписки
     function followUser(userId) {
-        fetch(`/api/users/${userId}/follow`, {
+        // Получаем все кнопки подписки для этого пользователя
+        const buttons = document.querySelectorAll(`.follow-btn[data-user-id="${userId}"]`)
+        const originalHTML = {};
+        
+        // Сохраняем оригинальный текст и показываем индикатор загрузки
+        buttons.forEach((btn, index) => {
+            originalHTML[index] = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+        });
+        
+        fetch(`/users/${userId}/follow`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -92,35 +103,54 @@
         })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.status === 'success') {
+                    // Показываем уведомление с высокой контрастностью
+                    window.toast.success(data.message, {
+                        duration: 3000,
+                        style: {
+                            background: 'rgba(15, 25, 40, 0.97)', 
+                            color: '#ffffff'
+                        }
+                    });
+                    
                     // Обновляем интерфейс после успешной подписки/отписки
-                    const buttons = document.querySelectorAll(`.follow-btn[data-user-id="${userId}"]`)
                     buttons.forEach(btn => {
+                        btn.disabled = false;
                         if (data.action === 'followed') {
-                            btn.innerHTML = '<i class="fas fa-user-minus"></i> Отписаться'
+                            btn.innerHTML = '<i class="fas fa-user-minus"></i> Unfollow'
                         } else {
-                            btn.innerHTML = '<i class="fas fa-user-plus"></i> Подписаться'
+                            btn.innerHTML = '<i class="fas fa-user-plus"></i> Follow'
                         }
                     })
-
-                    // Показываем уведомление
-                    showToast({
-                        message: data.message,
-                        type: 'success'
-                    })
                 } else {
-                    showToast({
-                        message: data.message || 'Произошла ошибка',
-                        type: 'error'
+                    // В случае ошибки восстанавливаем оригинальный текст кнопки
+                    window.toast.error(data.message || 'Error processing your request', {
+                        duration: 3000,
+                        style: {
+                            background: 'rgba(15, 25, 40, 0.97)',
+                            color: '#ffffff'
+                        }
                     })
+                    buttons.forEach((btn, index) => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML[index];
+                    });
                 }
             })
             .catch(error => {
                 console.error('Error:', error)
-                showToast({
-                    message: 'Произошла ошибка при выполнении запроса',
-                    type: 'error'
+                window.toast.error('An error occurred while processing your request', {
+                    duration: 3000,
+                    style: {
+                        background: 'rgba(15, 25, 40, 0.97)',
+                        color: '#ffffff'
+                    }
                 })
+                // Восстанавливаем оригинальный текст кнопки
+                buttons.forEach((btn, index) => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML[index];
+                });
             })
     }
 </script>

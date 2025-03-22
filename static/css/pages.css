@@ -1,77 +1,266 @@
+/* Адаптивный заголовок дашборда */
 .dashboard-header {
-    display: grid;
-    grid-template-columns: 70% 30%;
-    gap: 24px;
-    margin-bottom: 24px;
+	display: grid;
+	grid-template-columns: 70% 30%;
+	gap: 24px;
+	margin-bottom: 24px;
 }
 
 .hero-section {
-    height: 100%;
+	height: 100%;
 }
 
 .quick-stats {
-    height: 100%;
+	height: 100%;
 }
 
-.user-projects-scroll {
-    display: flex;
-    gap: 24px;
-    overflow-x: auto;
-    padding: 16px 0;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+/* Унифицированные стили карточек проектов */
+.project-card {
+	background: var(--glass-bg);
+	border: 1px solid var(--glass-border);
+	border-radius: 16px;
+	padding: 20px;
+	transition: all 0.3s ease;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	backdrop-filter: blur(10px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-.user-projects-scroll .project-card {
-    min-width: 300px;
-    flex: 0 0 auto;
-    position: relative;
+.project-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+	border-color: rgba(0, 168, 150, 0.4);
 }
 
-.project-card h4 {
-    margin-right: 80px;
+.project-card h4,
+.project-card .project-title {
+	font-size: 1.25rem; /* Уменьшенный размер шрифта */
+	margin-top: 0;
+	margin-bottom: 8px; /* Уменьшенный отступ снизу */
+	margin-right: 70px;
+	color: var(--text-primary);
+	letter-spacing: 0.2px;
+	line-height: 1.3; /* Уменьшенная высота строки */
+}
+
+.project-card p,
+.project-card .project-description {
+	color: rgba(255, 255, 255, 0.9); /* Увеличена контрастность */
+	margin-bottom: 12px; /* Уменьшенный отступ */
+	flex-grow: 1;
+	font-size: 0.9rem; /* Уменьшенный размер шрифта */
+	line-height: 1.4; /* Более компактная высота строки */
+	max-height: none; /* Удалено ограничение высоты для показа большего количества текста */
+}
+
+.project-card .project-meta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 0.85rem; /* Уменьшенный размер шрифта */
+	color: rgba(
+		255,
+		255,
+		255,
+		0.95
+	); /* Увеличена контрастность для лучшей видимости */
+	width: 100%;
 }
 
 .project-card .likes-count {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.9em;
-    transition: all 0.3s ease;
+	position: absolute;
+	top: 14px; /* Уменьшенный отступ сверху */
+	right: 14px; /* Уменьшенный отступ справа */
+	background: rgba(255, 255, 255, 0.15);
+	padding: 4px 8px; /* Уменьшенные отступы для кнопки */
+	border-radius: 10px; /* Уменьшенный радиус */
+	font-size: 0.85rem; /* Уменьшенный размер шрифта */
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	gap: 4px; /* Уменьшенный отступ между иконкой и текстом */
+	color: var(--text-primary);
+	text-decoration: none;
 }
 
 .project-card .likes-count i {
-    color: var(--text-secondary);
-    transition: all 0.3s ease;
+	color: var(--accent);
+	transition: all 0.3s ease;
 }
 
 .project-card .likes-count:hover {
-    background: rgba(255, 255, 255, 0.2);
-    cursor: pointer;
+	background: rgba(255, 255, 255, 0.25);
+	cursor: pointer;
 }
 
 .project-card .likes-count:hover i {
-    color: var(--highlight);
-    transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+.project-card .project-author {
+	font-size: 0.85rem; /* Уменьшенный размер шрифта */
+	color: var(--text-secondary);
+	transition: color 0.3s ease;
+	text-decoration: none;
+	display: inline-flex; /* Улучшенное выравнивание */
+	align-items: center;
+	white-space: nowrap; /* Предотвращаем перенос имени */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 150px; /* Ограничиваем ширину длинных имен */
+}
+
+.project-card .author:hover {
+	color: var(--accent-gold);
+}
+
+.project-card .vision-btn {
+	margin: 0; /* Убраны все отступы */
+	padding: 5px 12px; /* Уменьшенные отступы для кнопки */
+	font-size: 0.85rem; /* Уменьшенный размер текста */
+	min-width: 70px; /* Фиксированная ширина */
+	text-align: center;
+}
+
+/* Горизонтальный скроллер для проектов */
+.user-projects-scroll {
+	display: flex;
+	gap: 20px;
+	overflow-x: auto;
+	padding: 12px 0;
+	margin: 0 -5px;
+	padding: 5px;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+}
+
+.user-projects-scroll .project-card {
+	min-width: 300px;
+	width: 300px;
+	flex: 0 0 auto;
 }
 
 .user-projects-scroll::-webkit-scrollbar {
-    height: 8px;
+	height: 8px;
 }
 
 .user-projects-scroll::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 4px;
 }
 
 .user-projects-scroll::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 4px;
 }
 
 .user-projects-scroll::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+	background: rgba(255, 255, 255, 0.3);
+}
+
+/* Сетка проектов */
+.projects-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 20px;
+}
+
+/* Адаптивность для разных экранов */
+@media (max-width: 1024px) {
+	.dashboard-header {
+		grid-template-columns: 1fr;
+	}
+
+	.projects-grid {
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	}
+}
+
+@media (max-width: 768px) {
+	.user-projects-scroll {
+		margin: 0 -15px;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	.user-projects-scroll .project-card {
+		min-width: 280px;
+		width: 280px;
+	}
+}
+
+/* Стили для футера карточки проекта */
+.project-card .project-footer {
+	margin-top: auto; /* Прижимает футер к низу карточки */
+	padding-top: 12px; /* Отступ сверху */
+	border-top: 1px solid rgba(255, 255, 255, 0.12); /* Высококонтрастная разделительная линия */
+}
+
+.project-card .project-info-line {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 8px; /* Отступ между элементами */
+	width: 100%;
+	overflow: hidden;
+}
+
+.project-card .author-avatar {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(
+		255,
+		255,
+		255,
+		0.15
+	); /* Увеличена контрастность для фона аватара */
+	margin-right: 8px;
+	border: 1px solid rgba(255, 255, 255, 0.2); /* Добавлена граница для лучшей видимости */
+}
+
+.project-card .author-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.project-card .avatar-placeholder {
+	font-size: 12px;
+	color: #fff;
+	font-weight: bold;
+}
+
+.project-card .project-date {
+	font-size: 0.8rem; /* Уменьшенный размер шрифта */
+	color: rgba(
+		255,
+		255,
+		255,
+		0.95
+	); /* Ещё выше контрастность для лучшей видимости */
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.project-card .meta-separator {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 0.85rem;
+	line-height: 0.8;
+}
+
+.project-card .project-meta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
 }

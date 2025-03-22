@@ -69,3 +69,34 @@
 	</div>
 </div>
 {% endblock %}
+
+<script>
+// Wait until the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const termsCheckbox = document.getElementById('terms');
+    const submitButton = document.querySelector('button[type="submit"]');
+    const publicProfileCheckbox = document.getElementById('is_public_profile');
+    
+    // Function to check the state of the terms checkbox
+    function updateSubmitButton() {
+        if (termsCheckbox.checked) {
+            submitButton.disabled = false;
+            submitButton.classList.remove('disabled');
+        } else {
+            submitButton.disabled = true;
+            submitButton.classList.add('disabled');
+        }
+    }
+    
+    // Set initial button state
+    updateSubmitButton();
+    
+    // Add event handler for checkbox state change
+    termsCheckbox.addEventListener('change', updateSubmitButton);
+    
+    // Check functionality of the public profile flag
+    publicProfileCheckbox.addEventListener('change', function() {
+        console.log('Public profile:', this.checked);
+    });
+});
+</script>

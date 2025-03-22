@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFi
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
-from ..database import get_db
-from ..models import User, UserFollow
+from app.database import get_db
+from app.models import User, UserFollow
 from typing import Optional
 from datetime import datetime
 import os
@@ -14,9 +14,12 @@ router = APIRouter(prefix="/users", tags=["users"])
 templates = Jinja2Templates(directory="templates")
 
 # Перенаправление /profile на /profile/{id}
+
+
 @router.get("/profile")
 async def profile_redirect(request: Request, current_user: User = Depends(get_current_user)):
     return RedirectResponse(url=f"/users/profile/{current_user.id}")
+
 
 @router.post("/profile/{user_id}/update")
 async def update_profile(
@@ -31,20 +34,21 @@ async def update_profile(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You can only update your own profile"
         )
-    
+
     form = await request.form()
-    
+
     # Обновление информации о пользователе
     current_user.full_name = form.get("full_name", current_user.full_name)
-    current_user.phone_number = form.get("phone_number", current_user.phone_number)
-    
+    current_user.phone_number = form.get(
+        "phone_number", current_user.phone_number)
+
     # Правильная обработка чекбоксов
     # Если чекбокс отмечен, его значение будет в form, если не отмечен - его не будет
     current_user.is_public_profile = "is_public_profile" in form
     current_user.is_email_notifications_enabled = "is_email_notifications_enabled" in form
-    
+
     db.commit()
-    
+
     # Перенаправляем на страницу профиля с уведомлением об успешном обновлении
     return RedirectResponse(
         url=f"/users/profile/{user_id}",
@@ -53,6 +57,7 @@ async def update_profile(
             "HX-Trigger": '{"showToast": {"message": "Profile updated successfully", "type": "success"}}'
         }
     )
+
 
 @router.post("/profile/{user_id}/avatar")
 async def update_avatar(
@@ -73,42 +78,45 @@ async def update_avatar(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="File must be an image"
         )
-    
+
     # Создаём директорию static/avatars
     static_dir = "static"
     avatar_dir = os.path.join(static_dir, "avatars")
     os.makedirs(avatar_dir, exist_ok=True)
-    
+
     # Save and process avatar
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"avatar_{current_user.id}_{timestamp}.jpg"
     filepath = os.path.join(avatar_dir, filename)
-    
+
     # Save and resize image
     image = Image.open(avatar.file)
     image.thumbnail((200, 200))  # Resize to maximum dimensions
-    
+
     # Конвертируем RGBA в RGB, если необходимо
     if image.mode == 'RGBA':
         # Создаём новое изображение RGB и смешиваем с белым фоном
         rgb_img = Image.new('RGB', image.size, (255, 255, 255))
         rgb_img.paste(image, mask=image.split()[3])  # 3 - это альфа-канал
         image = rgb_img
-    
+
     image.save(filepath, "JPEG", quality=90)
-    
+
     # Update user avatar URL
     current_user.avatar_url = f"/static/avatars/{filename}"
     db.commit()
-    
+
     return {"message": "Avatar updated successfully"}
+
 
 @router.get("/notifications")
 async def notifications_page(request: Request, current_user: User = Depends(get_current_user)):
     return templates.TemplateResponse(
         "users/notifications.html",
-        {"request": request, "user": current_user, "notifications": current_user.notifications}
+        {"request": request, "user": current_user,
+            "notifications": current_user.notifications}
     )
+
 
 @router.post("/notifications/{notification_id}/read")
 async def mark_notification_read(
@@ -120,17 +128,18 @@ async def mark_notification_read(
         (n for n in current_user.notifications if n.id == notification_id),
         None
     )
-    
+
     if not notification:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Notification not found"
         )
-    
+
     notification.is_read = True
     db.commit()
-    
+
     return {"message": "Notification marked as read"}
+
 
 @router.get("/profile/{user_id}")
 async def view_user_profile(
@@ -154,10 +163,10 @@ async def view_user_profile(
             },
             status_code=404
         )
-    
+
     # Проверка, является ли это собственным профилем или публичным
     is_own_profile = current_user and current_user.id == user_id
-    
+
     # Если профиль приватный и это не собственный профиль
     if not is_own_profile and not user.is_public_profile:
         return templates.TemplateResponse(
@@ -171,15 +180,16 @@ async def view_user_profile(
             },
             status_code=403
         )
-    
+
     # Получение публичных проектов
     public_projects = [p for p in user.projects if p.is_public]
-    
+
     # Проверка, подписан ли текущий пользователь на просматриваемого
     is_following = False
     if current_user:
-        is_following = any(follow.followed_id == user_id for follow in current_user.following)
-    
+        is_following = any(follow.followed_id ==
+                           user_id for follow in current_user.following)
+
     return templates.TemplateResponse(
         "users/profile.html",
         {
@@ -194,6 +204,8 @@ async def view_user_profile(
     )
 
 # Маршрут для редактирования профиля
+
+
 @router.get("/profile/{user_id}/edit")
 async def edit_profile(user_id: int, request: Request, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     # Редактировать можно только свой профиль
@@ -201,6 +213,8 @@ async def edit_profile(user_id: int, request: Request, current_user: User = Depe
         return RedirectResponse(url=f"/users/profile/{user_id}")
 
 # Маршрут для просмотра списка подписчиков пользователя
+
+
 @router.get("/profile/{user_id}/followers")
 async def view_followers(
     user_id: int,
@@ -222,7 +236,7 @@ async def view_followers(
             },
             status_code=404
         )
-    
+
     # Проверка доступа к профилю (публичный или владелец)
     is_owner = current_user and current_user.id == user_profile.id
     if not user_profile.is_public_profile and not is_owner:
@@ -237,11 +251,11 @@ async def view_followers(
             },
             status_code=403
         )
-    
+
     # Получение списка подписчиков
     followers = user_profile.followers
     followers_users = [follow.follower for follow in followers]
-    
+
     return templates.TemplateResponse(
         "users/users_list.html",
         {
@@ -255,6 +269,8 @@ async def view_followers(
     )
 
 # Маршрут для просмотра списка подписок пользователя
+
+
 @router.get("/profile/{user_id}/following")
 async def view_following(
     user_id: int,
@@ -276,7 +292,7 @@ async def view_following(
             },
             status_code=404
         )
-    
+
     # Проверка доступа к профилю (публичный или владелец)
     is_owner = current_user and current_user.id == user_profile.id
     if not user_profile.is_public_profile and not is_owner:
@@ -291,11 +307,11 @@ async def view_following(
             },
             status_code=403
         )
-    
+
     # Получение списка подписок
     following = user_profile.following
     following_users = [follow.followed for follow in following]
-    
+
     return templates.TemplateResponse(
         "users/users_list.html",
         {
@@ -309,6 +325,8 @@ async def view_following(
     )
 
 # Маршрут для просмотра списка лайков проекта
+
+
 @router.get("/projects/{project_id}/likes")
 async def view_project_likes(
     project_id: int,
@@ -316,8 +334,8 @@ async def view_project_likes(
     current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db)
 ):
-    from ..models import Project, ProjectLike
-    
+    from app.models import Project, ProjectLike
+
     # Получение проекта по ID
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
@@ -332,7 +350,7 @@ async def view_project_likes(
             },
             status_code=404
         )
-    
+
     # Проверка доступа к проекту (публичный или владелец)
     is_owner = current_user and current_user.id == project.owner_id
     if not project.is_public and not is_owner:
@@ -347,11 +365,12 @@ async def view_project_likes(
             },
             status_code=403
         )
-    
+
     # Получение списка пользователей, которые лайкнули проект
-    likes = db.query(ProjectLike).filter(ProjectLike.project_id == project_id).all()
+    likes = db.query(ProjectLike).filter(
+        ProjectLike.project_id == project_id).all()
     users_who_liked = [like.user for like in likes]
-    
+
     return templates.TemplateResponse(
         "users/likes_list.html",
         {
@@ -364,6 +383,8 @@ async def view_project_likes(
     )
 
 # Маршрут для просмотра списка подписчиков
+
+
 @router.get("/profile/{user_id}/followers")
 async def view_followers(
     user_id: int,
@@ -385,7 +406,7 @@ async def view_followers(
             },
             status_code=404
         )
-    
+
     # Проверка доступа (публичный профиль или собственный)
     is_own_profile = current_user and current_user.id == user_id
     if not user.is_public_profile and not is_own_profile:
@@ -400,10 +421,10 @@ async def view_followers(
             },
             status_code=403
         )
-    
+
     # Получение списка подписчиков
     followers = [follow.follower for follow in user.followers]
-    
+
     return templates.TemplateResponse(
         "users/users_list.html",
         {
@@ -417,6 +438,8 @@ async def view_followers(
     )
 
 # Маршрут для просмотра списка подписок
+
+
 @router.get("/profile/{user_id}/following")
 async def view_following(
     user_id: int,
@@ -438,7 +461,7 @@ async def view_following(
             },
             status_code=404
         )
-    
+
     # Проверка доступа (публичный профиль или собственный)
     is_own_profile = current_user and current_user.id == user_id
     if not user.is_public_profile and not is_own_profile:
@@ -453,10 +476,10 @@ async def view_following(
             },
             status_code=403
         )
-    
+
     # Получение списка подписок
     following = [follow.followed for follow in user.following]
-    
+
     return templates.TemplateResponse(
         "users/users_list.html",
         {
@@ -470,6 +493,8 @@ async def view_following(
     )
 
 # API-маршрут для подписки/отписки от пользователя
+
+
 @router.post("/{user_id}/follow")
 async def follow_user(
     user_id: int,
@@ -478,23 +503,26 @@ async def follow_user(
 ):
     if current_user.id == user_id:
         return {"success": False, "message": "Вы не можете подписаться на самого себя"}
-    
+
     # Проверяем, существует ли пользователь, на которого хотим подписаться
     target_user = db.query(User).filter(User.id == user_id).first()
     if not target_user:
         raise HTTPException(status_code=404, detail="Пользователь не найден")
-    
+
+    # Импортируем функцию создания уведомлений
+    from app.routers.notifications import create_notification
+
     # Проверяем, подписаны ли мы уже на этого пользователя
     existing_follow = db.query(UserFollow).filter(
         UserFollow.follower_id == current_user.id,
         UserFollow.followed_id == user_id
     ).first()
-    
+
     if existing_follow:
         # Отписываемся
         db.delete(existing_follow)
         db.commit()
-        return {"success": True, "message": f"Вы отписались от пользователя {target_user.full_name}", "action": "unfollowed"}
+        return {"status": "success", "message": f"Вы отписались от пользователя {target_user.full_name}", "action": "unfollowed"}
     else:
         # Подписываемся
         new_follow = UserFollow(
@@ -502,5 +530,15 @@ async def follow_user(
             followed_id=user_id
         )
         db.add(new_follow)
+
+        # Создаем уведомление для пользователя, на которого подписались
+        create_notification(
+            db=db,
+            user_id=user_id,
+            notification_type="follow",
+            title="Новый подписчик",
+            content=f"{current_user.full_name} подписался на вас"
+        )
+
         db.commit()
-        return {"success": True, "message": f"Вы подписались на пользователя {target_user.full_name}", "action": "followed"}
+        return {"status": "success", "message": f"Вы подписались на пользователя {target_user.full_name}", "action": "followed"}

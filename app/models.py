@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Float, Text
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Float, Text, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -72,6 +72,7 @@ class Project(Base):
 
     owner = relationship("User", back_populates="projects")
     shared_users = relationship("ProjectShare", back_populates="project")
+    midi_files = relationship("MidiFile", back_populates="project")
     
     likes = relationship("ProjectLike", back_populates="project")
 
@@ -122,3 +123,34 @@ class UserFollow(Base):
 
     follower = relationship("User", foreign_keys=[follower_id], back_populates="following")
     followed = relationship("User", foreign_keys=[followed_id], back_populates="followers")
+
+
+class MidiFile(Base):
+    __tablename__ = "midi_files"
+
+    id = Column(Integer, primary_key=True, index=True)
+    project_id = Column(Integer, ForeignKey("projects.id"))
+    filename = Column(String)
+    original_filename = Column(String)
+    file_path = Column(String)  # путь к файлу MIDI
+    midi_data = Column(JSON, nullable=True)  # данные о нотах, аккордах и т.д.
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = relationship("Project", back_populates="midi_files")
+    tablatures = relationship("Tablature", back_populates="midi_file")
+
+
+class Tablature(Base):
+    __tablename__ = "tablatures"
+
+    id = Column(Integer, primary_key=True, index=True)
+    midi_file_id = Column(Integer, ForeignKey("midi_files.id"))
+    tab_data = Column(JSON, nullable=False)  # Данные табулатуры в JSON формате
+    tab_text = Column(Text, nullable=True)  # Текстовое представление табулатуры
+    is_edited = Column(Boolean, default=False)  # Была ли табулатура отредактирована
+    last_edited_at = Column(DateTime, nullable=True)  # Время последнего редактирования
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    midi_file = relationship("MidiFile", back_populates="tablatures")

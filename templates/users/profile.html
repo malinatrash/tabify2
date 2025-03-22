@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{# Импортируем макрос для карточки проекта #}
+{% from "components/project_card.html" import project_card, is_liked %}
+
 {% block content %}
 <div class="container mt-5 mb-5">
 	<div class="vision-glass-card fade-in profile-container">
@@ -116,32 +119,38 @@
 		<h3 class="section-title">Public Projects</h3>
 		<div class="projects-grid">
 			{% for project in public_projects %}
-			<div class="vision-glass-card project-card fade-in">
-				<h3 class="project-title">{{ project.title }}</h3>
-				<p class="project-description">{{ project.description or 'No description provided' }}</p>
-				<div class="project-meta">
-					<span class="project-date">Created: {{ project.created_at.strftime('%B %d, %Y') }}</span>
-					<div class="project-info">
-						<a href="/projects/{{ project.id }}/likes" class="likes-link"><span class="likes-count">❤️ {{
-								project.likes|length }}</span></a>
-					</div>
-				</div>
-				<div class="project-actions">
-					<a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">View Project</a>
-				</div>
-			</div>
+				{{ project_card(project, current_user) }}
 			{% endfor %}
 		</div>
+		{% if not public_projects %}
+		<div class="empty-state fade-in">
+			<p>No public projects yet.</p>
+			{% if is_own_profile %}
+			<a href="/projects/new" class="vision-btn vision-btn-primary">Create Your First Project</a>
+			{% endif %}
+		</div>
+		{% endif %}
 	</div>
 	{% endif %}
 </div>
 
 <script>
 	function followUser(userId) {
-		// Преобразуем userId в число, если это строка
+		// Convert userId to a number if it's a string
 		if (typeof userId === 'string') {
 			userId = parseInt(userId, 10)
 		}
+
+		// Получаем кнопку подписки
+		const followBtn = document.querySelector(`.follow-btn[data-user-id="${userId}"]`)
+		const originalText = followBtn ? followBtn.textContent : ''
+		
+		// Показываем индикатор загрузки на кнопке
+		if (followBtn) {
+			followBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'
+			followBtn.disabled = true
+		}
+		
 		fetch(`/users/${userId}/follow`, {
 			method: 'POST',
 			headers: {
@@ -150,25 +159,66 @@
 		})
 			.then(response => response.json())
 			.then(data => {
-				if (data.success) {
-					window.toast.success(data.message)
-					location.reload()
+				if (data.status === 'success') {
+					// Показываем уведомление с высокой контрастностью
+					window.toast.success(data.message, {
+						duration: 3000,
+						style: {
+							background: 'rgba(15, 25, 40, 0.97)', // Высокая непрозрачность
+							color: '#ffffff'
+						}
+					})
+					
+					// Обновляем интерфейс без перезагрузки
+					const isNowFollowing = data.action === 'followed'
+					
+					// Обновляем кнопку подписки
+					if (followBtn) {
+						followBtn.disabled = false
+						if (isNowFollowing) {
+							followBtn.textContent = 'Unfollow'
+						} else {
+							followBtn.textContent = 'Follow'
+						}
+					}
+					
+					// Обновляем счетчик подписчиков
+					const followersStat = document.querySelector('a[href$="/followers"] span strong')
+					if (followersStat) {
+						let currentCount = parseInt(followersStat.textContent, 10)
+						if (isNowFollowing) {
+							currentCount += 1
+						} else {
+							currentCount = Math.max(0, currentCount - 1)
+						}
+						followersStat.textContent = currentCount
+					}
 				} else {
+					// В случае ошибки восстанавливаем оригинальный текст кнопки
 					window.toast.error(data.message)
+					if (followBtn) {
+						followBtn.disabled = false
+						followBtn.textContent = originalText
+					}
 				}
 			})
 			.catch(error => {
+				// В случае ошибки восстанавливаем оригинальный текст кнопки
 				window.toast.error('An error occurred while processing your request.')
+				if (followBtn) {
+					followBtn.disabled = false
+					followBtn.textContent = originalText
+				}
 			})
 	}
 
-	// Обработка загрузки аватарки
+	// Handle avatar upload
 	document.addEventListener('DOMContentLoaded', function () {
 		const avatarOverlay = document.getElementById('avatarUploadOverlay')
 		const avatarInput = document.getElementById('avatarInput')
 		const avatarForm = document.getElementById('avatarForm')
 
-		// Обработчик для кнопки подписки
+		// Handler for the follow button
 		const followBtn = document.querySelector('.follow-btn')
 		if (followBtn) {
 			followBtn.addEventListener('click', function () {
@@ -196,7 +246,7 @@
 						.then(data => {
 							if (data.message) {
 								window.toast.success(data.message)
-								// Обновить изображение на странице без перезагрузки
+								// Update the image on the page without reloading
 								setTimeout(() => {
 									location.reload()
 								}, 1000)

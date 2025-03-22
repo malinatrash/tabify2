@@ -1,15 +1,29 @@
 :root {
+	/* Основной любимый цвет */
 	--primary: #00a896;
-	--secondary: #017e5d;
-	--accent: #00a896;
-	--highlight: #02c39a;
-	--background: rgba(255, 255, 255, 0.05);
-	--text-primary: #ffffff;
-	--text-secondary: rgba(255, 255, 255, 0.7);
-	--glass-bg: rgba(255, 255, 255, 0.1);
-	--glass-border: rgba(255, 255, 255, 0.2);
-	--glass-shadow: rgba(0, 0, 0, 0.1);
-	--blur-strength: 12px;
+	
+	/* Новая, более контрастная палитра дополнительных цветов */
+	--secondary: #017e5d;       /* Темно-бирюзовый для градиента фона */
+	--accent: #ff6b6b;          /* Коралловый для акцентов и призывов к действию */
+	--highlight: #02c39a;       /* Яркий зеленый для выделений */
+	
+	/* Дополнительные акцентные цвета */
+	--accent-purple: #8075ff;   /* Фиолетовый для дополнительных акцентов */
+	--accent-gold: #ffd166;     /* Золотой для выделения премиум-функций */
+	
+	/* Дополнительные фоны с повышенной контрастностью */
+	--background: #004e46;      /* Темно-бирюзовый для дополнительных элементов */
+	--background-alt: #006657;  /* Средний бирюзовый для альтернативных фонов */
+	
+	/* Цвета текста */
+	--text-primary: #ffffff;    /* Белый для основного текста */
+	--text-secondary: rgba(255, 255, 255, 0.87); /* Повышаем контрастность второстепенного текста */
+	
+	/* Стеклянный эффект */
+	--glass-bg: rgba(0, 78, 70, 0.9);        /* Бирюзовый полупрозрачный фон */
+	--glass-border: rgba(0, 168, 150, 0.4);    /* Границы с оттенком основного цвета */
+	--glass-shadow: rgba(0, 0, 0, 0.25);       /* Более выраженные тени */
+	--blur-strength: 10px;
 }
 
 * {
@@ -22,6 +36,7 @@ body {
 	font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
 		Roboto, sans-serif;
 	background: linear-gradient(135deg, var(--primary), var(--secondary));
+	background-attachment: fixed;
 	color: var(--text-primary);
 	line-height: 1.6;
 	min-height: 100vh;

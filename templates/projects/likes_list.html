@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="vision-glass-card fade-in">
+        <div class="likes-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Users who liked "{{ project.title }}"</h2>
+                <a href="/projects/{{ project.id }}" class="vision-btn vision-btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back to Project
+                </a>
+            </div>
+            <p class="text-muted">{{ project.likes|length }} {% if project.likes|length == 1 %}user{% else %}users{% endif %} liked this project</p>
+        </div>
+
+        <div class="likes-list-container mt-4">
+            {% if project.likes %}
+                {% for like in project.likes %}
+                    <div class="user-item">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                {% if like.user.avatar_url %}
+                                    <img src="{{ like.user.avatar_url }}" alt="{{ like.user.full_name }}">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        {{ like.user.full_name[:1] }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="user-details">
+                                <a href="/users/profile/{{ like.user.id }}" class="user-name">{{ like.user.full_name }}</a>
+                                <span class="user-since">Liked on {{ like.created_at.strftime('%B %d, %Y') }}</span>
+                            </div>
+                        </div>
+                        
+                        {% if current_user.id != like.user.id %}
+                            <button class="follow-btn vision-btn vision-btn-sm" data-user-id="{{ like.user.id }}">
+                                {% if like.user.id in following_ids %}
+                                    <i class="fas fa-user-minus"></i> Unfollow
+                                {% else %}
+                                    <i class="fas fa-user-plus"></i> Follow
+                                {% endif %}
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-heart-broken"></i>
+                    <p>No likes yet</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .likes-header {
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .likes-header h2 {
+        color: var(--primary-color);
+        margin-bottom: 5px;
+    }
+    
+    .user-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+    }
+    
+    .user-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+    
+    .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    
+    .user-details {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .user-name {
+        font-weight: bold;
+        color: var(--text-color);
+        text-decoration: none;
+    }
+    
+    .user-name:hover {
+        color: var(--primary-color);
+    }
+    
+    .user-since {
+        font-size: 0.85rem;
+        color: var(--secondary-text-color);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px 0;
+        color: var(--secondary-text-color);
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.6;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Находим все кнопки подписки
+        const followButtons = document.querySelectorAll('.follow-btn');
+        
+        // Добавляем обработчик событий для каждой кнопки
+        followButtons.forEach(btn => {
+            // Сохраняем оригинальный HTML для восстановления в случае ошибки
+            const originalHTML = btn.innerHTML;
+            
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                const buttons = document.querySelectorAll(`.follow-btn[data-user-id="${userId}"]`);
+                const originalHTML = [];
+                
+                // Сохраняем оригинальный HTML всех кнопок для одного пользователя
+                buttons.forEach(button => {
+                    originalHTML.push(button.innerHTML);
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                });
+                
+                // Отправляем запрос на подписку/отписку
+                fetch(`/users/${userId}/follow`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Обновляем все кнопки для этого пользователя
+                        buttons.forEach(btn => {
+                            btn.disabled = false;
+                            
+                            // Обновляем текст кнопки в зависимости от действия
+                            if (data.action === 'followed') {
+                                btn.innerHTML = '<i class="fas fa-user-minus"></i> Unfollow';
+                                
+                                // Показываем toast уведомление
+                                window.toast.success('You are now following this user', {
+                                    duration: 3000,
+                                    style: {
+                                        background: 'rgba(15, 25, 40, 0.97)', // Повышенная контрастность
+                                        color: '#ffffff'
+                                    }
+                                });
+                            } else {
+                                btn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+                                
+                                // Показываем toast уведомление
+                                window.toast.info('You unfollowed this user', {
+                                    duration: 3000,
+                                    style: {
+                                        background: 'rgba(15, 25, 40, 0.97)', // Повышенная контрастность
+                                        color: '#ffffff'
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        // В случае ошибки восстанавливаем оригинальный текст кнопки
+                        window.toast.error(data.message || 'Error processing your request', {
+                            duration: 3000,
+                            style: {
+                                background: 'rgba(15, 25, 40, 0.97)', // Повышенная контрастность
+                                color: '#ffffff'
+                            }
+                        });
+                        
+                        buttons.forEach((btn, index) => {
+                            btn.disabled = false;
+                            btn.innerHTML = originalHTML[index];
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    window.toast.error('An error occurred while processing your request', {
+                        duration: 3000,
+                        style: {
+                            background: 'rgba(15, 25, 40, 0.97)', // Повышенная контрастность
+                            color: '#ffffff'
+                        }
+                    });
+                    
+                    // Восстанавливаем оригинальный текст кнопки
+                    buttons.forEach((btn, index) => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML[index];
+                    });
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -8,6 +8,12 @@
 	padding: 24px;
 	margin-bottom: 24px;
 	box-shadow: 0 8px 32px var(--glass-shadow);
+	transition: all 0.3s ease;
+}
+
+.vision-glass-card:hover {
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+	border-color: rgba(0, 168, 150, 0.4);
 }
 
 /* Buttons */
@@ -27,16 +33,16 @@
 	cursor: pointer;
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 	letter-spacing: 0.3px;
 	margin: 0 8px;
 }
 
 .vision-btn:hover {
-	background: rgba(255, 255, 255, 0.2);
+	background: rgba(255, 255, 255, 0.25);
 	transform: translateY(-2px);
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-	border-color: rgba(255, 255, 255, 0.4);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+	border-color: rgba(0, 168, 150, 0.5);
 }
 
 .vision-btn-primary {
@@ -48,6 +54,17 @@
 .vision-btn-primary:hover {
 	background: linear-gradient(135deg, var(--highlight), var(--primary));
 	box-shadow: 0 8px 25px rgba(2, 195, 154, 0.4);
+}
+
+.vision-btn-accent {
+	background: linear-gradient(135deg, var(--accent), #ff8f8f);
+	border-color: var(--accent);
+	box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.vision-btn-accent:hover {
+	background: linear-gradient(135deg, #ff8f8f, var(--accent));
+	box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
 }
 
 .vision-btn-secondary {
@@ -229,6 +246,50 @@
 
 .profile-avatar-editable:hover .avatar-upload-overlay {
 	opacity: 1;
+}
+
+/* Premium Link Styles */
+.premium-link {
+    position: relative;
+}
+
+.premium-link i {
+    color: #ffb600;
+}
+
+.premium-active {
+    background: linear-gradient(135deg, rgba(255, 209, 102, 0.3), rgba(255, 182, 0, 0.15));
+    border: 1px solid rgba(255, 209, 102, 0.5);
+    border-radius: 8px;
+}
+
+.premium-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffb600, #ffd166);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    vertical-align: text-top;
+}
+
+.user-premium-badge {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #ffb600, #ffd166);
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin: 5px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.premium-icon {
+    margin-right: 5px;
 }
 
 .avatar-upload-overlay {

@@ -14,25 +14,698 @@
 	<link rel="stylesheet" href="/static/css/profile.css" type="text/css">
 	<link rel="stylesheet" href="/static/css/auth.css" type="text/css">
 	<link rel="stylesheet" href="/static/css/users.css" type="text/css">
-	
-	<!-- Font Awesome для иконок -->
+	<link rel="stylesheet" href="/static/css/premium.css" type="text/css">
+	<meta name="theme-color" content="var(--primary-color)">
+	<!-- Font Awesome for icons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 	<script src="/static/js/toast.js"></script>
+	{% block head_scripts %}{% endblock %}
+	{% block head_extra %}{% endblock %}
+	<style>
+		/* Styles for navigation */
+		.navbar {
+			background: var(--glass-bg);
+			backdrop-filter: blur(var(--blur-strength, 10px));
+			-webkit-backdrop-filter: blur(var(--blur-strength, 10px));
+			border-bottom: 1px solid var(--glass-border);
+			padding: 14px 24px;
+			position: sticky;
+			top: 0;
+			z-index: 1000;
+			margin-bottom: 30px;
+			box-shadow: 0 4px 24px var(--glass-shadow);
+			transition: all 0.3s ease;
+		}
+
+		.nav-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			max-width: 1440px;
+			margin: 0 auto;
+		}
+
+		.nav-brand {
+			display: flex;
+			align-items: center;
+		}
+
+		.brand-logo {
+			font-size: 1.5rem;
+			font-weight: 700;
+			color: #fff;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			transition: transform 0.3s ease;
+		}
+
+		.brand-logo:hover {
+			transform: scale(1.05);
+		}
+
+		.nav-group {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+		}
+
+		.nav-link {
+			color: #fff;
+			text-decoration: none;
+			font-weight: 500;
+			padding: 8px 16px;
+			border-radius: 12px;
+			transition: all 0.2s ease;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			background: rgba(255, 255, 255, 0.05);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.nav-link:hover {
+			background: rgba(255, 255, 255, 0.15);
+			transform: translateY(-2px);
+			border-color: rgba(255, 255, 255, 0.3);
+		}
+
+		.nav-link-primary {
+			background: linear-gradient(135deg, var(--primary), var(--highlight, #02c39a));
+			border-color: var(--highlight, #02c39a);
+			box-shadow: 0 4px 15px rgba(2, 195, 154, 0.3);
+		}
+
+		.nav-link-primary:hover {
+			background: linear-gradient(135deg, var(--highlight, #02c39a), var(--primary));
+			box-shadow: 0 8px 25px rgba(2, 195, 154, 0.4);
+		}
+
+		.nav-link-logout {
+			background: rgba(255, 255, 255, 0.05);
+			border-color: rgba(255, 255, 255, 0.2);
+		}
+
+		.mobile-menu-btn {
+			display: none;
+			background: none;
+			border: none;
+			color: var(--text-color, #fff);
+			font-size: 1.5rem;
+			cursor: pointer;
+			padding: 0.5rem;
+		}
+
+		/* Styles for premium subscription */
+		.premium-link {
+			position: relative;
+			overflow: visible;
+		}
+
+		.premium-link i {
+			color: var(--accent-gold);
+			transition: all 0.3s ease;
+		}
+
+		.premium-link:hover i {
+			transform: rotate(15deg) scale(1.2);
+		}
+
+		.premium-active {
+			background: linear-gradient(135deg, rgba(255, 209, 102, 0.15), rgba(255, 182, 0, 0.05));
+			border: 1px solid rgba(255, 209, 102, 0.3);
+		}
+
+		.premium-badge {
+			background: linear-gradient(135deg, #ffd166, #ffb600);
+			color: #000;
+			font-size: 0.65rem;
+			font-weight: 700;
+			padding: 2px 6px;
+			border-radius: 10px;
+			margin-left: 5px;
+			letter-spacing: 0.5px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+		}
+
+		.user-premium-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			background: linear-gradient(135deg, var(--accent-gold), #ffb600);
+			color: #000;
+			font-size: 0.7rem;
+			font-weight: 700;
+			padding: 3px 8px;
+			border-radius: 12px;
+			margin-left: 8px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+			vertical-align: middle;
+		}
+
+		.premium-icon {
+			font-size: 0.8rem;
+			margin-right: 2px;
+		}
+
+		/* Styles for notifications */
+		.notifications-wrapper {
+			position: relative;
+			margin-left: 8px;
+			z-index: 1100;
+		}
+
+		.notifications-btn {
+			background: rgba(255, 255, 255, 0.05);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			color: var(--text-color, #fff);
+			font-size: 1.1rem;
+			cursor: pointer;
+			padding: 8px;
+			position: relative;
+			border-radius: 12px;
+			width: 38px;
+			height: 38px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s ease;
+		}
+
+		.notification-badge {
+			position: absolute;
+			top: 0;
+			right: 0;
+			background-color: var(--primary-color);
+			color: white;
+			border-radius: 50%;
+			min-width: 18px;
+			height: 18px;
+			font-size: 0.7rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 2px;
+			transform: translate(30%, -30%);
+		}
+
+		.notifications-dropdown {
+			position: absolute;
+			right: 0;
+			top: 100%;
+			background-color: rgba(30, 30, 30, 0.95);
+			border-radius: 12px;
+			width: 350px;
+			max-height: 450px;
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+			overflow: hidden;
+			z-index: 1000;
+			display: none;
+			border: 1px solid rgba(255, 255, 255, 0.15);
+			margin-top: 10px;
+			backdrop-filter: blur(10px);
+		}
+
+		.notifications-header {
+			padding: 14px 16px;
+			border-bottom: 2px solid var(--border-color);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background-color: var(--card-bg);
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.notifications-header h3 {
+			margin: 0;
+			font-size: 1rem;
+		}
+
+		.mark-all-read-btn {
+			background: none;
+			border: none;
+			color: var(--primary-color);
+			cursor: pointer;
+			font-size: 0.85rem;
+			font-weight: 500;
+			padding: 3px 8px;
+			border-radius: 4px;
+			transition: background-color 0.2s;
+		}
+
+		.mark-all-read-btn:hover {
+			background-color: rgba(var(--primary-color-rgb), 0.1);
+		}
+
+		.notifications-list {
+			max-height: 320px;
+			overflow-y: auto;
+			padding: 8px 5px;
+			background-color: var(--background-color);
+		}
+
+		.notification-item {
+			padding: 14px 16px;
+			border-bottom: 1px solid var(--border-color);
+			cursor: pointer;
+			transition: background-color 0.2s, transform 0.1s;
+			margin: 3px 5px;
+			border-radius: 8px;
+		}
+
+		.notification-item:hover {
+			background-color: rgba(255, 255, 255, 0.1);
+			transform: translateX(2px);
+		}
+
+		.notification-item.unread {
+			background-color: rgba(var(--primary-color-rgb), 0.15);
+			border-left: 3px solid var(--primary-color);
+		}
+
+		.notification-title {
+			font-weight: bold;
+			font-size: 0.95rem;
+			margin-bottom: 6px;
+			display: flex;
+			justify-content: space-between;
+			color: var(--heading-color, #fff);
+		}
+
+		.notification-time {
+			font-size: 0.75rem;
+			color: var(--text-muted);
+		}
+
+		.notification-content {
+			font-size: 0.88rem;
+			color: var(--text-color);
+			margin-bottom: 0;
+			line-height: 1.4;
+		}
+
+		.notification-icon {
+			margin-right: 10px;
+			display: inline-block;
+			width: 20px;
+			text-align: center;
+		}
+
+		.notification-loading {
+			padding: 20px;
+			text-align: center;
+			color: var(--text-muted);
+		}
+
+		.notifications-footer {
+			padding: 12px 16px;
+			text-align: center;
+			border-top: 2px solid var(--border-color);
+			background-color: var(--card-bg);
+		}
+
+		.view-all-btn {
+			text-decoration: none;
+			color: var(--primary-color);
+			font-size: 0.9rem;
+			font-weight: 500;
+			padding: 5px 10px;
+			border-radius: 4px;
+			transition: background-color 0.2s;
+			display: inline-block;
+		}
+
+		.view-all-btn:hover {
+			background-color: rgba(var(--primary-color-rgb), 0.1);
+		}
+
+		.empty-notifications {
+			padding: 30px 15px;
+			text-align: center;
+			color: var(--text-muted);
+		}
+
+		/* Стили для унифицированной карточки проекта */
+		.project-card {
+			display: flex;
+			flex-direction: column;
+			background: rgba(15, 25, 40, 0.97);
+			/* Ещё выше контрастность */
+			border-radius: 12px;
+			overflow: hidden;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+			/* Более заметная тень */
+			transition: all 0.3s ease;
+			height: 100%;
+			padding: 20px;
+			border: 1px solid rgba(255, 255, 255, 0.15);
+			/* Более заметная граница */
+			position: relative;
+		}
+
+		.project-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+			/* Усиленная тень при наведении */
+			border-color: rgba(var(--primary-color-rgb), 0.7);
+			/* Более видимая граница */
+			background: rgba(20, 30, 45, 0.98);
+			/* Ещё меньше прозрачности при наведении */
+		}
+
+		.project-card-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 16px;
+			padding-bottom: 12px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.project-title {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 0;
+		}
+
+		.project-title h4 {
+			font-size: 18px;
+			color: #ffffff;
+			/* Изменено на белый для максимальной контрастности */
+			margin: 0;
+			font-weight: 700;
+			/* Увеличена жирность для лучшей читаемости */
+			text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+			/* Тень текста для лучшей читаемости */
+		}
+
+		.project-premium-badge {
+			color: var(--accent-gold);
+			font-size: 14px;
+		}
+
+		.project-actions {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.like-btn {
+			background: rgba(255, 255, 255, 0.1);
+			border: none;
+			cursor: pointer;
+			border-radius: 20px;
+			padding: 6px 12px;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			color: #ffffff;
+			transition: all 0.2s ease;
+		}
+
+		.like-btn:hover {
+			background: rgba(255, 255, 255, 0.2);
+		}
+
+		.like-btn i.fas.fa-heart.liked {
+			color: #ff3333;
+			/* Более насыщенный красный для лучшей видимости */
+			text-shadow: 0 0 5px rgba(255, 51, 51, 0.4);
+			/* Добавлено свечение для лучшей видимости */
+		}
+
+		.like-btn i.far.fa-heart {
+			color: rgba(255, 255, 255, 0.95);
+			/* Увеличена непрозрачность для лучшей видимости */
+		}
+
+		.like-count {
+			font-weight: 600;
+		}
+
+		.view-likes-btn {
+			background: rgba(255, 255, 255, 0.05);
+			color: #ffffff;
+			border: none;
+			border-radius: 50%;
+			width: 32px;
+			height: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-decoration: none;
+			transition: all 0.2s ease;
+		}
+
+		.view-likes-btn:hover {
+			background: rgba(255, 255, 255, 0.15);
+			color: var(--primary-color);
+		}
+
+		.project-content {
+			flex: 1;
+			margin-bottom: 16px;
+		}
+
+		.project-description {
+			font-size: 14px;
+			color: rgba(255, 255, 255, 0.95);
+			/* Увеличена непрозрачность текста для лучшей читаемости */
+			margin-bottom: 16px;
+			line-height: 1.5;
+			max-height: 60px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			line-clamp: 2;
+			-webkit-box-orient: vertical;
+		}
+
+		.project-meta {
+			margin-top: auto;
+		}
+
+		.project-info {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 15px;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 13px;
+			color: rgba(255, 255, 255, 0.7);
+		}
+
+		.project-creator {
+			display: flex;
+			align-items: center;
+		}
+
+		.project-author {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			text-decoration: none;
+			color: var(--text-color);
+			transition: color 0.2s ease;
+		}
+
+		.project-author:hover {
+			color: var(--primary-color);
+		}
+
+		.author-avatar {
+			width: 24px;
+			height: 24px;
+			border-radius: 50%;
+			overflow: hidden;
+			background: rgba(255, 255, 255, 0.1);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.author-avatar img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.avatar-placeholder {
+			font-size: 12px;
+			font-weight: bold;
+			color: #ffffff;
+		}
+
+		.project-date {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			color: rgba(255, 255, 255, 0.7);
+		}
+
+		.project-footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-top: auto;
+		}
+
+		.owner-actions {
+			display: flex;
+			gap: 8px;
+		}
+
+		.projects-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 20px;
+			margin-top: 20px;
+		}
+
+		/* Адаптивные стили для навигации */
+		@media (max-width: 768px) {
+			.navbar {
+				padding: 10px 16px;
+			}
+
+			.mobile-menu-btn {
+				display: block;
+				margin-left: 15px;
+			}
+
+			.nav-links {
+				position: fixed;
+				top: 60px;
+				left: 0;
+				right: 0;
+				background: rgba(0, 0, 0, 0.85);
+				flex-direction: column;
+				gap: 10px;
+				padding: 20px;
+				box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+				z-index: 999;
+				transform: translateY(-150%);
+				visibility: hidden;
+				opacity: 0;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				backdrop-filter: blur(var(--blur-strength, 12px));
+				-webkit-backdrop-filter: blur(var(--blur-strength, 12px));
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.nav-links.active {
+				transform: translateY(0);
+				visibility: visible;
+				opacity: 1;
+			}
+
+			.nav-group {
+				flex-direction: column;
+				width: 100%;
+				gap: 12px;
+			}
+
+			.nav-link {
+				width: 100%;
+				justify-content: center;
+				padding: 12px 16px;
+				margin: 3px 0;
+			}
+
+			.nav-link span {
+				font-size: 0.95rem;
+			}
+
+			.notifications-wrapper {
+				position: relative;
+				margin: 0;
+				display: flex;
+				align-items: center;
+			}
+
+			.notifications-dropdown {
+				width: 100%;
+				max-width: 100%;
+				position: relative;
+				top: 0;
+				margin-top: 10px;
+			}
+		}
+	</style>
 </head>
 
 <body>
-	<nav class="vision-glass-card">
-		<div class="nav-links">
-			<a href="/" class="vision-btn">Tabify</a>
-			{% if user %}
-			<a href="/projects" class="vision-btn">Projects</a>
-			<a href="/users/profile" class="vision-btn">Profile</a>
-			<a href="/auth/logout" class="vision-btn vision-btn-secondary">Logout</a>
-			{% else %}
-			<a href="/auth/login" class="vision-btn">Login</a>
-			<a href="/auth/register" class="vision-btn vision-btn-primary">Sign Up</a>
-			{% endif %}
+
+	<nav class="navbar">
+		<div class="nav-container">
+			<div class="nav-brand">
+				<a href="/" class="brand-logo">
+					<i class="fas fa-guitar"></i> Tabify
+				</a>
+				<button class="mobile-menu-btn" aria-label="Toggle menu">
+					<i class="fas fa-bars"></i>
+				</button>
+			</div>
+
+			<div class="nav-links">
+				{% if user %}
+				<div class="nav-group">
+					<a href="/projects" class="nav-link">
+						<i class="fas fa-music"></i>
+						<span>Your Projects</span>
+					</a>
+					<a href="/users/profile" class="nav-link">
+						<i class="fas fa-user"></i>
+						<span>Profile</span>
+					</a>
+					<a href="/premium" class="nav-link premium-link {% if user.is_premium %}premium-active{% endif %}">
+						<i class="fas fa-crown"></i>
+						<span>Premium</span>
+						{% if user.is_premium %}<span class="premium-badge">PRO</span>{% endif %}
+					</a>
+					<div class="notifications-wrapper">
+						<button class="notifications-btn" aria-label="Notifications">
+							<i class="fas fa-bell"></i>
+							<span class="notification-badge" id="notificationBadge">0</span>
+						</button>
+						<div class="notifications-dropdown">
+							<div class="notifications-header">
+								<h3>Notifications</h3>
+								<button class="mark-all-read-btn">Mark all as read</button>
+							</div>
+							<div class="notifications-list" id="notificationsList">
+								<div class="notification-loading">
+									<i class="fas fa-spinner fa-spin"></i> Loading...
+								</div>
+							</div>
+							<div class="notifications-footer">
+								<a href="/notifications" class="view-all-btn">Посмотреть все</a>
+							</div>
+						</div>
+					</div>
+					<a href="/auth/logout" class="nav-link nav-link-logout">
+						<i class="fas fa-sign-out-alt"></i>
+						<span>Logout</span>
+					</a>
+				</div>
+				{% else %}
+				<div class="nav-group">
+					<a href="/auth/login" class="nav-link">
+						<i class="fas fa-sign-in-alt"></i>
+						<span>Login</span>
+					</a>
+					<a href="/auth/register" class="nav-link nav-link-primary">
+						<i class="fas fa-user-plus"></i>
+						<span>Register</span>
+					</a>
+				</div>
+				{% endif %}
+			</div>
 		</div>
 	</nav>
 
@@ -71,6 +744,474 @@
 			<p>&copy; 2024 Tabify. All rights reserved.</p>
 		</div>
 	</footer>
+	<script>
+		// Инициализация системы уведомлений
+		let unreadNotificationsCount = 0
+		const notificationBadge = document.getElementById('notificationBadge')
+		const notificationsBtn = document.querySelector('.notifications-btn')
+		const notificationsDropdown = document.querySelector('.notifications-dropdown')
+		const notificationsList = document.getElementById('notificationsList')
+		const markAllReadBtn = document.querySelector('.mark-all-read-btn')
+		const mobileMenuBtn = document.querySelector('.mobile-menu-btn')
+		const navLinks = document.querySelector('.nav-links')
+		const premiumLink = document.querySelector('.premium-link')
+
+		// Функция для обновления счетчика непрочитанных уведомлений
+		function updateNotificationBadge() {
+			if (unreadNotificationsCount > 0) {
+				notificationBadge.textContent = unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount
+				notificationBadge.style.display = 'flex'
+			} else {
+				notificationBadge.style.display = 'none'
+			}
+		}
+
+		// Функция для получения уведомлений
+		async function fetchNotifications() {
+			try {
+				const response = await fetch('/notifications')
+				if (!response.ok) throw new Error('Ошибка загрузки уведомлений')
+
+				const data = await response.json()
+				unreadNotificationsCount = data.unread_count
+				updateNotificationBadge()
+
+				renderNotifications(data.notifications)
+			} catch (error) {
+				console.error('Ошибка:', error)
+				notificationsList.innerHTML = `
+					<div class="empty-notifications">
+						<i class="fas fa-exclamation-circle"></i>
+						<p>Failed to load notifications</p>
+					</div>
+				`
+			}
+		}
+
+		// Функция для отображения уведомлений
+		function renderNotifications(notifications) {
+			if (!notifications || notifications.length === 0) {
+				notificationsList.innerHTML = `
+					<div class="empty-notifications">
+						<i class="fas fa-bell-slash"></i>
+						<p>You have no notifications</p>
+					</div>
+				`
+				return
+			}
+
+			let html = ''
+			notifications.forEach(notification => {
+				const timeAgo = formatTimeAgo(new Date(notification.created_at))
+				const iconClass = getNotificationIcon(notification.type)
+
+				html += `
+					<div class="notification-item ${!notification.is_read ? 'unread' : ''}" data-id="${notification.id}">
+						<div class="notification-title">
+							<span><i class="${iconClass} notification-icon"></i> ${notification.title}</span>
+							<span class="notification-time">${timeAgo}</span>
+						</div>
+						<p class="notification-content">${notification.content}</p>
+					</div>
+				`
+			})
+
+			notificationsList.innerHTML = html
+
+			// Adding event handlers to mark notification as read
+			const notificationItems = document.querySelectorAll('.notification-item')
+			notificationItems.forEach(item => {
+				item.addEventListener('click', function () {
+					const notificationId = this.dataset.id
+					markNotificationAsRead(notificationId)
+				})
+			})
+		}
+
+		// Функция для отметки уведомления как прочитанного
+		async function markNotificationAsRead(notificationId) {
+			try {
+				const response = await fetch(`/notifications/${notificationId}/mark-read`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				})
+
+				if (!response.ok) throw new Error('Error updating notification status')
+
+				const item = document.querySelector(`.notification-item[data-id="${notificationId}"]`)
+				if (item && item.classList.contains('unread')) {
+					item.classList.remove('unread')
+					unreadNotificationsCount--
+					updateNotificationBadge()
+				}
+			} catch (error) {
+				console.error('Ошибка:', error)
+			}
+		}
+
+		// Функция для отметки всех уведомлений как прочитанных
+		async function markAllNotificationsAsRead() {
+			try {
+				const response = await fetch('/notifications/mark-all-read', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				})
+
+				if (!response.ok) throw new Error('Error updating notifications status')
+
+				const unreadItems = document.querySelectorAll('.notification-item.unread')
+				unreadItems.forEach(item => {
+					item.classList.remove('unread')
+				})
+
+				unreadNotificationsCount = 0
+				updateNotificationBadge()
+			} catch (error) {
+				console.error('Ошибка:', error)
+			}
+		}
+
+		// Функция форматирования времени (например, "5 minutes ago")
+		function formatTimeAgo(date) {
+			const now = new Date()
+			const seconds = Math.floor((now - date) / 1000)
+
+			let interval = Math.floor(seconds / 31536000)
+			if (interval >= 1) {
+				return interval + " years ago"
+			}
+
+			interval = Math.floor(seconds / 2592000)
+			if (interval >= 1) {
+				return interval + " months ago"
+			}
+
+			interval = Math.floor(seconds / 86400)
+			if (interval >= 1) {
+				return interval + " days ago"
+			}
+
+			interval = Math.floor(seconds / 3600)
+			if (interval >= 1) {
+				return interval + " hours ago"
+			}
+
+			interval = Math.floor(seconds / 60)
+			if (interval >= 1) {
+				return interval + " minutes ago"
+			}
+
+			if (seconds < 10) return "just now"
+
+			return Math.floor(seconds) + " seconds ago"
+		}
+
+		// Функция для получения иконки в зависимости от типа уведомления
+		function getNotificationIcon(type) {
+			switch (type) {
+				case 'like':
+					return 'fas fa-heart'
+				case 'follow':
+					return 'fas fa-user-plus'
+				case 'comment':
+					return 'fas fa-comment'
+				case 'share':
+					return 'fas fa-share-alt'
+				case 'project':
+					return 'fas fa-guitar'
+				default:
+					return 'fas fa-bell'
+			}
+		}
+
+		// Events when clicking on the notifications button
+		if (notificationsBtn) {
+			notificationsBtn.addEventListener('click', function (e) {
+				e.stopPropagation()
+				const isVisible = notificationsDropdown.style.display === 'block'
+
+				if (!isVisible) {
+					notificationsDropdown.style.display = 'block'
+					fetchNotifications()
+				} else {
+					notificationsDropdown.style.display = 'none'
+				}
+			})
+		}
+
+		// Закрытие выпадающего списка уведомлений при клике вне его
+		document.addEventListener('click', function (e) {
+			if (notificationsDropdown && notificationsDropdown.style.display === 'block') {
+				if (!notificationsDropdown.contains(e.target) && e.target !== notificationsBtn) {
+					notificationsDropdown.style.display = 'none'
+				}
+			}
+		})
+
+		// Отметить все уведомления как прочитанные
+		if (markAllReadBtn) {
+			markAllReadBtn.addEventListener('click', function (e) {
+				e.stopPropagation()
+				markAllNotificationsAsRead()
+			})
+		}
+
+		// Мобильное меню
+		if (mobileMenuBtn) {
+			mobileMenuBtn.addEventListener('click', function () {
+				navLinks.classList.toggle('active')
+			})
+		}
+
+		// Закрытие мобильного меню при клике вне его
+		document.addEventListener('click', function (e) {
+			if (navLinks && navLinks.classList.contains('active')) {
+				if (!navLinks.contains(e.target) && e.target !== mobileMenuBtn) {
+					navLinks.classList.remove('active')
+				}
+			}
+		})
+
+		// Загрузка количества непрочитанных уведомлений при загрузке страницы
+		if (notificationBadge) {
+			fetch('/notifications')
+				.then(response => response.json())
+				.then(data => {
+					unreadNotificationsCount = data.unread_count
+					updateNotificationBadge()
+				})
+				.catch(error => console.error('Ошибка загрузки уведомлений:', error))
+		}
+
+		// Проверка премиум-статуса пользователя
+		async function checkPremiumStatus() {
+			// Если элемент премиум-ссылки не существует или пользователь не авторизован, прекращаем выполнение
+			if (!premiumLink || !document.querySelector('.nav-group')) return
+
+			try {
+				const response = await fetch('/premium/status')
+				if (!response.ok) throw new Error('Ошибка загрузки статуса премиума')
+
+				const data = await response.json()
+
+				// Обновляем вид премиум-ссылки в зависимости от статуса
+				if (data.is_premium) {
+					premiumLink.classList.add('premium-active')
+
+					// Добавляем бейдж, если его еще нет
+					if (!premiumLink.querySelector('.premium-badge')) {
+						const badge = document.createElement('span')
+						badge.className = 'premium-badge'
+						badge.textContent = 'PRO'
+						premiumLink.appendChild(badge)
+					}
+				} else {
+					premiumLink.classList.remove('premium-active')
+
+					// Удаляем бейдж, если он есть
+					const badge = premiumLink.querySelector('.premium-badge')
+					if (badge) badge.remove()
+				}
+			} catch (error) {
+				console.error('Ошибка при проверке премиум-статуса:', error)
+			}
+		}
+
+		// Проверяем премиум-статус при загрузке страницы
+		document.addEventListener('DOMContentLoaded', function () {
+			checkPremiumStatus()
+			
+			// Обработчик для кнопок подписки (follow)
+			const followButtons = document.querySelectorAll('.follow-btn')
+			followButtons.forEach(button => {
+				button.addEventListener('click', function() {
+					const userId = this.getAttribute('data-user-id')
+					if (!userId) return
+					
+					// Сохраняем оригинальный текст кнопки
+					const originalText = this.innerHTML
+					const isFollowing = this.classList.contains('following')
+					
+					// Индикатор загрузки
+					this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'
+					this.disabled = true
+					
+					fetch(`/users/${userId}/follow`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+					.then(response => response.json())
+					.then(data => {
+						// Моментальное обновление UI
+						this.disabled = false
+						
+						if (data.success !== false) {
+							if (isFollowing) {
+								// Если отписались
+								this.classList.remove('following')
+								this.innerHTML = 'Follow'
+							} else {
+								// Если подписались
+								this.classList.add('following')
+								this.innerHTML = 'Unfollow'
+							}
+							
+							// Уведомление с высокой контрастностью
+							window.toast.success(data.message || 'Subscription updated', {
+								duration: 3000,
+								style: {
+									background: 'rgba(15, 25, 40, 0.97)', // Высокая контрастность
+									color: '#ffffff',
+									borderColor: 'rgba(0, 168, 150, 0.8)'
+								}
+							})
+							
+							// Обновить счетчики подписчиков, если они есть на странице
+							const followerCountEl = document.querySelector('.follower-count')
+							if (followerCountEl) {
+								const currentCount = parseInt(followerCountEl.textContent)
+								followerCountEl.textContent = isFollowing ? currentCount - 1 : currentCount + 1
+							}
+						} else {
+							// Восстановить исходное состояние при ошибке
+							this.innerHTML = originalText
+							
+							// Показать уведомление об ошибке с высокой контрастностью
+							window.toast.error(data.message || 'Error updating subscription', {
+								duration: 3000,
+								style: {
+									background: 'rgba(15, 25, 40, 0.97)',
+									color: '#ffffff'
+								}
+							})
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error)
+						this.disabled = false
+						this.innerHTML = originalText
+						
+						// Показать уведомление об ошибке с высокой контрастностью
+						window.toast.error('Error processing your request', {
+							duration: 3000,
+							style: {
+								background: 'rgba(15, 25, 40, 0.97)',
+								color: '#ffffff'
+							}
+						})
+					})
+				})
+			})
+
+			// Глобальный обработчик для кнопок лайков
+			const likeButtons = document.querySelectorAll('.like-btn')
+			likeButtons.forEach(button => {
+				button.addEventListener('click', function () {
+					const projectId = this.getAttribute('data-project-id')
+					if (!projectId) return
+
+					// Сохраняем оригинальный HTML кнопки
+					const originalHtml = this.innerHTML
+					// Находим элемент счетчика лайков
+					const likeCount = this.querySelector('.like-count')
+					const originalCount = likeCount ? parseInt(likeCount.textContent, 10) : 0
+
+					// Добавляем индикатор загрузки на кнопку
+					this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'
+					this.disabled = true
+
+					fetch(`/projects/${projectId}/like`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+						.then(response => response.json())
+						.then(data => {
+							if (data.status === 'success') {
+								// Обновляем вид кнопки в зависимости от действия
+								const heartIcon = data.action === 'liked' ? '<i class="fas fa-heart liked"></i>' : '<i class="far fa-heart"></i>'
+								this.innerHTML = `${heartIcon} <span class="like-count">${data.likes_count}</span>`
+
+								// Обновляем класс кнопки
+								if (data.action === 'liked') {
+									this.title = 'Unlike'
+								} else {
+									this.title = 'Like'
+								}
+
+								// Обновляем все кнопки лайков для этого проекта
+								const allProjectButtons = document.querySelectorAll(`.like-btn[data-project-id="${projectId}"]`)
+								allProjectButtons.forEach(btn => {
+									if (btn !== this) {
+										const btnHeartIcon = data.action === 'liked' ? '<i class="fas fa-heart liked"></i>' : '<i class="far fa-heart"></i>'
+										btn.innerHTML = `${btnHeartIcon} <span class="like-count">${data.likes_count}</span>`
+										btn.title = data.action === 'liked' ? 'Unlike' : 'Like'
+									}
+								})
+
+								// Показываем уведомление с высокой контрастностью
+								if (data.action === 'liked') {
+									window.toast.success('You liked this project', {
+										duration: 3000,
+										style: {
+											background: 'rgba(15, 25, 40, 0.97)', // Повышенная контрастность
+											color: '#ffffff',
+											borderColor: 'rgba(255, 99, 71, 0.8)'
+										}
+									})
+								} else {
+									window.toast.info('You unliked this project', {
+										duration: 3000,
+										style: {
+											background: 'rgba(15, 25, 40, 0.97)', // Повышенная контрастность
+											color: '#ffffff'
+										}
+									})
+								}
+							} else {
+								// Восстанавливаем оригинальный вид кнопки
+								this.innerHTML = originalHtml
+
+								// Показываем уведомление об ошибке
+								window.toast.error(data.message || 'Error processing your request', {
+									duration: 3000,
+									style: {
+										background: 'rgba(15, 25, 40, 0.97)', // Повышенная контрастность
+										color: '#ffffff'
+									}
+								})
+							}
+
+							// Разблокируем кнопку
+							this.disabled = false
+						})
+						.catch(error => {
+							console.error('Error:', error)
+
+							// Восстанавливаем оригинальный вид кнопки
+							this.innerHTML = originalHtml
+							this.disabled = false
+
+							// Показываем уведомление об ошибке
+							window.toast.error('An error occurred while processing your request', {
+								duration: 3000,
+								style: {
+									background: 'rgba(15, 25, 40, 0.97)', // Повышенная контрастность
+									color: '#ffffff'
+								}
+							})
+						})
+				})
+			})
+		});
+	</script>
 </body>
 
 </html>

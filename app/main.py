@@ -1,11 +1,12 @@
+from app.routers import auth, users, projects, notifications, premium
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
-from .database import engine, get_db
-from .models import Base, User, Project
+from app.database import engine, get_db
+from app.models import Base, User, Project
 from sqlalchemy.orm import Session
 from os import getenv
 from dotenv import load_dotenv
@@ -40,6 +41,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # Добавляем пользовательские фильтры для Jinja2
+
+
 def dateformat(date):
     if date is None:
         return ""
@@ -51,9 +54,12 @@ def dateformat(date):
             return date
     return date.strftime("%d.%m.%Y %H:%M")
 
+
 templates.env.filters["dateformat"] = dateformat
 
 # Landing page route
+
+
 @app.get("/")
 async def landing_page(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
@@ -61,32 +67,35 @@ async def landing_page(request: Request, db: Session = Depends(get_db)):
         user = db.query(User).filter(User.id == user_id).first()
         if user:
             return RedirectResponse(url="/home")
-    
+
     return templates.TemplateResponse(
         "landing.html",
         {"request": request}
     )
 
 # Include routers
-from .routers import auth, users, projects
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(projects.router)
+app.include_router(notifications.router)
+app.include_router(premium.router)
 
 # Home page route
+
+
 @app.get("/home")
 async def home_page(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/auth/login")
-    
+
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         return RedirectResponse(url="/auth/login")
-    
+
     # Get user's projects
     projects = db.query(Project).filter(Project.owner_id == user_id).all()
-    
+
     # Get popular projects (sorted by likes count)
     popular_projects = (
         db.query(Project)
@@ -94,24 +103,28 @@ async def home_page(request: Request, db: Session = Depends(get_db)):
         .all()
     )
     popular_projects.sort(key=lambda x: len(x.likes), reverse=True)
-    
+
     # Получаем популярных пользователей (по количеству подписчиков)
-    all_users = db.query(User).filter(User.id != user_id, User.is_public_profile == True).all()
+    all_users = db.query(User).filter(User.id != user_id,
+                                      User.is_public_profile == True).all()
     # Сортируем по количеству подписчиков
-    popular_users = sorted(all_users, key=lambda x: len(x.followers), reverse=True)[:5]
-        
+    popular_users = sorted(all_users, key=lambda x: len(
+        x.followers), reverse=True)[:5]
+
     return templates.TemplateResponse(
         "home.html",
         {
-            "request": request, 
-            "user": user, 
-            "projects": projects, 
+            "request": request,
+            "user": user,
+            "projects": projects,
             "popular_projects": popular_projects,
             "popular_users": popular_users
         }
     )
 
 # Error handlers
+
+
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc: HTTPException):
     return templates.TemplateResponse(
@@ -124,6 +137,7 @@ async def not_found_handler(request: Request, exc: HTTPException):
         },
         status_code=404
     )
+
 
 @app.exception_handler(401)
 async def unauthorized_handler(request: Request, exc: HTTPException):

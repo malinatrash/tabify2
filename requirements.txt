@@ -18,3 +18,11 @@ requests==2.31.0
 alembic==1.12.1
 pytz==2023.3.post1
 qrcode==7.4.2
+httpx==0.27.0
+
+# Библиотеки для работы с MIDI и табулатурами
+mido==1.2.10
+pretty-midi==0.2.10
+music21==9.1.0
+pyguitarpro==0.6
+uuid==1.30

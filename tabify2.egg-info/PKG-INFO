@@ -1,0 +1,42 @@
+Metadata-Version: 2.4
+Name: tabify2
+Version: 0.1.0
+Summary: Tabify application
+License-Expression: MIT
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi==0.104.1
+Requires-Dist: uvicorn==0.24.0
+Requires-Dist: python-multipart==0.0.6
+Requires-Dist: python-jose[cryptography]==3.3.0
+Requires-Dist: passlib[bcrypt]==1.7.4
+Requires-Dist: sqlalchemy==2.0.23
+Requires-Dist: psycopg2-binary==2.9.9
+Requires-Dist: python-dotenv==1.0.0
+Requires-Dist: jinja2==3.1.2
+Requires-Dist: aiofiles==23.2.1
+Requires-Dist: email-validator==2.1.0.post1
+Requires-Dist: pydantic[email]==2.5.2
+Requires-Dist: python-slugify==8.0.1
+Requires-Dist: Pillow==10.1.0
+Requires-Dist: starlette==0.27.0
+Requires-Dist: itsdangerous==2.1.2
+Requires-Dist: requests==2.31.0
+Requires-Dist: alembic==1.12.1
+Requires-Dist: pytz==2023.3.post1
+Requires-Dist: qrcode==7.4.2
+Requires-Dist: httpx==0.27.0
+Requires-Dist: mido==1.2.10
+Requires-Dist: pretty-midi==0.2.10
+Requires-Dist: music21==9.1.0
+Requires-Dist: pyguitarpro==0.6
+Requires-Dist: uuid==1.30
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: black; extra == "dev"
+Requires-Dist: isort; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
+
+# Tabify2
+
+A web application for converting audio and MIDI files to guitar tablature.
