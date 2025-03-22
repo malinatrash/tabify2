@@ -150,7 +150,7 @@
 		})
 			.then(response => response.json())
 			.then(data => {
-				if (data.success) {
+				if (data.status === 'success') {
 					window.toast.success(data.message)
 					location.reload()
 				} else {

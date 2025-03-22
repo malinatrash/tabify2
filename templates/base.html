@@ -19,20 +19,275 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 	<script src="/static/js/toast.js"></script>
+	{% block head_scripts %}{% endblock %}
+	<style>
+		/* Стили для навигации */
+		.nav-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+		}
+
+		.nav-brand {
+			display: flex;
+			align-items: center;
+		}
+
+		.mobile-menu-btn {
+			display: none;
+			background: none;
+			border: none;
+			color: var(--text-color);
+			font-size: 1.5rem;
+			cursor: pointer;
+			padding: 0.5rem;
+		}
+
+		/* Стили для уведомлений */
+		.notifications-wrapper {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			z-index: 1100;
+		}
+
+		.notifications-btn {
+			background: none;
+			border: none;
+			color: var(--text-color);
+			font-size: 1.2rem;
+			cursor: pointer;
+			padding: 0.5rem;
+			position: relative;
+			background-color: var(--card-bg);
+			border-radius: 50%;
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.notification-badge {
+			position: absolute;
+			top: 0;
+			right: 0;
+			background-color: var(--primary-color);
+			color: white;
+			border-radius: 50%;
+			min-width: 18px;
+			height: 18px;
+			font-size: 0.7rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 2px;
+			transform: translate(30%, -30%);
+		}
+
+		.notifications-dropdown {
+			position: absolute;
+			right: 0;
+			top: 100%;
+			background-color: var(--background-color);
+			border-radius: 8px;
+			width: 320px;
+			max-height: 400px;
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+			overflow: hidden;
+			z-index: 1000;
+			display: none;
+			border: 1px solid var(--border-color);
+			margin-top: 10px;
+		}
+
+		.notifications-header {
+			padding: 10px 15px;
+			border-bottom: 1px solid var(--border-color);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.notifications-header h3 {
+			margin: 0;
+			font-size: 1rem;
+		}
+
+		.mark-all-read-btn {
+			background: none;
+			border: none;
+			color: var(--primary-color);
+			cursor: pointer;
+			font-size: 0.8rem;
+		}
+
+		.notifications-list {
+			max-height: 300px;
+			overflow-y: auto;
+			padding: 0;
+		}
+
+		.notification-item {
+			padding: 12px 15px;
+			border-bottom: 1px solid var(--border-color);
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+		.notification-item:hover {
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+
+		.notification-item.unread {
+			background-color: rgba(var(--primary-color-rgb), 0.1);
+		}
+
+		.notification-title {
+			font-weight: bold;
+			font-size: 0.9rem;
+			margin-bottom: 5px;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.notification-time {
+			font-size: 0.75rem;
+			color: var(--text-muted);
+		}
+
+		.notification-content {
+			font-size: 0.85rem;
+			color: var(--text-color);
+			margin-bottom: 0;
+		}
+
+		.notification-icon {
+			margin-right: 10px;
+			display: inline-block;
+			width: 20px;
+			text-align: center;
+		}
+
+		.notification-loading {
+			padding: 20px;
+			text-align: center;
+			color: var(--text-muted);
+		}
+
+		.notifications-footer {
+			padding: 10px 15px;
+			text-align: center;
+			border-top: 1px solid var(--border-color);
+		}
+
+		.view-all-btn {
+			text-decoration: none;
+			color: var(--primary-color);
+			font-size: 0.9rem;
+		}
+
+		.empty-notifications {
+			padding: 30px 15px;
+			text-align: center;
+			color: var(--text-muted);
+		}
+
+		/* Адаптивные стили для навигации */
+		@media (max-width: 768px) {
+			.mobile-menu-btn {
+				display: block;
+				margin-left: 15px;
+			}
+
+			.nav-links {
+				position: absolute;
+				top: 100%;
+				left: 0;
+				right: 0;
+				background: var(--card-bg);
+				flex-direction: column;
+				gap: 10px;
+				padding: 15px;
+				border-radius: 0 0 8px 8px;
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+				z-index: 999;
+				transform: translateY(-100%);
+				visibility: hidden;
+				transition: transform 0.3s ease, visibility 0.3s;
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+				border: 1px solid var(--border-color);
+				overflow: hidden;
+			}
+
+			.nav-links.active {
+				transform: translateY(0);
+				visibility: visible;
+			}
+
+			.nav-links a, .notifications-wrapper {
+				width: 100%;
+				text-align: center;
+			}
+
+			.notifications-dropdown {
+				width: 100%;
+				max-width: 100%;
+				position: relative;
+				top: 0;
+				margin-top: 10px;
+			}
+		}
+	</style>
 </head>
 
 <body>
+	<!-- Колокольчик уведомлений в правом верхнем углу -->
+	<div class="notifications-wrapper">
+		<button class="notifications-btn" aria-label="Notifications">
+			<i class="fas fa-bell"></i>
+			<span class="notification-badge" id="notificationBadge">0</span>
+		</button>
+		<div class="notifications-dropdown">
+			<div class="notifications-header">
+				<h3>Уведомления</h3>
+				<button class="mark-all-read-btn">Отметить все как прочитанные</button>
+			</div>
+			<div class="notifications-list" id="notificationsList">
+				<div class="notification-loading">
+					<i class="fas fa-spinner fa-spin"></i> Загрузка...
+				</div>
+			</div>
+			<div class="notifications-footer">
+				<a href="/notifications" class="view-all-btn">Посмотреть все</a>
+			</div>
+		</div>
+	</div>
 	<nav class="vision-glass-card">
-		<div class="nav-links">
-			<a href="/" class="vision-btn">Tabify</a>
-			{% if user %}
-			<a href="/projects" class="vision-btn">Projects</a>
-			<a href="/users/profile" class="vision-btn">Profile</a>
-			<a href="/auth/logout" class="vision-btn vision-btn-secondary">Logout</a>
-			{% else %}
-			<a href="/auth/login" class="vision-btn">Login</a>
-			<a href="/auth/register" class="vision-btn vision-btn-primary">Sign Up</a>
-			{% endif %}
+		<div class="nav-container">
+			<div class="nav-brand">
+				<a href="/" class="vision-btn">Tabify</a>
+				<button class="mobile-menu-btn" aria-label="Toggle menu">
+					<i class="fas fa-bars"></i>
+				</button>
+			</div>
+			
+			<div class="nav-links">
+				{% if user %}
+				<a href="/projects" class="vision-btn">Проекты</a>
+				<a href="/users/profile" class="vision-btn">Профиль</a>
+				
+
+				
+				<a href="/auth/logout" class="vision-btn vision-btn-secondary">Выйти</a>
+				{% else %}
+				<a href="/auth/login" class="vision-btn">Войти</a>
+				<a href="/auth/register" class="vision-btn vision-btn-primary">Регистрация</a>
+				{% endif %}
+			</div>
 		</div>
 	</nav>
 
@@ -71,6 +326,248 @@
 			<p>&copy; 2024 Tabify. All rights reserved.</p>
 		</div>
 	</footer>
+<script>
+		// Инициализация системы уведомлений
+		let unreadNotificationsCount = 0;
+		const notificationBadge = document.getElementById('notificationBadge');
+		const notificationsBtn = document.querySelector('.notifications-btn');
+		const notificationsDropdown = document.querySelector('.notifications-dropdown');
+		const notificationsList = document.getElementById('notificationsList');
+		const markAllReadBtn = document.querySelector('.mark-all-read-btn');
+		const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+		const navLinks = document.querySelector('.nav-links');
+
+		// Функция для обновления счетчика непрочитанных уведомлений
+		function updateNotificationBadge() {
+			if (unreadNotificationsCount > 0) {
+				notificationBadge.textContent = unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount;
+				notificationBadge.style.display = 'flex';
+			} else {
+				notificationBadge.style.display = 'none';
+			}
+		}
+
+		// Функция для получения уведомлений
+		async function fetchNotifications() {
+			try {
+				const response = await fetch('/notifications');
+				if (!response.ok) throw new Error('Ошибка загрузки уведомлений');
+				
+				const data = await response.json();
+				unreadNotificationsCount = data.unread_count;
+				updateNotificationBadge();
+				
+				renderNotifications(data.notifications);
+			} catch (error) {
+				console.error('Ошибка:', error);
+				notificationsList.innerHTML = `
+					<div class="empty-notifications">
+						<i class="fas fa-exclamation-circle"></i>
+						<p>Не удалось загрузить уведомления</p>
+					</div>
+				`;
+			}
+		}
+
+		// Функция для отображения уведомлений
+		function renderNotifications(notifications) {
+			if (!notifications || notifications.length === 0) {
+				notificationsList.innerHTML = `
+					<div class="empty-notifications">
+						<i class="fas fa-bell-slash"></i>
+						<p>У вас нет уведомлений</p>
+					</div>
+				`;
+				return;
+			}
+
+			let html = '';
+			notifications.forEach(notification => {
+				const timeAgo = formatTimeAgo(new Date(notification.created_at));
+				const iconClass = getNotificationIcon(notification.type);
+				
+				html += `
+					<div class="notification-item ${!notification.is_read ? 'unread' : ''}" data-id="${notification.id}">
+						<div class="notification-title">
+							<span><i class="${iconClass} notification-icon"></i> ${notification.title}</span>
+							<span class="notification-time">${timeAgo}</span>
+						</div>
+						<p class="notification-content">${notification.content}</p>
+					</div>
+				`;
+			});
+
+			notificationsList.innerHTML = html;
+
+			// Добавляем обработчики событий для отметки уведомления как прочитанного
+			const notificationItems = document.querySelectorAll('.notification-item');
+			notificationItems.forEach(item => {
+				item.addEventListener('click', function() {
+					const notificationId = this.dataset.id;
+					markNotificationAsRead(notificationId);
+				});
+			});
+		}
+
+		// Функция для отметки уведомления как прочитанного
+		async function markNotificationAsRead(notificationId) {
+			try {
+				const response = await fetch(`/notifications/${notificationId}/mark-read`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+
+				if (!response.ok) throw new Error('Ошибка при обновлении статуса уведомления');
+
+				const item = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+				if (item && item.classList.contains('unread')) {
+					item.classList.remove('unread');
+					unreadNotificationsCount--;
+					updateNotificationBadge();
+				}
+			} catch (error) {
+				console.error('Ошибка:', error);
+			}
+		}
+
+		// Функция для отметки всех уведомлений как прочитанных
+		async function markAllNotificationsAsRead() {
+			try {
+				const response = await fetch('/notifications/mark-all-read', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+
+				if (!response.ok) throw new Error('Ошибка при обновлении статуса уведомлений');
+
+				const unreadItems = document.querySelectorAll('.notification-item.unread');
+				unreadItems.forEach(item => {
+					item.classList.remove('unread');
+				});
+
+				unreadNotificationsCount = 0;
+				updateNotificationBadge();
+			} catch (error) {
+				console.error('Ошибка:', error);
+			}
+		}
+
+		// Функция форматирования времени (например, "5 минут назад")
+		function formatTimeAgo(date) {
+			const now = new Date();
+			const seconds = Math.floor((now - date) / 1000);
+			
+			let interval = Math.floor(seconds / 31536000);
+			if (interval >= 1) {
+				return interval + " лет назад";
+			}
+			
+			interval = Math.floor(seconds / 2592000);
+			if (interval >= 1) {
+				return interval + " месяцев назад";
+			}
+			
+			interval = Math.floor(seconds / 86400);
+			if (interval >= 1) {
+				return interval + " дней назад";
+			}
+			
+			interval = Math.floor(seconds / 3600);
+			if (interval >= 1) {
+				return interval + " часов назад";
+			}
+			
+			interval = Math.floor(seconds / 60);
+			if (interval >= 1) {
+				return interval + " минут назад";
+			}
+			
+			if (seconds < 10) return "только что";
+			
+			return Math.floor(seconds) + " секунд назад";
+		}
+
+		// Функция для получения иконки в зависимости от типа уведомления
+		function getNotificationIcon(type) {
+			switch (type) {
+				case 'like':
+					return 'fas fa-heart';
+				case 'follow':
+					return 'fas fa-user-plus';
+				case 'comment':
+					return 'fas fa-comment';
+				case 'share':
+					return 'fas fa-share-alt';
+				case 'project':
+					return 'fas fa-guitar';
+				default:
+					return 'fas fa-bell';
+			}
+		}
+
+		// События при нажатии на кнопку уведомлений
+		if (notificationsBtn) {
+			notificationsBtn.addEventListener('click', function(e) {
+				e.stopPropagation();
+				const isVisible = notificationsDropdown.style.display === 'block';
+				
+				if (!isVisible) {
+					notificationsDropdown.style.display = 'block';
+					fetchNotifications();
+				} else {
+					notificationsDropdown.style.display = 'none';
+				}
+			});
+		}
+
+		// Закрытие выпадающего списка уведомлений при клике вне его
+		document.addEventListener('click', function(e) {
+			if (notificationsDropdown && notificationsDropdown.style.display === 'block') {
+				if (!notificationsDropdown.contains(e.target) && e.target !== notificationsBtn) {
+					notificationsDropdown.style.display = 'none';
+				}
+			}
+		});
+
+		// Отметить все уведомления как прочитанные
+		if (markAllReadBtn) {
+			markAllReadBtn.addEventListener('click', function(e) {
+				e.stopPropagation();
+				markAllNotificationsAsRead();
+			});
+		}
+
+		// Мобильное меню
+		if (mobileMenuBtn) {
+			mobileMenuBtn.addEventListener('click', function() {
+				navLinks.classList.toggle('active');
+			});
+		}
+
+		// Закрытие мобильного меню при клике вне его
+		document.addEventListener('click', function(e) {
+			if (navLinks && navLinks.classList.contains('active')) {
+				if (!navLinks.contains(e.target) && e.target !== mobileMenuBtn) {
+					navLinks.classList.remove('active');
+				}
+			}
+		});
+
+		// Загрузка количества непрочитанных уведомлений при загрузке страницы
+		if (notificationBadge) {
+			fetch('/notifications')
+				.then(response => response.json())
+				.then(data => {
+					unreadNotificationsCount = data.unread_count;
+					updateNotificationBadge();
+				})
+				.catch(error => console.error('Ошибка загрузки уведомлений:', error));
+		}
+	</script>
 </body>
 
 </html>

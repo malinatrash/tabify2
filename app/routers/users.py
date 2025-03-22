@@ -484,6 +484,9 @@ async def follow_user(
     if not target_user:
         raise HTTPException(status_code=404, detail="Пользователь не найден")
     
+    # Импортируем функцию создания уведомлений
+    from ..routers.notifications import create_notification
+
     # Проверяем, подписаны ли мы уже на этого пользователя
     existing_follow = db.query(UserFollow).filter(
         UserFollow.follower_id == current_user.id,
@@ -494,7 +497,7 @@ async def follow_user(
         # Отписываемся
         db.delete(existing_follow)
         db.commit()
-        return {"success": True, "message": f"Вы отписались от пользователя {target_user.full_name}", "action": "unfollowed"}
+        return {"status": "success", "message": f"Вы отписались от пользователя {target_user.full_name}", "action": "unfollowed"}
     else:
         # Подписываемся
         new_follow = UserFollow(
@@ -502,5 +505,15 @@ async def follow_user(
             followed_id=user_id
         )
         db.add(new_follow)
+        
+        # Создаем уведомление для пользователя, на которого подписались
+        create_notification(
+            db=db,
+            user_id=user_id,
+            notification_type="follow",
+            title="Новый подписчик",
+            content=f"{current_user.full_name} подписался на вас"
+        )
+        
         db.commit()
-        return {"success": True, "message": f"Вы подписались на пользователя {target_user.full_name}", "action": "followed"}
+        return {"status": "success", "message": f"Вы подписались на пользователя {target_user.full_name}", "action": "followed"}

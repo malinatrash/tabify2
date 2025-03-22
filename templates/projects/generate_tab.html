@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Генерация табулатуры - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/projects">Проекты</a></li>
+            <li class="breadcrumb-item"><a href="/projects/{{ project.id }}">{{ project.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Генерация табулатуры</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h3 mb-0">Генерация табулатуры</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <h5 class="alert-heading">MIDI файл загружен!</h5>
+                <p>Для файла <strong>{{ midi_file.original_filename }}</strong> еще не создана табулатура. Нажмите на кнопку ниже, чтобы сгенерировать табулатуру для этого MIDI-файла.</p>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button id="generateTabBtn" class="btn btn-primary btn-lg" data-project-id="{{ project.id }}" data-midi-id="{{ midi_file.id }}">
+                    <i class="fas fa-guitar me-2"></i> Сгенерировать табулатуру
+                </button>
+            </div>
+
+            <div id="loadingTab" style="display: none;" class="text-center my-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+                <p class="mt-2">Идет генерация табулатуры, это может занять некоторое время...</p>
+            </div>
+
+            <div id="tabError" class="alert alert-danger mt-3" style="display: none;">
+                <h5 class="alert-heading">Ошибка генерации</h5>
+                <p id="errorText"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/tab-functions.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM загружен, настраиваем обработчик события для кнопки');
+        const generateTabBtn = document.getElementById('generateTabBtn');
+        if (generateTabBtn) {
+            console.log('Кнопка найдена:', generateTabBtn);
+            console.log('Атрибуты кнопки:', {
+                'data-project-id': generateTabBtn.getAttribute('data-project-id'),
+                'data-midi-id': generateTabBtn.getAttribute('data-midi-id')
+            });
+            
+            generateTabBtn.addEventListener('click', function() {
+                console.log('Кнопка нажата!');
+                const projectId = generateTabBtn.getAttribute('data-project-id');
+                const midiId = generateTabBtn.getAttribute('data-midi-id');
+                console.log(`Вызов generateTab с projectId=${projectId}, midiId=${midiId}`);
+                generateTab(projectId, midiId);
+            });
+        } else {
+            console.error('Кнопка #generateTabBtn не найдена!');
+        }
+    });
+</script>
+{% endblock %}

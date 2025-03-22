@@ -69,3 +69,34 @@
 	</div>
 </div>
 {% endblock %}
+
+<script>
+// Ждем, пока DOM полностью загрузится
+document.addEventListener('DOMContentLoaded', function() {
+    const termsCheckbox = document.getElementById('terms');
+    const submitButton = document.querySelector('button[type="submit"]');
+    const publicProfileCheckbox = document.getElementById('is_public_profile');
+    
+    // Функция для проверки состояния чекбокса соглашения
+    function updateSubmitButton() {
+        if (termsCheckbox.checked) {
+            submitButton.disabled = false;
+            submitButton.classList.remove('disabled');
+        } else {
+            submitButton.disabled = true;
+            submitButton.classList.add('disabled');
+        }
+    }
+    
+    // Устанавливаем начальное состояние кнопки
+    updateSubmitButton();
+    
+    // Добавляем обработчик события изменения состояния чекбокса
+    termsCheckbox.addEventListener('change', updateSubmitButton);
+    
+    // Проверяем работоспособность флага публичного профиля
+    publicProfileCheckbox.addEventListener('change', function() {
+        console.log('Публичный профиль:', this.checked);
+    });
+});
+</script>

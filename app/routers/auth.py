@@ -158,7 +158,8 @@ async def register(request: Request, db: Session = Depends(get_db)):
         email=form.get("email"),
         hashed_password=get_password_hash(form.get("password")),
         full_name=form.get("full_name"),
-        phone_number=form.get("phone_number")
+        phone_number=form.get("phone_number"),
+        is_public_profile=form.get("is_public_profile") == "on"
     )
     
     db.add(user)

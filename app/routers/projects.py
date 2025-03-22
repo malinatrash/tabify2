@@ -1,13 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File, BackgroundTasks, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import JSONResponse, FileResponse, RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from ..database import get_db
-from ..models import User, Project, ProjectShare, Notification, ProjectLike
+from ..models import User, Project, ProjectShare, Notification, ProjectLike, MidiFile, Tablature
 from .auth import get_current_user
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Dict, Any
 import os
 import secrets
+import json
+import httpx
+import uuid
+import tempfile
+import shutil
+
+# Импортируем наш модуль для конвертации MIDI в табулатуру
+from ..utils.midi_to_tab import midi_to_tablature, save_tablature, convert_midi_to_tablature
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 templates = Jinja2Templates(directory="templates")
@@ -74,46 +83,50 @@ async def create_project(
 async def project_detail(
     project_id: int,
     request: Request,
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    project = db.query(Project).filter(Project.id == project_id).first()
+    # Используем функцию для проверки доступа. Неавторизованные пользователи могут просматривать публичные проекты
+    project = get_project_with_access_check(project_id, current_user, db)
+    
     if not project:
         return templates.TemplateResponse(
             "error.html",
             {
                 "request": request,
-                "error_code": 404,
-                "error_title": "Project Not Found",
-                "error_message": "The project you're looking for doesn't exist.",
-                "back_url": "/projects"
+                "error_code": 403 if current_user else 401,
+                "error_title": "Доступ запрещен" if current_user else "Требуется авторизация",
+                "error_message": "У вас нет доступа к этому проекту." if current_user else "Этот проект приватный. Пожалуйста, авторизуйтесь для доступа.",
+                "back_url": "/projects" if current_user else "/login"
             },
-            status_code=404
+            status_code=403 if current_user else 401
         )
-        
-    # Check access rights
-    if project.owner_id != current_user.id and not project.is_public:
-        shared = db.query(ProjectShare).filter(
-            ProjectShare.project_id == project_id,
-            ProjectShare.shared_email == current_user.email,
-            ProjectShare.is_accepted == True
+    
+    # Получаем MIDI-файлы проекта
+    midi_files = db.query(MidiFile).filter(MidiFile.project_id == project_id).all()
+    
+    # Определяем, является ли пользователь владельцем проекта
+    is_owner = current_user and project.owner_id == current_user.id
+    
+    # Определяем, лайкнул ли пользователь проект
+    has_liked = False
+    if current_user:
+        like = db.query(ProjectLike).filter(
+            ProjectLike.project_id == project_id,
+            ProjectLike.user_id == current_user.id
         ).first()
-        if not shared:
-            return templates.TemplateResponse(
-                "error.html",
-                {
-                    "request": request,
-                    "error_code": 403,
-                    "error_title": "Access Denied",
-                    "error_message": "You don't have permission to access this project.",
-                    "back_url": "/projects"
-                },
-                status_code=403
-            )
+        has_liked = like is not None
     
     return templates.TemplateResponse(
         "projects/detail.html",
-        {"request": request, "user": current_user, "project": project}
+        {
+            "request": request, 
+            "user": current_user, 
+            "project": project, 
+            "midi_files": midi_files,
+            "is_owner": is_owner,
+            "has_liked": has_liked
+        }
     )
 
 @router.post("/{project_id}/share")
@@ -193,6 +206,394 @@ async def project_likes(
         }
     )
 
+# Маршрут для загрузки аудиофайла и преобразования в MIDI
+@router.post("/{project_id}/upload-audio")
+async def upload_audio(
+    project_id: int,
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Проверяем доступ к проекту
+    project = get_project_with_access_check(project_id, current_user, db, allow_public=False)
+    if not project:
+        return JSONResponse(
+            content={"error": "Проект не найден или у вас нет доступа к нему"},
+            status_code=403
+        )
+        
+    # Проверяем формат файла
+    allowed_formats = [".wav", ".mp3", ".ogg", ".flac", ".m4a"]
+    file_ext = os.path.splitext(file.filename)[1].lower()
+    if file_ext not in allowed_formats:
+        return JSONResponse(
+            content={"error": f"Неподдерживаемый формат файла. Поддерживаются только: {', '.join(allowed_formats)}"},
+            status_code=400
+        )
+    
+    # Создаем временную директорию для файла
+    temp_dir = tempfile.mkdtemp()
+    try:
+        # Сохраняем файл
+        temp_file_path = os.path.join(temp_dir, file.filename)
+        with open(temp_file_path, "wb") as temp_file:
+            content = await file.read()
+            temp_file.write(content)
+            
+        # Отправляем файл на обработку в сервис basic-pitch
+        try:
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                # Открываем файл с правильным режимом
+                with open(temp_file_path, "rb") as file_data:
+                    files = {"file": (file.filename, file_data, "audio/mpeg")}
+                    # Добавляем больше информации о запросе для диагностики
+                    print(f"Отправка файла {file.filename} на обработку в basic-pitch...")
+                    response = await client.post("http://host.docker.internal:8001/audio-to-midi", files=files)
+                
+                print(f"Получен ответ от basic-pitch: статус {response.status_code}")
+                if response.status_code != 200:
+                    # Попробуем получить детали ошибки
+                    try:
+                        error_content = response.json() if response.headers.get("content-type") == "application/json" else {"error": "Ошибка при обработке файла"}
+                    except Exception as json_err:
+                        error_content = {"error": f"Ошибка при обработке файла: {str(response.content)[:100]}..."}
+                    
+                    print(f"Ошибка при обработке в basic-pitch: {error_content}")
+                    return JSONResponse(
+                        content=error_content,
+                        status_code=response.status_code
+                    )
+        except Exception as http_error:
+            error_msg = f"Ошибка при отправке запроса к сервису basic-pitch: {str(http_error)}"
+            print(error_msg)
+            return JSONResponse(
+                content={"error": error_msg},
+                status_code=500
+            )
+        
+        # Создаем директорию для MIDI-файлов, если она не существует
+        midi_dir = os.path.join("static", "midi")
+        os.makedirs(midi_dir, exist_ok=True)
+        
+        # Генерируем уникальное имя для файла
+        now = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"midi_{project_id}_{now}_{uuid.uuid4().hex[:8]}.mid"
+        file_path = os.path.join(midi_dir, filename)
+        
+        # Сохраняем MIDI-файл
+        with open(file_path, "wb") as f:
+            f.write(response.content)
+        
+        # Создаем запись в БД
+        midi_file = MidiFile(
+            project_id=project_id,
+            filename=filename,
+            original_filename=os.path.splitext(file.filename)[0] + ".mid",
+            file_path=file_path
+        )
+        
+        db.add(midi_file)
+        db.commit()
+        db.refresh(midi_file)
+        
+        # Добавляем задачу на удаление временных файлов
+        background_tasks.add_task(lambda: shutil.rmtree(temp_dir) if os.path.exists(temp_dir) else None)
+        
+        # Возвращаем результат
+        return JSONResponse({
+            "id": midi_file.id,
+            "filename": midi_file.filename,
+            "original_filename": midi_file.original_filename,
+            "file_path": f"/static/midi/{midi_file.filename}"
+        })
+        
+    except Exception as e:
+        # В случае ошибки удаляем временные файлы и выводим детальную информацию
+        import traceback
+        error_traceback = traceback.format_exc()
+        print(f"Ошибка при обработке аудиофайла: {str(e)}")
+        print(f"Трассировка: {error_traceback}")
+        shutil.rmtree(temp_dir, ignore_errors=True)
+        return JSONResponse(
+            content={"error": f"Ошибка при обработке аудиофайла: {str(e)}"},
+            status_code=500
+        )
+
+# Маршрут для получения MIDI-файла
+@router.get("/{project_id}/midi/{midi_id}")
+async def get_midi_file(
+    project_id: int,
+    midi_id: int,
+    request: Request,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Проверяем доступ к проекту (в том числе для неавторизованных пользователей)
+    project = get_project_with_access_check(project_id, current_user, db)
+    if not project:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 403 if current_user else 401,
+                "error_title": "Доступ запрещен" if current_user else "Требуется авторизация",
+                "error_message": "У вас нет доступа к этому проекту." if current_user else "Этот проект приватный. Пожалуйста, авторизуйтесь для доступа.",
+                "back_url": "/projects" if current_user else "/login"
+            },
+            status_code=403 if current_user else 401
+        )
+    
+    # Получаем MIDI-файл
+    midi_file = db.query(MidiFile).filter(
+        MidiFile.id == midi_id,
+        MidiFile.project_id == project_id
+    ).first()
+    
+    if not midi_file:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 404,
+                "error_title": "Файл не найден",
+                "error_message": "Запрашиваемый MIDI-файл не найден.",
+                "back_url": f"/projects/{project_id}"
+            },
+            status_code=404
+        )
+    
+    # Возвращаем файл
+    return FileResponse(
+        path=midi_file.file_path,
+        filename=midi_file.original_filename,
+        media_type="audio/midi"
+    )
+
+# Маршрут для удаления MIDI-файла
+@router.post("/{project_id}/midi/{midi_id}/delete")
+async def delete_midi_file(
+    project_id: int,
+    midi_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Проверяем, что пользователь имеет права на удаление файла
+    project = db.query(Project).filter(
+        Project.id == project_id,
+        Project.owner_id == current_user.id
+    ).first()
+    
+    if not project:
+        return JSONResponse(
+            content={"error": "Проект не найден или у вас нет прав для его редактирования"},
+            status_code=403
+        )
+    
+    # Получаем MIDI-файл
+    midi_file = db.query(MidiFile).filter(
+        MidiFile.id == midi_id,
+        MidiFile.project_id == project_id
+    ).first()
+    
+    if not midi_file:
+        return JSONResponse(
+            content={"error": "MIDI-файл не найден"},
+            status_code=404
+        )
+    
+    # Удаляем файл с диска
+    if os.path.exists(midi_file.file_path):
+        os.remove(midi_file.file_path)
+    
+    # Удаляем запись из БД
+    db.delete(midi_file)
+    db.commit()
+    
+    return JSONResponse({"success": True})
+
+# Маршруты для работы с табулатурами
+
+@router.get("/{project_id}/midi/{midi_id}/tab")
+async def generate_tab_page(project_id: int, midi_id: int, request: Request, current_user: Optional[User] = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Страница генерации табулатуры из MIDI-файла"""
+    # Проверка доступа к проекту
+    project = get_project_with_access_check(project_id, current_user, db)
+    if not project:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Проект не найден или у вас нет к нему доступа")
+    
+    # Проверка наличия MIDI-файла
+    midi_file = db.query(MidiFile).filter(MidiFile.id == midi_id, MidiFile.project_id == project_id).first()
+    if not midi_file:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="MIDI-файл не найден")
+    
+    # Проверяем, есть ли уже табулатура для этого MIDI
+    existing_tab = db.query(Tablature).filter(Tablature.midi_file_id == midi_id).first()
+    
+    # Если табулатура существует, перенаправляем на её просмотр
+    if existing_tab:
+        return RedirectResponse(url=f"/projects/{project_id}/midi/{midi_id}/tab/view", status_code=303)
+    
+    return templates.TemplateResponse(
+        "projects/generate_tab.html",
+        {
+            "request": request, 
+            "user": current_user, 
+            "project": project,
+            "midi_file": midi_file
+        }
+    )
+
+
+@router.post("/{project_id}/midi/{midi_id}/tab/generate")
+async def generate_tab(project_id: int, midi_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Генерация табулатуры из MIDI-файла"""
+    # Проверка доступа к проекту
+    project = get_project_with_access_check(project_id, current_user, db)
+    if not project:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"error": "Проект не найден или у вас нет к нему доступа"}
+        )
+    
+    # Проверка наличия MIDI-файла
+    midi_file = db.query(MidiFile).filter(MidiFile.id == midi_id, MidiFile.project_id == project_id).first()
+    if not midi_file:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"error": "MIDI-файл не найден"}
+        )
+    
+    # Проверяем, есть ли уже табулатура для этого MIDI
+    existing_tab = db.query(Tablature).filter(Tablature.midi_file_id == midi_id).first()
+    if existing_tab:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "message": "Табулатура уже существует",
+                "redirect_url": f"/projects/{project_id}/midi/{midi_id}/tab/view"
+            }
+        )
+    
+    try:
+        # Получаем путь к MIDI-файлу
+        midi_path = os.path.join("uploads", "midi", f"{midi_file.filename}")
+        
+        # Конвертируем MIDI в табулатуру
+        tab_data = convert_midi_to_tablature(midi_path)
+        
+        # Создаем текстовое представление табулатуры
+        tab_text = save_tablature(tab_data)
+        
+        # Сохраняем в базу данных
+        new_tab = Tablature(
+            midi_file_id=midi_id,
+            tab_data=tab_data,
+            tab_text=tab_text,
+            is_edited=False
+        )
+        db.add(new_tab)
+        db.commit()
+        db.refresh(new_tab)
+        
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content={
+                "message": "Табулатура успешно создана",
+                "redirect_url": f"/projects/{project_id}/midi/{midi_id}/tab/view"
+            }
+        )
+    except Exception as e:
+        # В случае ошибки возвращаем JSON с описанием ошибки
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"error": f"Ошибка при генерации табулатуры: {str(e)}"}
+        )
+
+
+@router.get("/{project_id}/midi/{midi_id}/tab/view")
+async def view_tab(project_id: int, midi_id: int, request: Request, current_user: Optional[User] = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Просмотр табулатуры"""
+    # Проверка доступа к проекту
+    project = get_project_with_access_check(project_id, current_user, db, allow_public=True)
+    if not project:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Проект не найден или у вас нет к нему доступа")
+    
+    # Проверка наличия MIDI-файла
+    midi_file = db.query(MidiFile).filter(MidiFile.id == midi_id, MidiFile.project_id == project_id).first()
+    if not midi_file:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="MIDI-файл не найден")
+    
+    # Проверяем наличие табулатуры
+    tablature = db.query(Tablature).filter(Tablature.midi_file_id == midi_id).first()
+    if not tablature:
+        # Если табулатуры нет, перенаправляем на страницу генерации
+        return RedirectResponse(url=f"/projects/{project_id}/midi/{midi_id}/tab", status_code=303)
+    
+    return templates.TemplateResponse(
+        "projects/view_tab.html",
+        {
+            "request": request, 
+            "user": current_user, 
+            "project": project,
+            "midi_file": midi_file,
+            "tablature": tablature
+        }
+    )
+
+
+@router.post("/{project_id}/midi/{midi_id}/tab/update")
+async def update_tab(project_id: int, midi_id: int, request: Request, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Обновление табулатуры"""
+    # Проверка доступа к проекту (только владелец может редактировать)
+    project = db.query(Project).filter(Project.id == project_id, Project.owner_id == current_user.id).first()
+    if not project:
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={"error": "Только владелец проекта может редактировать табулатуру"}
+        )
+    
+    # Проверка наличия MIDI и табулатуры
+    midi_file = db.query(MidiFile).filter(MidiFile.id == midi_id, MidiFile.project_id == project_id).first()
+    if not midi_file:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"error": "MIDI-файл не найден"}
+        )
+    
+    tablature = db.query(Tablature).filter(Tablature.midi_file_id == midi_id).first()
+    if not tablature:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"error": "Табулатура не найдена"}
+        )
+    
+    try:
+        # Получаем данные из запроса
+        tab_data = await request.json()
+        
+        # Обновляем данные табулатуры
+        tablature.tab_data = tab_data
+        tablature.is_edited = True
+        tablature.last_edited_at = datetime.utcnow()
+        
+        # Обновляем текстовое представление
+        tablature.tab_text = save_tablature(tab_data)
+        
+        db.commit()
+        db.refresh(tablature)
+        
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={"message": "Табулатура успешно обновлена"}
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"error": f"Ошибка при обновлении табулатуры: {str(e)}"}
+        )
+
+
 # API-маршрут для лайка проекта
 @router.post("/{project_id}/like")
 async def like_project(
@@ -211,11 +612,14 @@ async def like_project(
         ProjectLike.user_id == current_user.id
     ).first()
     
+    # Импортируем функцию создания уведомлений
+    from ..routers.notifications import create_notification
+    
     if existing_like:
         # Если лайк уже существует, удаляем его (отменяем лайк)
         db.delete(existing_like)
         db.commit()
-        return {"success": True, "message": "Лайк удален", "action": "unliked", "likes_count": len(project.likes) - 1}
+        return {"status": "success", "message": "Лайк удален", "action": "unliked", "likes_count": len(project.likes) - 1}
     else:
         # Создаем новый лайк
         new_like = ProjectLike(
@@ -226,12 +630,13 @@ async def like_project(
         
         # Добавляем уведомление владельцу проекта, если он не является тем, кто лайкнул
         if project.owner_id != current_user.id:
-            notification = Notification(
+            create_notification(
+                db=db,
                 user_id=project.owner_id,
-                content=f"{current_user.full_name} оценил ваш проект '{project.title}'",
-                link=f"/projects/{project_id}"
+                notification_type="like",
+                title="Новый лайк",
+                content=f"{current_user.full_name} оценил ваш проект '{project.title}'"
             )
-            db.add(notification)
             
         db.commit()
-        return {"success": True, "message": "Лайк добавлен", "action": "liked", "likes_count": len(project.likes) + 1}
+        return {"status": "success", "message": "Лайк добавлен", "action": "liked", "likes_count": len(project.likes) + 1}

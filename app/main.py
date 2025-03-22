@@ -68,10 +68,11 @@ async def landing_page(request: Request, db: Session = Depends(get_db)):
     )
 
 # Include routers
-from .routers import auth, users, projects
+from .routers import auth, users, projects, notifications
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(projects.router)
+app.include_router(notifications.router)
 
 # Home page route
 @app.get("/home")
