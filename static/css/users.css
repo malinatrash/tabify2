@@ -1,0 +1,141 @@
+/* Стили для пользовательских страниц и списков */
+
+/* Сетка пользователей */
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+/* Карточка пользователя */
+.user-card {
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.user-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.user-avatar {
+  margin-right: 16px;
+  position: relative;
+}
+
+.avatar-image-sm {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar-placeholder-sm {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(100, 100, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.user-since {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0;
+}
+
+.user-stats {
+  display: flex;
+  margin-bottom: 16px;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.user-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+
+/* Стили для пустого состояния */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-state p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Стили для ссылок на статистику в профиле */
+.stats-link {
+  text-decoration: none;
+  transition: all 0.2s ease;
+  color: inherit;
+}
+
+.stats-link:hover {
+  color: rgba(100, 100, 255, 0.9);
+}
+
+.author-link, .likes-link {
+  text-decoration: none;
+  transition: all 0.2s ease;
+  color: inherit;
+}
+
+.author-link:hover, .likes-link:hover {
+  color: rgba(100, 100, 255, 0.9);
+  text-decoration: underline;
+}
+
+/* Адаптивный дизайн */
+@media (max-width: 768px) {
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .user-card-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .user-card-actions .vision-btn {
+    width: 100%;
+  }
+}

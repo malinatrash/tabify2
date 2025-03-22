@@ -3,12 +3,12 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from ..database import get_db
-from ..models import User
-from .auth import get_current_user
+from ..models import User, UserFollow
 from typing import Optional
 from datetime import datetime
 import os
 from PIL import Image
+from .auth import get_current_user, get_optional_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 templates = Jinja2Templates(directory="templates")
@@ -136,14 +136,10 @@ async def mark_notification_read(
 async def view_user_profile(
     user_id: int,
     request: Request,
-    current_user: Optional[User] = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db),
     is_edit_mode: bool = False
 ):
-    # Проверка авторизации пользователя
-    if not current_user:
-        return RedirectResponse(url="/auth/login")
-    
     # Получение пользователя по ID
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -160,7 +156,9 @@ async def view_user_profile(
         )
     
     # Проверка, является ли это собственным профилем или публичным
-    is_own_profile = current_user.id == user_id
+    is_own_profile = current_user and current_user.id == user_id
+    
+    # Если профиль приватный и это не собственный профиль
     if not is_own_profile and not user.is_public_profile:
         return templates.TemplateResponse(
             "error.html",
@@ -178,7 +176,9 @@ async def view_user_profile(
     public_projects = [p for p in user.projects if p.is_public]
     
     # Проверка, подписан ли текущий пользователь на просматриваемого
-    is_following = any(follow.followed_id == user_id for follow in current_user.following)
+    is_following = False
+    if current_user:
+        is_following = any(follow.followed_id == user_id for follow in current_user.following)
     
     return templates.TemplateResponse(
         "users/profile.html",
@@ -199,6 +199,308 @@ async def edit_profile(user_id: int, request: Request, current_user: User = Depe
     # Редактировать можно только свой профиль
     if current_user.id != user_id:
         return RedirectResponse(url=f"/users/profile/{user_id}")
+
+# Маршрут для просмотра списка подписчиков пользователя
+@router.get("/profile/{user_id}/followers")
+async def view_followers(
+    user_id: int,
+    request: Request,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Получение пользователя по ID
+    user_profile = db.query(User).filter(User.id == user_id).first()
+    if not user_profile:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 404,
+                "error_title": "Пользователь не найден",
+                "error_message": "Пользователь, которого вы ищете, не существует.",
+                "back_url": "/"
+            },
+            status_code=404
+        )
     
-    # Используем тот же обработчик, но с флагом редактирования
-    return await view_user_profile(user_id, request, current_user, db, is_edit_mode=True)
+    # Проверка доступа к профилю (публичный или владелец)
+    is_owner = current_user and current_user.id == user_profile.id
+    if not user_profile.is_public_profile and not is_owner:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 403,
+                "error_title": "Приватный профиль",
+                "error_message": "У вас нет доступа к этому профилю.",
+                "back_url": "/"
+            },
+            status_code=403
+        )
+    
+    # Получение списка подписчиков
+    followers = user_profile.followers
+    followers_users = [follow.follower for follow in followers]
+    
+    return templates.TemplateResponse(
+        "users/users_list.html",
+        {
+            "request": request,
+            "current_user": current_user,
+            "users": followers_users,
+            "user_profile": user_profile,
+            "title": f"Подписчики {user_profile.full_name}",
+            "empty_message": "У пользователя пока нет подписчиков."
+        }
+    )
+
+# Маршрут для просмотра списка подписок пользователя
+@router.get("/profile/{user_id}/following")
+async def view_following(
+    user_id: int,
+    request: Request,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Получение пользователя по ID
+    user_profile = db.query(User).filter(User.id == user_id).first()
+    if not user_profile:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 404,
+                "error_title": "Пользователь не найден",
+                "error_message": "Пользователь, которого вы ищете, не существует.",
+                "back_url": "/"
+            },
+            status_code=404
+        )
+    
+    # Проверка доступа к профилю (публичный или владелец)
+    is_owner = current_user and current_user.id == user_profile.id
+    if not user_profile.is_public_profile and not is_owner:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 403,
+                "error_title": "Приватный профиль",
+                "error_message": "У вас нет доступа к этому профилю.",
+                "back_url": "/"
+            },
+            status_code=403
+        )
+    
+    # Получение списка подписок
+    following = user_profile.following
+    following_users = [follow.followed for follow in following]
+    
+    return templates.TemplateResponse(
+        "users/users_list.html",
+        {
+            "request": request,
+            "current_user": current_user,
+            "users": following_users,
+            "user_profile": user_profile,
+            "title": f"Подписки {user_profile.full_name}",
+            "empty_message": "Пользователь пока ни на кого не подписан."
+        }
+    )
+
+# Маршрут для просмотра списка лайков проекта
+@router.get("/projects/{project_id}/likes")
+async def view_project_likes(
+    project_id: int,
+    request: Request,
+    current_user: Optional[User] = Depends(get_optional_user),
+    db: Session = Depends(get_db)
+):
+    from ..models import Project, ProjectLike
+    
+    # Получение проекта по ID
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if not project:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 404,
+                "error_title": "Project Not Found",
+                "error_message": "The project you're looking for doesn't exist.",
+                "back_url": "/projects"
+            },
+            status_code=404
+        )
+    
+    # Проверка доступа к проекту (публичный или владелец)
+    is_owner = current_user and current_user.id == project.owner_id
+    if not project.is_public and not is_owner:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 403,
+                "error_title": "Private Project",
+                "error_message": "You don't have access to this project.",
+                "back_url": "/projects"
+            },
+            status_code=403
+        )
+    
+    # Получение списка пользователей, которые лайкнули проект
+    likes = db.query(ProjectLike).filter(ProjectLike.project_id == project_id).all()
+    users_who_liked = [like.user for like in likes]
+    
+    return templates.TemplateResponse(
+        "users/likes_list.html",
+        {
+            "request": request,
+            "project": project,
+            "users": users_who_liked,
+            "current_user": current_user,
+            "title": f"Users who liked {project.title}"
+        }
+    )
+
+# Маршрут для просмотра списка подписчиков
+@router.get("/profile/{user_id}/followers")
+async def view_followers(
+    user_id: int,
+    request: Request,
+    current_user: Optional[User] = Depends(get_optional_user),
+    db: Session = Depends(get_db)
+):
+    # Получение пользователя по ID
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 404,
+                "error_title": "User Not Found",
+                "error_message": "The user you're looking for doesn't exist.",
+                "back_url": "/home"
+            },
+            status_code=404
+        )
+    
+    # Проверка доступа (публичный профиль или собственный)
+    is_own_profile = current_user and current_user.id == user_id
+    if not user.is_public_profile and not is_own_profile:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 403,
+                "error_title": "Private Profile",
+                "error_message": "This user's profile is private.",
+                "back_url": "/home"
+            },
+            status_code=403
+        )
+    
+    # Получение списка подписчиков
+    followers = [follow.follower for follow in user.followers]
+    
+    return templates.TemplateResponse(
+        "users/users_list.html",
+        {
+            "request": request,
+            "user_profile": user,
+            "users": followers,
+            "current_user": current_user,
+            "title": f"Followers of {user.full_name}",
+            "empty_message": "No followers yet."
+        }
+    )
+
+# Маршрут для просмотра списка подписок
+@router.get("/profile/{user_id}/following")
+async def view_following(
+    user_id: int,
+    request: Request,
+    current_user: Optional[User] = Depends(get_optional_user),
+    db: Session = Depends(get_db)
+):
+    # Получение пользователя по ID
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 404,
+                "error_title": "User Not Found",
+                "error_message": "The user you're looking for doesn't exist.",
+                "back_url": "/home"
+            },
+            status_code=404
+        )
+    
+    # Проверка доступа (публичный профиль или собственный)
+    is_own_profile = current_user and current_user.id == user_id
+    if not user.is_public_profile and not is_own_profile:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 403,
+                "error_title": "Private Profile",
+                "error_message": "This user's profile is private.",
+                "back_url": "/home"
+            },
+            status_code=403
+        )
+    
+    # Получение списка подписок
+    following = [follow.followed for follow in user.following]
+    
+    return templates.TemplateResponse(
+        "users/users_list.html",
+        {
+            "request": request,
+            "user_profile": user,
+            "users": following,
+            "current_user": current_user,
+            "title": f"Users followed by {user.full_name}",
+            "empty_message": "Not following anyone yet."
+        }
+    )
+
+# API-маршрут для подписки/отписки от пользователя
+@router.post("/{user_id}/follow")
+async def follow_user(
+    user_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if current_user.id == user_id:
+        return {"success": False, "message": "Вы не можете подписаться на самого себя"}
+    
+    # Проверяем, существует ли пользователь, на которого хотим подписаться
+    target_user = db.query(User).filter(User.id == user_id).first()
+    if not target_user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    
+    # Проверяем, подписаны ли мы уже на этого пользователя
+    existing_follow = db.query(UserFollow).filter(
+        UserFollow.follower_id == current_user.id,
+        UserFollow.followed_id == user_id
+    ).first()
+    
+    if existing_follow:
+        # Отписываемся
+        db.delete(existing_follow)
+        db.commit()
+        return {"success": True, "message": f"Вы отписались от пользователя {target_user.full_name}", "action": "unfollowed"}
+    else:
+        # Подписываемся
+        new_follow = UserFollow(
+            follower_id=current_user.id,
+            followed_id=user_id
+        )
+        db.add(new_follow)
+        db.commit()
+        return {"success": True, "message": f"Вы подписались на пользователя {target_user.full_name}", "action": "followed"}

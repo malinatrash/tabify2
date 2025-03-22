@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFi
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from ..database import get_db
-from ..models import User, Project, ProjectShare, Notification
+from ..models import User, Project, ProjectShare, Notification, ProjectLike
 from .auth import get_current_user
 from datetime import datetime
 from typing import Optional
@@ -11,6 +11,28 @@ import secrets
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 templates = Jinja2Templates(directory="templates")
+
+# Функция для получения проекта с проверкой доступа
+def get_project_with_access_check(project_id: int, current_user: User, db: Session, allow_public: bool = True):
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if not project:
+        return None
+        
+    # Проверка прав доступа
+    has_access = (
+        project.owner_id == getattr(current_user, 'id', None) or  # владелец
+        (allow_public and project.is_public) or  # публичный проект, если разрешен просмотр публичных
+        (current_user and db.query(ProjectShare).filter(
+            ProjectShare.project_id == project_id,
+            ProjectShare.shared_email == current_user.email,
+            ProjectShare.is_accepted == True
+        ).first() is not None)  # доступ через приглашение
+    )
+    
+    if not has_access:
+        return None
+        
+    return project
 
 @router.get("/")
 async def projects_list(request: Request, current_user: User = Depends(get_current_user)):
@@ -131,3 +153,41 @@ async def share_project(
     db.commit()
     
     return {"message": "Project shared successfully"}
+
+@router.get("/{project_id}/likes")
+async def project_likes(
+    project_id: int,
+    request: Request,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Используем функцию для проверки доступа к проекту
+    project = get_project_with_access_check(project_id, current_user, db, allow_public=True)
+    
+    if not project:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error_code": 404,
+                "error_title": "Проект не найден",
+                "error_message": "Проект, который вы ищете, не существует или у вас нет доступа к нему.",
+                "back_url": "/projects"
+            },
+            status_code=404
+        )
+    
+    # Получаем пользователей, которые лайкнули проект
+    likes = db.query(ProjectLike).filter(ProjectLike.project_id == project_id).all()
+    users = [like.user for like in likes]
+    
+    return templates.TemplateResponse(
+        "users/likes_list.html",
+        {
+            "request": request, 
+            "current_user": current_user, 
+            "users": users,
+            "project": project,
+            "title": f"Пользователи, оценившие проект '{project.title}'"
+        }
+    )

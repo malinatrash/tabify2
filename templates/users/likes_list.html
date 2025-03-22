@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="vision-glass-card fade-in">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="vision-card-title">{{ title }}</h2>
+            <a href="/projects/{{ project.id }}" class="vision-btn vision-btn-secondary">
+                <i class="fas fa-arrow-left"></i> Назад к проекту
+            </a>
+        </div>
+
+        {% if users %}
+        <div class="users-grid">
+            {% for user_item in users %}
+            <div class="vision-glass-card user-card fade-in">
+                <div class="user-card-header">
+                    <div class="user-avatar">
+                        {% if user_item.avatar_url %}
+                        <img src="{{ user_item.avatar_url }}" alt="{{ user_item.full_name }}" class="avatar-image-sm">
+                        {% else %}
+                        <div class="avatar-placeholder-sm">
+                            <span>{{ user_item.full_name[:1] }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="user-info">
+                        <h3 class="user-name">{{ user_item.full_name }}</h3>
+                        <p class="user-since">Оценил {{ user_item.liked_projects|selectattr('project_id', 'equalto',
+                            project.id)|map(attribute='created_at')|first|default(None)|dateformat }}</p>
+                    </div>
+                </div>
+
+                <div class="user-stats">
+                    <span><strong>{{ user_item.projects|selectattr('is_public')|list|length }}</strong> проектов</span>
+                    <span><strong>{{ user_item.followers|length }}</strong> подписчиков</span>
+                </div>
+
+                <div class="user-card-actions">
+                    <a href="/users/profile/{{ user_item.id }}" class="vision-btn vision-btn-primary btn-sm">
+                        <i class="fas fa-user"></i> Просмотреть профиль
+                    </a>
+
+                    {% if current_user and current_user.id != user_item.id %}
+                    <button class="vision-btn vision-btn-outline follow-btn btn-sm" data-user-id="{{ user_item.id }}">
+                        {% set is_following = false %}
+                        {% for follow in current_user.following %}
+                        {% if follow.followed_id == user_item.id %}
+                        {% set is_following = true %}
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if is_following %}
+                        <i class="fas fa-user-minus"></i> Отписаться
+                        {% else %}
+                        <i class="fas fa-user-plus"></i> Подписаться
+                        {% endif %}
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state fade-in">
+            <p>Этот проект еще никто не оценил.</p>
+            <a href="/projects/{{ project.id }}" class="vision-btn vision-btn-primary">Вернуться к проекту</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Обработка кнопок подписки
+        const followButtons = document.querySelectorAll('.follow-btn')
+        followButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const userId = this.dataset.userId
+                followUser(userId)
+            })
+        })
+    })
+
+    // Функция для подписки/отписки
+    function followUser(userId) {
+        fetch(`/api/users/${userId}/follow`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Обновляем интерфейс после успешной подписки/отписки
+                    const buttons = document.querySelectorAll(`.follow-btn[data-user-id="${userId}"]`)
+                    buttons.forEach(btn => {
+                        if (data.action === 'followed') {
+                            btn.innerHTML = '<i class="fas fa-user-minus"></i> Отписаться'
+                        } else {
+                            btn.innerHTML = '<i class="fas fa-user-plus"></i> Подписаться'
+                        }
+                    })
+
+                    // Показываем уведомление
+                    showToast({
+                        message: data.message,
+                        type: 'success'
+                    })
+                } else {
+                    showToast({
+                        message: data.message || 'Произошла ошибка',
+                        type: 'error'
+                    })
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error)
+                showToast({
+                    message: 'Произошла ошибка при выполнении запроса',
+                    type: 'error'
+                })
+            })
+    }
+</script>
+{% endblock %}

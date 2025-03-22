@@ -18,19 +18,22 @@
 						<span class="upload-icon"><i class="fas fa-camera"></i></span>
 					</div>
 					{% endif %}
-				{% if is_own_profile %}
-					<form id="avatarForm" action="/users/profile/{{ user.id }}/avatar" method="POST" enctype="multipart/form-data" style="display: none;">
+					{% if is_own_profile %}
+					<form id="avatarForm" action="/users/profile/{{ user.id }}/avatar" method="POST" enctype="multipart/form-data"
+						style="display: none;">
 						<input type="file" id="avatarInput" name="avatar" accept="image/*">
 					</form>
-				{% endif %}
+					{% endif %}
 				</div>
 				<div class="profile-info-main">
 					<h2 class="vision-card-title">{{ user.full_name }}</h2>
 					<p class="member-since">Member since {{ user.created_at.strftime('%B %d, %Y') }}</p>
 					<div class="profile-stats">
 						<span><strong>{{ public_projects|length }}</strong> projects</span>
-						<span><strong>{{ user.followers|length }}</strong> followers</span>
-						<span><strong>{{ user.following|length }}</strong> following</span>
+						<a href="/users/profile/{{ user.id }}/followers" class="stats-link"><span><strong>{{ user.followers|length
+									}}</strong> followers</span></a>
+						<a href="/users/profile/{{ user.id }}/following" class="stats-link"><span><strong>{{ user.following|length
+									}}</strong> following</span></a>
 					</div>
 				</div>
 			</div>
@@ -49,7 +52,10 @@
 				<h3 class="profile-section-title">Basic Information</h3>
 				<div class="info-row">
 					<div class="info-group">
-						<label for="email">Email <span class="field-status">{% if user.is_email_verified %}<span class="verified-badge" title="Verified"><i class="fas fa-check-circle"></i></span>{% else %}<span class="unverified-badge" title="Not Verified"><i class="fas fa-exclamation-circle"></i></span>{% endif %}</span></label>
+						<label for="email">Email <span class="field-status">{% if user.is_email_verified %}<span
+									class="verified-badge" title="Verified"><i class="fas fa-check-circle"></i></span>{% else %}<span
+									class="unverified-badge" title="Not Verified"><i class="fas fa-exclamation-circle"></i></span>{% endif
+								%}</span></label>
 						<input type="email" id="email" name="email" value="{{ user.email }}" class="vision-input" required>
 						<div class="field-help">This address is used for login and notifications</div>
 					</div>
@@ -63,8 +69,8 @@
 					</div>
 					<div class="info-group">
 						<label for="phone_number">Phone Number</label>
-						<input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}"
-							class="vision-input" placeholder="+1 (XXX) XXX-XXXX">
+						<input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}" class="vision-input"
+							placeholder="+1 (XXX) XXX-XXXX">
 						<div class="field-help">Optional, for emergency contact</div>
 					</div>
 				</div>
@@ -72,7 +78,8 @@
 				<h3 class="profile-section-title">Privacy Settings</h3>
 				<div class="info-group checkbox-group">
 					<label class="checkbox-container tooltip-container">
-						<input type="checkbox" name="is_public_profile" id="is_public_profile" {% if user.is_public_profile %}checked{% endif %}>
+						<input type="checkbox" name="is_public_profile" id="is_public_profile" {% if user.is_public_profile
+							%}checked{% endif %}>
 						<span class="checkmark"></span>
 						<span class="checkbox-label">Make my profile public</span>
 						<span class="checkbox-tooltip">Other users will be able to see your public projects</span>
@@ -80,7 +87,8 @@
 				</div>
 				<div class="info-group checkbox-group">
 					<label class="checkbox-container tooltip-container">
-						<input type="checkbox" name="is_email_notifications_enabled" id="is_email_notifications_enabled" {% if user.is_email_notifications_enabled %}checked{% endif %}>
+						<input type="checkbox" name="is_email_notifications_enabled" id="is_email_notifications_enabled" {% if
+							user.is_email_notifications_enabled %}checked{% endif %}>
 						<span class="checkmark"></span>
 						<span class="checkbox-label">Enable email notifications</span>
 						<span class="checkbox-tooltip">Receive notifications about new followers and comments</span>
@@ -114,7 +122,8 @@
 				<div class="project-meta">
 					<span class="project-date">Created: {{ project.created_at.strftime('%B %d, %Y') }}</span>
 					<div class="project-info">
-						<span class="likes-count">❤️ {{ project.likes|length }}</span>
+						<a href="/projects/{{ project.id }}/likes" class="likes-link"><span class="likes-count">❤️ {{
+								project.likes|length }}</span></a>
 					</div>
 				</div>
 				<div class="project-actions">
@@ -131,9 +140,9 @@
 	function followUser(userId) {
 		// Преобразуем userId в число, если это строка
 		if (typeof userId === 'string') {
-			userId = parseInt(userId, 10);
+			userId = parseInt(userId, 10)
 		}
-		fetch(`/api/users/${userId}/follow`, {
+		fetch(`/users/${userId}/follow`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -154,50 +163,50 @@
 	}
 
 	// Обработка загрузки аватарки
-	document.addEventListener('DOMContentLoaded', function() {
-		const avatarOverlay = document.getElementById('avatarUploadOverlay');
-		const avatarInput = document.getElementById('avatarInput');
-		const avatarForm = document.getElementById('avatarForm');
+	document.addEventListener('DOMContentLoaded', function () {
+		const avatarOverlay = document.getElementById('avatarUploadOverlay')
+		const avatarInput = document.getElementById('avatarInput')
+		const avatarForm = document.getElementById('avatarForm')
 
 		// Обработчик для кнопки подписки
-		const followBtn = document.querySelector('.follow-btn');
+		const followBtn = document.querySelector('.follow-btn')
 		if (followBtn) {
-			followBtn.addEventListener('click', function() {
-				const userId = this.getAttribute('data-user-id');
-				followUser(userId);
-			});
+			followBtn.addEventListener('click', function () {
+				const userId = this.getAttribute('data-user-id')
+				followUser(userId)
+			})
 		}
 
 		if (avatarOverlay && avatarInput) {
-			avatarOverlay.addEventListener('click', function() {
-				avatarInput.click();
-			});
+			avatarOverlay.addEventListener('click', function () {
+				avatarInput.click()
+			})
 
-			avatarInput.addEventListener('change', function() {
+			avatarInput.addEventListener('change', function () {
 				if (this.files && this.files[0]) {
 					// Используем существующий URL формы вместо жестко закодированного пути
-					const formAction = avatarForm.getAttribute('action');
-					const formData = new FormData(avatarForm);
-					
+					const formAction = avatarForm.getAttribute('action')
+					const formData = new FormData(avatarForm)
+
 					fetch(formAction, {
 						method: 'POST',
 						body: formData
 					})
-					.then(response => response.json())
-					.then(data => {
-						if (data.message) {
-							window.toast.success(data.message);
-							// Обновить изображение на странице без перезагрузки
-							setTimeout(() => {
-								location.reload();
-							}, 1000);
-						}
-					})
-					.catch(error => {
-						window.toast.error('Ошибка при загрузке аватарки');
-					});
+						.then(response => response.json())
+						.then(data => {
+							if (data.message) {
+								window.toast.success(data.message)
+								// Обновить изображение на странице без перезагрузки
+								setTimeout(() => {
+									location.reload()
+								}, 1000)
+							}
+						})
+						.catch(error => {
+							window.toast.error('Ошибка при загрузке аватарки')
+						})
 				}
-			});
+			})
 		}
 	});
 </script>

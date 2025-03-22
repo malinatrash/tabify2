@@ -39,6 +39,20 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Templates configuration
 templates = Jinja2Templates(directory="templates")
 
+# Добавляем пользовательские фильтры для Jinja2
+def dateformat(date):
+    if date is None:
+        return ""
+    if isinstance(date, str):
+        from datetime import datetime
+        try:
+            date = datetime.fromisoformat(date)
+        except ValueError:
+            return date
+    return date.strftime("%d.%m.%Y %H:%M")
+
+templates.env.filters["dateformat"] = dateformat
+
 # Landing page route
 @app.get("/")
 async def landing_page(request: Request, db: Session = Depends(get_db)):

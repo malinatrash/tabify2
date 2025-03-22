@@ -69,6 +69,24 @@ async def get_current_user(request: Request, db: Session = Depends(get_db)):
         raise credentials_exception
     return user
 
+# Функция для получения текущего пользователя, но без требования авторизации
+async def get_optional_user(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token or not token.startswith("Bearer "):
+        return None
+    
+    token = token.split(" ")[1]
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            return None
+    except JWTError:
+        return None
+
+    user = db.query(User).filter(User.email == email).first()
+    return user
+
 # Routes
 @router.get("/login")
 async def login_page(request: Request):

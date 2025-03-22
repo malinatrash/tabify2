@@ -17,8 +17,8 @@
 				<div class="project-meta">
 					<span class="project-date">Created: {{ project.created_at.strftime('%B %d, %Y') }}</span>
 					<div class="project-info">
-						<span class="likes-count">❤️ {{ project.likes|length }}</span>
-						<span class="author">by {{ project.owner.full_name }}</span>
+						<a href="/projects/{{ project.id }}/likes" class="likes-link"><span class="likes-count">❤️ {{ project.likes|length }}</span></a>
+						<a href="/users/profile/{{ project.owner.id }}" class="author-link"><span class="author">by {{ project.owner.full_name }}</span></a>
 					</div>
 				</div>
 				<div class="project-actions">
