@@ -94,10 +94,21 @@ async def home_page(request: Request, db: Session = Depends(get_db)):
         .all()
     )
     popular_projects.sort(key=lambda x: len(x.likes), reverse=True)
+    
+    # Получаем популярных пользователей (по количеству подписчиков)
+    all_users = db.query(User).filter(User.id != user_id, User.is_public_profile == True).all()
+    # Сортируем по количеству подписчиков
+    popular_users = sorted(all_users, key=lambda x: len(x.followers), reverse=True)[:5]
         
     return templates.TemplateResponse(
         "home.html",
-        {"request": request, "user": user, "projects": projects, "popular_projects": popular_projects}
+        {
+            "request": request, 
+            "user": user, 
+            "projects": projects, 
+            "popular_projects": popular_projects,
+            "popular_users": popular_users
+        }
     )
 
 # Error handlers

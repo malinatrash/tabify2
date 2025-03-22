@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="vision-glass-card project-detail-card fade-in">
+        <div class="project-header">
+            <h1>{{ project.title }}</h1>
+            <div class="project-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar-alt"></i> Created: {{ project.created_at.strftime('%B %d, %Y') }}
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-user"></i> Owner: <a href="/users/profile/{{ project.owner.id }}">{{ project.owner.full_name }}</a>
+                </div>
+                <div class="meta-item">
+                    <button class="like-btn" data-project-id="{{ project.id }}" title="Like/Unlike">
+                        {% set is_liked = false %}
+                        {% for like in project.likes %}
+                            {% if like.user_id == user.id %}
+                                {% set is_liked = true %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if is_liked %}
+                        <i class="fas fa-heart liked"></i> <span class="likes-count">{{ project.likes|length }}</span>
+                        {% else %}
+                        <i class="far fa-heart"></i> <span class="likes-count">{{ project.likes|length }}</span>
+                        {% endif %}
+                    </button>
+                </div>
+                {% if project.is_public %}
+                <div class="meta-item">
+                    <i class="fas fa-globe"></i> Public Project
+                </div>
+                {% else %}
+                <div class="meta-item">
+                    <i class="fas fa-lock"></i> Private Project
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="project-content">
+            <div class="project-section">
+                <h3>Description</h3>
+                <div class="project-description">
+                    {% if project.description %}
+                    <p>{{ project.description }}</p>
+                    {% else %}
+                    <p class="text-muted">No description provided</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if project.owner_id == user.id %}
+            <div class="project-section">
+                <h3>Project Management</h3>
+                <div class="project-actions">
+                    <a href="/projects/{{ project.id }}/edit" class="vision-btn vision-btn-primary">Edit Project</a>
+                    <button type="button" class="vision-btn vision-btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjectModal">
+                        Delete Project
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="project-section">
+                <h3>Share Project</h3>
+                {% if project.owner_id == user.id %}
+                <form action="/projects/{{ project.id }}/share" method="POST" class="share-form">
+                    <div class="share-input-group">
+                        <input type="email" name="email" class="vision-input" placeholder="Email address" required>
+                        <button type="submit" class="vision-btn vision-btn-primary">Share</button>
+                    </div>
+                </form>
+                {% endif %}
+                
+                {% if project.shares %}
+                <div class="shared-users mt-3">
+                    <h4>Shared With</h4>
+                    <ul class="shared-list">
+                        {% for share in project.shares %}
+                        <li class="shared-user">
+                            <span>{{ share.shared_email }}</span>
+                            {% if share.is_accepted %}
+                            <span class="share-status accepted">Accepted</span>
+                            {% else %}
+                            <span class="share-status pending">Pending</span>
+                            {% endif %}
+                            {% if project.owner_id == user.id %}
+                            <button class="vision-btn vision-btn-sm vision-btn-danger revoke-share-btn" 
+                                    data-project-id="{{ project.id }}" 
+                                    data-email="{{ share.shared_email }}">
+                                Revoke
+                            </button>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Project Modal -->
+<div class="modal fade" id="deleteProjectModal" tabindex="-1" aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content vision-glass-card">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteProjectModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this project? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="vision-btn vision-btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="/projects/{{ project.id }}/delete" method="POST">
+                    <button type="submit" class="vision-btn vision-btn-danger">Delete Project</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .project-detail-card {
+        padding: 30px;
+    }
+    
+    .project-header {
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .project-header h1 {
+        margin-bottom: 15px;
+        color: var(--primary-color);
+    }
+    
+    .project-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .meta-item {
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .project-section {
+        margin-bottom: 30px;
+    }
+    
+    .project-section h3 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: var(--primary-color);
+    }
+    
+    .project-description {
+        background: rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+    }
+    
+    .project-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .share-form {
+        margin-top: 10px;
+    }
+    
+    .share-input-group {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .share-input-group input {
+        flex: 1;
+    }
+    
+    .shared-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .shared-user {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .shared-user:last-child {
+        border-bottom: none;
+    }
+    
+    .shared-user span {
+        flex: 1;
+    }
+    
+    .share-status {
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-right: 10px;
+    }
+    
+    .share-status.accepted {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
+    
+    .share-status.pending {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+    }
+    
+    .revoke-share-btn {
+        padding: 2px 8px;
+        font-size: 0.8rem;
+    }
+
+    .like-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0;
+        font-size: 0.9rem;
+    }
+
+    .like-btn i.fa-heart.liked {
+        color: #e74c3c;
+    }
+
+    .like-btn i.fa-heart {
+        transition: transform 0.2s, color 0.2s;
+    }
+
+    .like-btn:hover i.fa-heart {
+        transform: scale(1.2);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Like/Unlike project functionality
+        const likeButtons = document.querySelectorAll('.like-btn');
+        
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project-id');
+                
+                fetch(`/api/projects/${projectId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const icon = this.querySelector('i');
+                        const likesCount = this.querySelector('.likes-count');
+                        
+                        if (data.action === 'liked') {
+                            icon.classList.remove('far');
+                            icon.classList.add('fas', 'liked');
+                        } else {
+                            icon.classList.remove('fas', 'liked');
+                            icon.classList.add('far');
+                        }
+                        
+                        likesCount.textContent = data.likes_count;
+                    } else {
+                        showToast({
+                            message: data.message || 'Error updating like status',
+                            type: 'error'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast({
+                        message: 'An error occurred while processing your request',
+                        type: 'error'
+                    });
+                });
+            });
+        });
+        
+        // Revoke share functionality
+        const revokeButtons = document.querySelectorAll('.revoke-share-btn');
+        
+        revokeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project-id');
+                const email = this.getAttribute('data-email');
+                
+                if (confirm(`Are you sure you want to revoke access for ${email}?`)) {
+                    fetch(`/projects/${projectId}/revoke-share`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email: email })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Remove this shared user from the list
+                            this.closest('.shared-user').remove();
+                            
+                            showToast({
+                                message: data.message || 'Access revoked successfully',
+                                type: 'success'
+                            });
+                        } else {
+                            showToast({
+                                message: data.message || 'Error revoking access',
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast({
+                            message: 'An error occurred while processing your request',
+                            type: 'error'
+                        });
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

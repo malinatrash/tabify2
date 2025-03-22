@@ -3,15 +3,15 @@
 {% block content %}
 <div class="container mt-5">
     <div class="vision-glass-card fade-in">
-        <h2 class="vision-card-title">Create New Project</h2>
+        <h2 class="vision-card-title">Создать новый проект</h2>
         <form action="/projects/create" method="POST" class="vision-form">
             <div class="form-group">
-                <label for="title">Project Title</label>
+                <label for="title">Название проекта</label>
                 <input type="text" id="title" name="title" class="vision-input" required>
             </div>
 
             <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description">Описание</label>
                 <textarea id="description" name="description" class="vision-input" rows="4"></textarea>
             </div>
 
@@ -19,28 +19,13 @@
                 <label class="checkbox-container">
                     <input type="checkbox" name="is_public" checked>
                     <span class="checkmark"></span>
-                    Make this project public
+                    Сделать этот проект публичным
                 </label>
             </div>
 
-            <div class="form-group">
-                <label>Initial Track</label>
-                <div class="track-form">
-                    <div class="track-input-group">
-                        <input type="text" name="track_name" class="vision-input" placeholder="Track Name" required>
-                        <select name="track_instrument" class="vision-input" required>
-                            <option value="guitar">Guitar</option>
-                            <option value="bass">Bass</option>
-                            <option value="ukulele">Ukulele</option>
-                        </select>
-                    </div>
-                </div>
-                <p class="help-text">You can add more tracks after creating the project</p>
-            </div>
-
             <div class="form-actions">
-                <button type="submit" class="vision-btn vision-btn-primary">Create Project</button>
-                <a href="/projects" class="vision-btn vision-btn-secondary">Cancel</a>
+                <button type="submit" class="vision-btn vision-btn-primary">Создать проект</button>
+                <a href="/projects" class="vision-btn vision-btn-secondary">Отмена</a>
             </div>
         </form>
     </div>

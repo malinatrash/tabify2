@@ -67,7 +67,8 @@ async def create_project(
     db.commit()
     db.refresh(project)
     
-    return {"message": "Project created successfully", "project_id": project.id}
+    # Перенаправляем на страницу проекта
+    return RedirectResponse(url=f"/projects/{project.id}", status_code=303)
 
 @router.get("/{project_id}")
 async def project_detail(
@@ -191,3 +192,46 @@ async def project_likes(
             "title": f"Пользователи, оценившие проект '{project.title}'"
         }
     )
+
+# API-маршрут для лайка проекта
+@router.post("/{project_id}/like")
+async def like_project(
+    project_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Проверяем, существует ли проект
+    project = db.query(Project).filter(Project.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Проект не найден")
+        
+    # Проверяем, есть ли уже лайк от этого пользователя
+    existing_like = db.query(ProjectLike).filter(
+        ProjectLike.project_id == project_id,
+        ProjectLike.user_id == current_user.id
+    ).first()
+    
+    if existing_like:
+        # Если лайк уже существует, удаляем его (отменяем лайк)
+        db.delete(existing_like)
+        db.commit()
+        return {"success": True, "message": "Лайк удален", "action": "unliked", "likes_count": len(project.likes) - 1}
+    else:
+        # Создаем новый лайк
+        new_like = ProjectLike(
+            project_id=project_id,
+            user_id=current_user.id,
+        )
+        db.add(new_like)
+        
+        # Добавляем уведомление владельцу проекта, если он не является тем, кто лайкнул
+        if project.owner_id != current_user.id:
+            notification = Notification(
+                user_id=project.owner_id,
+                content=f"{current_user.full_name} оценил ваш проект '{project.title}'",
+                link=f"/projects/{project_id}"
+            )
+            db.add(notification)
+            
+        db.commit()
+        return {"success": True, "message": "Лайк добавлен", "action": "liked", "likes_count": len(project.likes) + 1}
