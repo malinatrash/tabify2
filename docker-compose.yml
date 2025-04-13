@@ -29,3 +29,7 @@ services:
 
 volumes:
   postgres_data:
+
+networks:
+  tabify_network:
+    external: true
