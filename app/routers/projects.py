@@ -282,7 +282,7 @@ async def upload_audio(
                     # Добавляем больше информации о запросе для диагностики
                     print(
                         f"Отправка файла {file.filename} на обработку в basic-pitch...")
-                    response = await client.post("http://host.docker.internal:8001/audio-to-midi", files=files)
+                    response = await client.post("http://basic-pitch-service:8001/audio-to-midi", files=files)
 
                 print(
                     f"Получен ответ от basic-pitch: статус {response.status_code}")
