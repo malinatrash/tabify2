@@ -1,9 +1,6 @@
-"""
-Модуль для конвертации MIDI-файлов в табулатуры.
-Использует библиотеки music21 и mido для анализа файлов MIDI и создания табулатур.
-"""
+
 from typing import Dict, List, Tuple, Optional
-import pretty_midi
+import mido
 from music21 import converter, note, chord, stream, pitch
 
 # Словарь соответствия MIDI-нот струнам гитары и позициям ладов
@@ -127,7 +124,6 @@ class Tablature:
     
     def __init__(self):
         """Инициализация пустой табулатуры."""
-        # Будем хранить ноты по временным отрезкам (тактам)
         self.measures = []
         self.current_measure = []
         self.measure_duration = 4.0  # По умолчанию 4/4
@@ -135,431 +131,97 @@ class Tablature:
     
     def add_note(self, tab_note: TabNote):
         """Добавить ноту в табулатуру."""
-        # Если нота выходит за пределы текущего такта, создаем новый такт
         if tab_note.start_time >= self.current_time + self.measure_duration:
-            self.measures.append(self.current_measure)
-            self.current_measure = []
+            if self.current_measure:
+                self.measures.append(self.current_measure)
+                self.current_measure = []
             self.current_time += self.measure_duration
         
         self.current_measure.append(tab_note)
     
     def finalize(self):
-        """Завершить создание табулатуры, добавив последний такт."""
+        """Завершить создание табулатуры."""
         if self.current_measure:
             self.measures.append(self.current_measure)
-    
-    def to_text_format(self) -> str:
-        """Преобразовать табулатуру в текстовый формат."""
-        self.finalize()
-        
-        # Если нет нот, возвращаем пустую табулатуру
-        if not self.measures:
-            return "Пустая табулатура"
-        
-        result = []
-        
-        # Заголовок табулатуры
-        result.append("Табулатура")
-        result.append("=" * 40)
-        
-        # Для каждого такта создаем текстовое представление
-        for measure_idx, measure in enumerate(self.measures):
-            # Создаем 6 строк для струн
-            strings = ["E|", "B|", "G|", "D|", "A|", "E|"]
-            
-            # Если в такте нет нот, добавляем пустой такт
-            if not measure:
-                for i in range(6):
-                    strings[i] += "----|"
-            else:
-                # Вычисляем максимальную длину такта в символах
-                max_len = 30  # Произвольное минимальное значение для читаемости
-                
-                # Сортируем ноты по времени начала
-                measure.sort(key=lambda x: x.start_time)
-                
-                # Добавляем ноты на соответствующие струны
-                for note in measure:
-                    # Находим позицию в строке для этой ноты
-                    pos = int(20 * (note.start_time - self.current_time) / self.measure_duration)
-                    
-                    # Добавляем дефисы до позиции ноты
-                    while len(strings[note.string - 1]) < pos + 2:  # +2 для учета начальных символов "X|"
-                        strings[note.string - 1] += "-"
-                    
-                    # Добавляем номер лада
-                    fret_str = str(note.fret)
-                    strings[note.string - 1] += fret_str
-                    
-                    # Обновляем максимальную длину, если нужно
-                    max_len = max(max_len, len(strings[note.string - 1]) + 5)  # +5 для добавления хвоста
-                
-                # Добавляем хвосты строк и разделитель такта
-                for i in range(6):
-                    while len(strings[i]) < max_len:
-                        strings[i] += "-"
-                    strings[i] += "|"
-            
-            # Добавляем строки в результат
-            result.extend(strings)
-            # Пустая строка между тактами
-            result.append("")
-        
-        return "\n".join(result)
+            self.current_measure = []
     
     def to_json(self) -> dict:
-        """Преобразовать табулатуру в формат JSON для AlphaTab."""
+        """Преобразовать табулатуру в JSON формат для отображения."""
         self.finalize()
         
-        # Создаем структуру AlphaTab
-        alphatab_data = {
-            "tracks": [
-                {
-                    "name": "Guitar",
-                    "tuning": [40, 45, 50, 55, 59, 64],  # E2, A2, D3, G3, B3, E4
-                    "measures": []
-                }
+        tab_data = {
+            "title": "Guitar Tab",
+            "strings": [
+                {"name": "e", "notes": []},  # 1-я струна (высокая E)
+                {"name": "B", "notes": []},  # 2-я струна
+                {"name": "G", "notes": []},  # 3-я струна
+                {"name": "D", "notes": []},  # 4-я струна
+                {"name": "A", "notes": []},  # 5-я струна
+                {"name": "E", "notes": []}   # 6-я струна (низкая E)
             ]
         }
         
-        # Для каждого такта создаем JSON представление
+        # Группируем ноты по тактам для более компактного отображения
         for measure_idx, measure in enumerate(self.measures):
-            # Создаем такт
-            measure_data = {
-                "index": measure_idx,
-                "voices": [
-                    {
-                        "beats": []
-                    }
-                ]
-            }
-            
-            # Если в такте есть ноты, добавляем их
-            if measure:
-                # Сортируем ноты по времени начала
-                measure.sort(key=lambda x: x.start_time)
-                
-                # Группируем ноты по временным отрезкам
-                time_groups = {}
-                for note in measure:
-                    # Округляем время до ближайшей 1/16 ноты
-                    time_key = round(note.start_time * 16) / 16
-                    if time_key not in time_groups:
-                        time_groups[time_key] = []
-                    time_groups[time_key].append(note)
-                
-                # Сортируем временные отрезки
-                sorted_times = sorted(time_groups.keys())
-                
-                # Для каждого временного отрезка создаем бит
-                for time_key in sorted_times:
-                    notes_at_time = time_groups[time_key]
-                    
-                    # Создаем бит
-                    beat = {
-                        "notes": []
-                    }
-                    
-                    # Добавляем все ноты в бит
-                    for note in notes_at_time:
-                        beat["notes"].append({
-                            "string": note.string,
-                            "fret": note.fret,
-                            "duration": "w"  # Целая нота по умолчанию
-                        })
-                    
-                    measure_data["voices"][0]["beats"].append(beat)
-            
-            # Добавляем такт в трек
-            alphatab_data["tracks"][0]["measures"].append(measure_data)
-        
-        return alphatab_data
-
-
-def find_best_position(midi_note: int) -> Tuple[int, int]:
-    """Находит наилучшую позицию на грифе для MIDI-ноты.
-    
-    Args:
-        midi_note: MIDI-нота (0-127)
-    
-    Returns:
-        Tuple[int, int]: (строка, лад)
-    """
-    # Если нота есть в словаре, возвращаем её позицию
-    if midi_note in GUITAR_MAPPING:
-        return GUITAR_MAPPING[midi_note]
-    
-    # Если нота слишком низкая или высокая, приближаем её к доступному диапазону
-    if midi_note < 40:  # Ниже низкой E (E2)
-        return (6, 0)  # Открытая 6-я струна (низкая E)
-    elif midi_note > 76:  # Выше высокой E на 12-м ладу (E5)
-        return (1, 12)  # 12-й лад 1-й струны
-    
-    # В противном случае находим ближайшую ноту (что не должно происходить при хорошем маппинге)
-    closest_note = min(GUITAR_MAPPING.keys(), key=lambda x: abs(x - midi_note))
-    return GUITAR_MAPPING[closest_note]
-
-
-def convert_midi_to_tablature(midi_file_path: str) -> dict:
-    """Конвертирует MIDI-файл в табулатуру.
-    
-    Args:
-        midi_file_path: Путь к MIDI-файлу
-    
-    Returns:
-        dict: Табулатура в формате JSON для AlphaTab
-    """
-    try:
-        # Загружаем MIDI-файл
-        midi_data = pretty_midi.PrettyMIDI(midi_file_path)
-        
-        # Создаем пустую табулатуру
-        tab = Tablature()
-        
-        # Перебираем все инструменты и ноты
-        for instrument in midi_data.instruments:
-            # Пропускаем ударные
-            if instrument.is_drum:
+            if not measure:
                 continue
+                
+            measure.sort(key=lambda x: x.start_time)
+            base_position = measure_idx * 12  # Уменьшенная фиксированная длина такта
             
-            # Добавляем каждую ноту в табулатуру
-            for note in instrument.notes:
-                # Получаем MIDI-номер ноты
-                midi_note = note.pitch
-                
-                # Находим позицию на грифе
-                string, fret = find_best_position(midi_note)
-                
-                # Преобразуем время в доли такта
-                start_time = note.start
-                duration = note.end - note.start
-                
-                # Создаем ноту табулатуры
-                tab_note = TabNote(string, fret, duration, start_time)
-                
-                # Добавляем ноту в табулатуру
-                tab.add_note(tab_note)
-        
-        # Финализируем табулатуру
-        tab.finalize()
-        
-        # Возвращаем JSON представление
-        return tab.to_json()
-    
-    except Exception as e:
-        print(f"Ошибка при конвертации MIDI в табулатуру: {e}")
-        # Возвращаем пустую табулатуру в случае ошибки
-        return {"tracks": [{"name": "Guitar", "tuning": [40, 45, 50, 55, 59, 64], "measures": []}]}
-
-
-def midi_to_tablature(midi_data) -> Tablature:
-    """Конвертирует данные MIDI в объект табулатуры.
-    
-    Args:
-        midi_data: Данные MIDI (может быть путь к файлу или объект MIDI)
-    
-    Returns:
-        Tablature: Объект табулатуры
-    """
-    # Создаем пустую табулатуру
-    tab = Tablature()
-    
-    try:
-        # Если midi_data - это путь к файлу
-        if isinstance(midi_data, str):
-            midi = pretty_midi.PrettyMIDI(midi_data)
-        else:
-            # Если midi_data - это объект MIDI
-            midi = midi_data
-        
-        # Перебираем все инструменты и ноты
-        for instrument in midi.instruments:
-            # Пропускаем ударные
-            if instrument.is_drum:
-                continue
-            
-            # Добавляем каждую ноту в табулатуру
-            for note in instrument.notes:
-                # Получаем MIDI-номер ноты
-                midi_note = note.pitch
-                
-                # Находим позицию на грифе
-                string, fret = find_best_position(midi_note)
-                
-                # Преобразуем время в доли такта
-                start_time = note.start
-                duration = note.end - note.start
-                
-                # Создаем ноту табулатуры
-                tab_note = TabNote(string, fret, duration, start_time)
-                
-                # Добавляем ноту в табулатуру
-                tab.add_note(tab_note)
-    
-    except Exception as e:
-        print(f"Ошибка при создании табулатуры: {e}")
-    
-    return tab
-
-
-def save_tablature(tab_data) -> str:
-    """Сохраняет данные табулатуры в текстовом формате.
-    
-    Args:
-        tab_data: Данные табулатуры в формате JSON или объект Tablature
-    
-    Returns:
-        str: Текстовое представление табулатуры
-    """
-    if isinstance(tab_data, Tablature):
-        # Если tab_data - это объект Tablature
-        return tab_data.to_text_format()
-    
-    # Если tab_data - это словарь (JSON)
-    try:
-        # Преобразуем JSON в объект табулатуры
-        tab = Tablature()
-        
-        # Извлекаем ноты из JSON
-        if "tracks" in tab_data and len(tab_data["tracks"]) > 0:
-            track = tab_data["tracks"][0]
-            
-            # Перебираем все такты
-            for measure in track.get("measures", []):
-                for voice in measure.get("voices", []):
-                    for beat in voice.get("beats", []):
-                        for note in beat.get("notes", []):
-                            # Создаем ноту табулатуры
-                            string = note.get("string", 1)
-                            fret = note.get("fret", 0)
-                            duration = 1.0  # По умолчанию четвертная нота
-                            start_time = 0.0  # Временно
-                            
-                            tab_note = TabNote(string, fret, duration, start_time)
-                            tab.add_note(tab_note)
-        
-        # Возвращаем текстовое представление
-        return tab.to_text_format()
-    
-    except Exception as e:
-        print(f"Ошибка при сохранении табулатуры: {e}")
-        return "Ошибка при сохранении табулатуры"
-    
-    def to_json(self) -> dict:
-        """Преобразовать табулатуру в JSON-совместимый формат."""
-        self.finalize()
-        
-        measures_json = []
-        for measure in self.measures:
-            measure_json = []
             for note in measure:
-                measure_json.append({
-                    "string": note.string,
-                    "fret": note.fret,
-                    "duration": note.duration,
-                    "start_time": note.start_time
-                })
-            measures_json.append(measure_json)
-        
-        return {
-            "measures": measures_json,
-            "measure_duration": self.measure_duration
-        }
-
-def find_best_position(midi_note: int) -> Optional[Tuple[int, int]]:
-    """
-    Найти оптимальную позицию (струна, лад) для заданной MIDI-ноты.
-    
-    Args:
-        midi_note: MIDI-номер ноты
-    
-    Returns:
-        Кортеж (струна, лад) или None, если нота не может быть сыграна на гитаре
-    """
-    if midi_note in GUITAR_MAPPING:
-        return GUITAR_MAPPING[midi_note]
-    
-    # Если ноты нет в маппинге, она может быть слишком низкой или слишком высокой для гитары
-    return None
-
-def midi_to_tablature(midi_file_path: str) -> Tablature:
-    """
-    Конвертировать MIDI-файл в табулатуру.
-    
-    Args:
-        midi_file_path: Путь к MIDI-файлу
-    
-    Returns:
-        Объект Tablature с табулатурой
-    """
-    # Загружаем MIDI-файл с помощью pretty_midi
-    try:
-        midi_data = pretty_midi.PrettyMIDI(midi_file_path)
-    except Exception as e:
-        print(f"Ошибка при загрузке MIDI-файла: {e}")
-        return Tablature()  # Возвращаем пустую табулатуру в случае ошибки
-    
-    # Создаем новую табулатуру
-    tablature = Tablature()
-    
-    # Обрабатываем каждый инструмент в MIDI-файле
-    for instrument in midi_data.instruments:
-        # Пропускаем ударные
-        if instrument.is_drum:
-            continue
-        
-        # Обрабатываем каждую ноту в инструменте
-        for note in instrument.notes:
-            # Находим наилучшую позицию для этой ноты на гитаре
-            position = find_best_position(note.pitch)
-            if position:
-                string, fret = position
-                # Получаем время начала и длительность ноты в долях такта
-                start_time = note.start
-                duration = note.end - note.start
+                # Вычисляем относительную позицию внутри такта
+                relative_pos = int((note.start_time - measure[0].start_time) * 8 / self.measure_duration)
+                position = base_position + relative_pos
                 
-                # Создаем объект TabNote и добавляем его в табулатуру
-                tab_note = TabNote(string, fret, duration, start_time)
-                tablature.add_note(tab_note)
+                # Добавляем ноту в соответствующую струну
+                tab_data["strings"][note.string - 1]["notes"].append({
+                    "position": position,
+                    "fret": note.fret
+                })
+        
+        return tab_data
+
+def convert_midi_to_tab(midi_file_path: str) -> Tablature:
+    """Конвертировать MIDI-файл в табулатуру."""
+    midi_file = mido.MidiFile(midi_file_path)
+    tablature = Tablature()
+    current_time = 0.0
+    ticks_per_beat = midi_file.ticks_per_beat
     
-    # Финализируем табулатуру
-    tablature.finalize()
+    for track in midi_file.tracks:
+        for msg in track:
+            current_time += msg.time / ticks_per_beat
+            
+            if msg.type == 'note_on' and msg.velocity > 0:
+                if msg.note in GUITAR_MAPPING:
+                    string, fret = GUITAR_MAPPING[msg.note]
+                    duration = 0.25  # Фиксированная длительность для упрощения
+                    tab_note = TabNote(string, fret, duration, current_time)
+                    tablature.add_note(tab_note)
     
     return tablature
 
-# Функция для сохранения табулатуры в файл
-def save_tablature(tablature: Tablature, output_path: str, format_type: str = 'text'):
-    """
-    Сохранить табулатуру в файл.
+"""Модуль для конвертации MIDI-файлов в табулатуры."""
+
+def midi_to_tablature(midi_file_path: str) -> Tablature:
+    """Конвертировать MIDI-файл в табулатуру.
     
     Args:
-        tablature: Объект Tablature
-        output_path: Путь для сохранения файла
-        format_type: Формат сохранения ('text' или 'json')
+        midi_file_path: Путь к MIDI-файлу
+        
+    Returns:
+        Tablature: Объект табулатуры
     """
-    if format_type == 'text':
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(tablature.to_text_format())
-    elif format_type == 'json':
-        import json
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(tablature.to_json(), f, ensure_ascii=False, indent=2)
-    else:
-        raise ValueError(f"Неподдерживаемый формат: {format_type}")
+    return convert_midi_to_tab(midi_file_path)
 
-# Пример использования
-if __name__ == "__main__":
-    # Путь к MIDI-файлу
-    midi_file = "path/to/your/midi/file.mid"
+def save_tablature(tablature: Tablature, output_path: str) -> None:
+    """Сохранить табулатуру в JSON-файл.
     
-    # Конвертируем MIDI в табулатуру
-    tab = midi_to_tablature(midi_file)
-    
-    # Сохраняем табулатуру в текстовый файл
-    save_tablature(tab, "output_tab.txt", "text")
-    
-    # Сохраняем табулатуру в JSON
-    save_tablature(tab, "output_tab.json", "json")
-    
-    # Выводим табулатуру на экран
-    print(tab.to_text_format())
+    Args:
+        tablature: Объект табулатуры
+        output_path: Путь для сохранения JSON-файла
+    """
+    import json
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(tablature.to_json(), f, ensure_ascii=False, indent=2)

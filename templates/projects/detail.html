@@ -63,10 +63,15 @@
                                 <span class="midi-date">{{ midi.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
                             </div>
                             <div class="midi-actions">
-                                <a href="/projects/{{ project.id }}/midi/{{ midi.id }}/tab"
-                                    class="vision-btn vision-btn-sm vision-btn-primary" data-project-id="{{ project.id }}" data-midi-id="{{ midi.id }}">
-                                    <i class="fas fa-guitar"></i> Tablature
-                                </a>
+                                <div class="tablature-display">
+                                    {% if midi.tablatures and midi.tablatures[0].tab_data %}
+                                    <div class="tab-content" id="tab-{{ midi.id }}">
+                                        <div class="tablature-display" data-tab-data='{{ midi.tablatures[0].tab_data|tojson }}'></div>
+                                    </div>
+                                    {% else %}
+                                    <p class="text-muted">No tablature available</p>
+                                    {% endif %}
+                                </div>
                                 <a href="/projects/{{ project.id }}/midi/{{ midi.id }}"
                                     class="vision-btn vision-btn-sm vision-btn-secondary">
                                     <i class="fas fa-download"></i> Download
@@ -261,6 +266,7 @@
     }
 </style>
 
+<script src="/static/js/render-tab.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Загрузка необходимых библиотек для работы с MIDI

@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File, BackgroundTasks, Form
+from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User, Project, ProjectShare, Notification, ProjectLike, MidiFile, Tablature
-from .auth import get_current_user
 from datetime import datetime
 from typing import Optional
 import os
@@ -15,8 +14,9 @@ import uuid
 import tempfile
 import shutil
 
+from app.routers.auth import get_current_user
 # Импортируем наш модуль для конвертации MIDI в табулатуру
-from app.utils.midi_to_tab import midi_to_tablature, save_tablature, convert_midi_to_tablature
+from app.utils.midi_to_tab import midi_to_tablature, save_tablature
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 templates = Jinja2Templates(directory="templates")
@@ -206,14 +206,15 @@ async def project_likes(
     # Получаем лайки для проекта с детальной информацией
     likes = db.query(ProjectLike).filter(
         ProjectLike.project_id == project_id).order_by(ProjectLike.created_at.desc()).all()
-    
+
     # Если пользователь авторизован, получаем список пользователей, на которых он подписан
     following_ids = []
     if current_user:
         # Получаем список ID пользователей, на которых подписан текущий пользователь
-        followings = db.query(UserFollow).filter(UserFollow.follower_id == current_user.id).all()
+        followings = db.query(UserFollow).filter(
+            UserFollow.follower_id == current_user.id).all()
         following_ids = [follow.followed_id for follow in followings]
-    
+
     # Проверяем, лайкнул ли текущий пользователь проект
     is_liked = False
     if current_user:
@@ -226,7 +227,8 @@ async def project_likes(
             "current_user": current_user,
             "project": project,
             "likes": likes,  # Передаем сами объекты лайков вместо пользователей
-            "following_ids": following_ids,  # ID пользователей, на которых подписан текущий пользователь
+            # ID пользователей, на которых подписан текущий пользователь
+            "following_ids": following_ids,
             "is_liked": is_liked,  # Лайкнул ли текущий пользователь проект
             "title": f"Users who liked '{project.title}'"
         }
@@ -331,6 +333,26 @@ async def upload_audio(
         db.add(midi_file)
         db.commit()
         db.refresh(midi_file)
+
+        # Создаем табулатуру для MIDI-файла
+        try:
+            # Конвертируем MIDI в табулатуру
+            tablature_data = midi_to_tablature(file_path)
+            if not tablature_data:
+                raise ValueError("Не удалось создать табулатуру из MIDI файла")
+
+            # Создаем запись табулатуры в БД
+            tablature = Tablature(
+                midi_file_id=midi_file.id,
+                tab_data=tablature_data.to_json(),
+                tab_text="",
+            )
+            
+            db.add(tablature)
+            db.commit()
+        except Exception as tab_error:
+            print(f"Ошибка при конвертации MIDI в табулатуру: {str(tab_error)}")
+            # Продолжаем выполнение, так как MIDI файл уже сохранен
 
         # Добавляем задачу на удаление временных файлов
         background_tasks.add_task(lambda: shutil.rmtree(
@@ -528,7 +550,7 @@ async def generate_tab(project_id: int, midi_id: int, current_user: User = Depen
         midi_path = os.path.join("uploads", "midi", f"{midi_file.filename}")
 
         # Конвертируем MIDI в табулатуру
-        tab_data = convert_midi_to_tablature(midi_path)
+        tab_data = convert_midi_to_tab(midi_path)
 
         # Создаем текстовое представление табулатуры
         tab_text = save_tablature(tab_data)
