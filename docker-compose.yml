@@ -10,6 +10,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - tabify_network
 
   db:
     image: postgres:15
@@ -27,7 +29,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-        - tabify_network
+      - tabify_network
 
 volumes:
   postgres_data:
