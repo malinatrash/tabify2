@@ -659,7 +659,7 @@ async def update_tab(project_id: int, midi_id: int, request: Request, current_us
         tablature.last_edited_at = datetime.utcnow()
 
         # Обновляем текстовое представление
-        tablature.tab_text = save_tablature(tab_data)
+        # tablature.tab_text = save_tablature(tab_data)
 
         db.commit()
         db.refresh(tablature)

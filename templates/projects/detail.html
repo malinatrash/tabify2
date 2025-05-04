@@ -620,9 +620,7 @@
     }
 
     /* Workspace Panel */
-    .workspace-panel>div:not(.panel-header) {
-        padding: 10px 20px;
-    }
+    .workspace-panel>div:not(.panel-header) {}
 
     /* Transport Controls */
     .filters-panel {
@@ -676,7 +674,8 @@
         background: rgba(0, 0, 0, 0.2);
         height: calc(100% - 80px);
         overflow: hidden;
-        padding-top: 0;
+        margin: 0;
+        padding: 0;
     }
 
     .timeline {
@@ -872,10 +871,11 @@
 
     /* Tab notation styles */
     .tab-notation {
+
         font-family: monospace;
         white-space: pre;
         background: rgba(0, 0, 0, 0.2);
-        padding: 20px;
+        padding: 5px;
         border-radius: 5px;
         color: var(--text-primary);
         display: inline-block;
