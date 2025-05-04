@@ -1,0 +1,1404 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Tabify",
+		"version": "0.1.0"
+	},
+	"paths": {
+		"/": {
+			"get": {
+				"summary": "Landing Page",
+				"operationId": "landing_page__get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"get": {
+				"tags": ["auth"],
+				"summary": "Login Page",
+				"operationId": "login_page_auth_login_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/register": {
+			"get": {
+				"tags": ["auth"],
+				"summary": "Register Page",
+				"operationId": "register_page_auth_register_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["auth"],
+				"summary": "Register",
+				"operationId": "register_auth_register_post",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"get": {
+				"tags": ["auth"],
+				"summary": "Logout",
+				"operationId": "logout_auth_logout_post",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["auth"],
+				"summary": "Logout",
+				"operationId": "logout_auth_logout_post",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/token": {
+			"post": {
+				"tags": ["auth"],
+				"summary": "Login",
+				"operationId": "login_auth_token_post",
+				"requestBody": {
+					"content": {
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"$ref": "#/components/schemas/Body_login_auth_token_post"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/profile": {
+			"get": {
+				"tags": ["users"],
+				"summary": "Profile Redirect",
+				"operationId": "profile_redirect_users_profile_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/profile/{user_id}/update": {
+			"post": {
+				"tags": ["users"],
+				"summary": "Update Profile",
+				"operationId": "update_profile_users_profile__user_id__update_post",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/profile/{user_id}/avatar": {
+			"post": {
+				"tags": ["users"],
+				"summary": "Update Avatar",
+				"operationId": "update_avatar_users_profile__user_id__avatar_post",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/Body_update_avatar_users_profile__user_id__avatar_post"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/notifications": {
+			"get": {
+				"tags": ["users"],
+				"summary": "Notifications Page",
+				"operationId": "notifications_page_users_notifications_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/notifications/{notification_id}/read": {
+			"post": {
+				"tags": ["users"],
+				"summary": "Mark Notification Read",
+				"operationId": "mark_notification_read_users_notifications__notification_id__read_post",
+				"parameters": [
+					{
+						"name": "notification_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Notification Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/profile/{user_id}": {
+			"get": {
+				"tags": ["users"],
+				"summary": "View User Profile",
+				"operationId": "view_user_profile_users_profile__user_id__get",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					},
+					{
+						"name": "is_edit_mode",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "boolean",
+							"default": false,
+							"title": "Is Edit Mode"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/profile/{user_id}/edit": {
+			"get": {
+				"tags": ["users"],
+				"summary": "Edit Profile",
+				"operationId": "edit_profile_users_profile__user_id__edit_get",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/profile/{user_id}/followers": {
+			"get": {
+				"tags": ["users"],
+				"summary": "View Followers",
+				"operationId": "view_followers_users_profile__user_id__followers_get",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/profile/{user_id}/following": {
+			"get": {
+				"tags": ["users"],
+				"summary": "View Following",
+				"operationId": "view_following_users_profile__user_id__following_get",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/projects/{project_id}/likes": {
+			"get": {
+				"tags": ["users"],
+				"summary": "View Project Likes",
+				"operationId": "view_project_likes_users_projects__project_id__likes_get",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{user_id}/follow": {
+			"post": {
+				"tags": ["users"],
+				"summary": "Follow User",
+				"operationId": "follow_user_users__user_id__follow_post",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/": {
+			"get": {
+				"tags": ["projects"],
+				"summary": "Projects List",
+				"operationId": "projects_list_projects__get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/new": {
+			"get": {
+				"tags": ["projects"],
+				"summary": "New Project Page",
+				"operationId": "new_project_page_projects_new_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/create": {
+			"post": {
+				"tags": ["projects"],
+				"summary": "Create Project",
+				"operationId": "create_project_projects_create_post",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}": {
+			"get": {
+				"tags": ["projects"],
+				"summary": "Project Detail",
+				"operationId": "project_detail_projects__project_id__get",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/share": {
+			"post": {
+				"tags": ["projects"],
+				"summary": "Share Project",
+				"operationId": "share_project_projects__project_id__share_post",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/likes": {
+			"get": {
+				"tags": ["projects"],
+				"summary": "Project Likes",
+				"operationId": "project_likes_projects__project_id__likes_get",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/upload-audio": {
+			"post": {
+				"tags": ["projects"],
+				"summary": "Upload Audio",
+				"operationId": "upload_audio_projects__project_id__upload_audio_post",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/Body_upload_audio_projects__project_id__upload_audio_post"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/midi/{midi_id}": {
+			"get": {
+				"tags": ["projects"],
+				"summary": "Get Midi File",
+				"operationId": "get_midi_file_projects__project_id__midi__midi_id__get",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					},
+					{
+						"name": "midi_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Midi Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/midi/{midi_id}/delete": {
+			"post": {
+				"tags": ["projects"],
+				"summary": "Delete Midi File",
+				"operationId": "delete_midi_file_projects__project_id__midi__midi_id__delete_post",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					},
+					{
+						"name": "midi_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Midi Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/midi/{midi_id}/tab": {
+			"get": {
+				"tags": ["projects"],
+				"summary": "Generate Tab Page",
+				"description": "Страница генерации табулатуры из MIDI-файла",
+				"operationId": "generate_tab_page_projects__project_id__midi__midi_id__tab_get",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					},
+					{
+						"name": "midi_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Midi Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/midi/{midi_id}/tab/generate": {
+			"post": {
+				"tags": ["projects"],
+				"summary": "Generate Tab",
+				"description": "Генерация табулатуры из MIDI-файла",
+				"operationId": "generate_tab_projects__project_id__midi__midi_id__tab_generate_post",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					},
+					{
+						"name": "midi_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Midi Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/midi/{midi_id}/tab/view": {
+			"get": {
+				"tags": ["projects"],
+				"summary": "View Tab",
+				"description": "Просмотр табулатуры",
+				"operationId": "view_tab_projects__project_id__midi__midi_id__tab_view_get",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					},
+					{
+						"name": "midi_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Midi Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/midi/{midi_id}/tab/update": {
+			"post": {
+				"tags": ["projects"],
+				"summary": "Update Tab",
+				"description": "Обновление табулатуры",
+				"operationId": "update_tab_projects__project_id__midi__midi_id__tab_update_post",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					},
+					{
+						"name": "midi_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Midi Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/projects/{project_id}/like": {
+			"post": {
+				"tags": ["projects"],
+				"summary": "Like Project",
+				"operationId": "like_project_projects__project_id__like_post",
+				"parameters": [
+					{
+						"name": "project_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Project Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/notifications/": {
+			"get": {
+				"tags": ["notifications"],
+				"summary": "Get Notifications",
+				"description": "Получить уведомления пользователя с пагинацией.",
+				"operationId": "get_notifications_notifications__get",
+				"parameters": [
+					{
+						"name": "limit",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 10,
+							"title": "Limit"
+						}
+					},
+					{
+						"name": "offset",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 0,
+							"title": "Offset"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Get Notifications Notifications Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/notifications/{notification_id}/mark-read": {
+			"post": {
+				"tags": ["notifications"],
+				"summary": "Mark Notification Read",
+				"description": "Отметить уведомление как прочитанное.",
+				"operationId": "mark_notification_read_notifications__notification_id__mark_read_post",
+				"parameters": [
+					{
+						"name": "notification_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Notification Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Mark Notification Read Notifications Notification Id Mark Read Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/notifications/mark-all-read": {
+			"post": {
+				"tags": ["notifications"],
+				"summary": "Mark All Notifications Read",
+				"description": "Отметить все уведомления как прочитанные.",
+				"operationId": "mark_all_notifications_read_notifications_mark_all_read_post",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Mark All Notifications Read Notifications Mark All Read Post"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/premium": {
+			"get": {
+				"tags": ["premium"],
+				"summary": "Premium Page",
+				"description": "Отображение страницы премиум-подписки",
+				"operationId": "premium_page_premium_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/premium/activate-demo": {
+			"post": {
+				"tags": ["premium"],
+				"summary": "Activate Premium Demo",
+				"description": "Эмуляция активации премиум-подписки",
+				"operationId": "activate_premium_demo_premium_activate_demo_post",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/premium/check": {
+			"get": {
+				"tags": ["premium"],
+				"summary": "Check Premium Status",
+				"description": "Проверка статуса премиум-подписки",
+				"operationId": "check_premium_status_premium_check_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/premium/status": {
+			"get": {
+				"tags": ["premium"],
+				"summary": "Premium Status",
+				"description": "Возвращает статус премиум-подписки для обновления интерфейса",
+				"operationId": "premium_status_premium_status_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/home": {
+			"get": {
+				"summary": "Home Page",
+				"operationId": "home_page_home_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Body_login_auth_token_post": {
+				"properties": {
+					"grant_type": {
+						"anyOf": [
+							{
+								"type": "string",
+								"pattern": "password"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Grant Type"
+					},
+					"username": {
+						"type": "string",
+						"title": "Username"
+					},
+					"password": {
+						"type": "string",
+						"title": "Password"
+					},
+					"scope": {
+						"type": "string",
+						"title": "Scope",
+						"default": ""
+					},
+					"client_id": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Client Id"
+					},
+					"client_secret": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Client Secret"
+					}
+				},
+				"type": "object",
+				"required": ["username", "password"],
+				"title": "Body_login_auth_token_post"
+			},
+			"Body_update_avatar_users_profile__user_id__avatar_post": {
+				"properties": {
+					"avatar": {
+						"type": "string",
+						"format": "binary",
+						"title": "Avatar"
+					}
+				},
+				"type": "object",
+				"required": ["avatar"],
+				"title": "Body_update_avatar_users_profile__user_id__avatar_post"
+			},
+			"Body_upload_audio_projects__project_id__upload_audio_post": {
+				"properties": {
+					"file": {
+						"type": "string",
+						"format": "binary",
+						"title": "File"
+					}
+				},
+				"type": "object",
+				"required": ["file"],
+				"title": "Body_upload_audio_projects__project_id__upload_audio_post"
+			},
+			"HTTPValidationError": {
+				"properties": {
+					"detail": {
+						"items": {
+							"$ref": "#/components/schemas/ValidationError"
+						},
+						"type": "array",
+						"title": "Detail"
+					}
+				},
+				"type": "object",
+				"title": "HTTPValidationError"
+			},
+			"ValidationError": {
+				"properties": {
+					"loc": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "integer"
+								}
+							]
+						},
+						"type": "array",
+						"title": "Location"
+					},
+					"msg": {
+						"type": "string",
+						"title": "Message"
+					},
+					"type": {
+						"type": "string",
+						"title": "Error Type"
+					}
+				},
+				"type": "object",
+				"required": ["loc", "msg", "type"],
+				"title": "ValidationError"
+			}
+		}
+	}
+}

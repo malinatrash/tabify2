@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import User, Project, ProjectShare, Notification, ProjectLike, MidiFile, Tablature
+from app.models import User, Project, ProjectShare, Notification, ProjectLike, MidiFile, Tablature, Comment
 from datetime import datetime
 from typing import Optional
 import os
@@ -347,17 +347,19 @@ async def upload_audio(
                 tab_data=tablature_data.to_json(),
                 tab_text="",
             )
-            
+
             db.add(tablature)
             db.commit()
         except Exception as tab_error:
-            print(f"Ошибка при конвертации MIDI в табулатуру: {str(tab_error)}")
+            print(
+                f"Ошибка при конвертации MIDI в табулатуру: {str(tab_error)}")
             # Продолжаем выполнение, так как MIDI файл уже сохранен
 
         # Добавляем задачу на удаление временных файлов
         background_tasks.add_task(lambda: shutil.rmtree(
             temp_dir) if os.path.exists(temp_dir) else None)
 
+        return
         # Возвращаем результат
         return JSONResponse({
             "id": midi_file.id,
@@ -719,3 +721,109 @@ async def like_project(
 
         db.commit()
         return {"status": "success", "message": "Лайк добавлен", "action": "liked", "likes_count": len(project.likes) + 1}
+
+
+# Маршрут для получения комментариев к проекту
+@router.get("/{project_id}/comments")
+async def get_project_comments(
+    project_id: int,
+    request: Request,
+    current_user: Optional[User] = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Проверяем доступ к проекту
+    project = get_project_with_access_check(
+        project_id, current_user, db, allow_public=True)
+    if not project:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"error": "Проект не найден или у вас нет к нему доступа"}
+        )
+
+    # Получаем комментарии к проекту
+    comments = db.query(Comment).filter(
+        Comment.project_id == project_id).order_by(Comment.created_at).all()
+
+    # Преобразуем комментарии в формат для JSON
+    comments_data = [{
+        "id": comment.id,
+        "content": comment.content,
+        "created_at": comment.created_at.isoformat(),
+        "user": {
+            "id": comment.user.id,
+            "full_name": comment.user.full_name,
+            "avatar_url": comment.user.avatar_url
+        }
+    } for comment in comments]
+
+    return JSONResponse(content=comments_data)
+
+
+# Маршрут для добавления комментария к проекту
+@router.post("/{project_id}/comments")
+async def add_project_comment(
+    project_id: int,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Проверяем доступ к проекту
+    project = get_project_with_access_check(project_id, current_user, db)
+    if not project:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"error": "Проект не найден или у вас нет к нему доступа"}
+        )
+
+    # Получаем данные комментария из запроса
+    try:
+        data = await request.json()
+        content = data.get("content")
+
+        if not content or not content.strip():
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={"error": "Содержание комментария не может быть пустым"}
+            )
+
+        # Создаем новый комментарий
+        comment = Comment(
+            project_id=project_id,
+            user_id=current_user.id,
+            content=content
+        )
+
+        db.add(comment)
+        db.commit()
+        db.refresh(comment)
+
+        # Добавляем уведомление владельцу проекта, если он не является автором комментария
+        from app.routers.notifications import create_notification
+        if project.owner_id != current_user.id:
+            create_notification(
+                db=db,
+                user_id=project.owner_id,
+                notification_type="comment",
+                title="Новый комментарий",
+                content=f"{current_user.full_name} оставил комментарий к вашему проекту '{project.title}'"
+            )
+
+        # Возвращаем данные созданного комментария
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content={
+                "id": comment.id,
+                "content": comment.content,
+                "created_at": comment.created_at.isoformat(),
+                "user": {
+                    "id": current_user.id,
+                    "full_name": current_user.full_name,
+                    "avatar_url": current_user.avatar_url
+                }
+            }
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"error": f"Ошибка при добавлении комментария: {str(e)}"}
+        )

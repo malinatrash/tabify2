@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -21,14 +22,20 @@ class User(Base):
     password_reset_token = Column(String, nullable=True)
     password_reset_expires = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
-    active_subscription = relationship("Subscription", back_populates="user", uselist=False)
+    active_subscription = relationship(
+        "Subscription", back_populates="user", uselist=False)
     projects = relationship("Project", back_populates="owner")
     notifications = relationship("Notification", back_populates="user")
     liked_projects = relationship("ProjectLike", back_populates="user")
-    followers = relationship("UserFollow", foreign_keys="UserFollow.followed_id", back_populates="followed")
-    following = relationship("UserFollow", foreign_keys="UserFollow.follower_id", back_populates="follower")
+    followers = relationship(
+        "UserFollow", foreign_keys="UserFollow.followed_id", back_populates="followed")
+    following = relationship(
+        "UserFollow", foreign_keys="UserFollow.follower_id", back_populates="follower")
+    comments = relationship("Comment", back_populates="user")
+
 
 class SubscriptionPlan(Base):
     __tablename__ = "subscription_plans"
@@ -39,9 +46,11 @@ class SubscriptionPlan(Base):
     description = Column(Text)
     features = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
     subscriptions = relationship("Subscription", back_populates="plan")
+
 
 class Subscription(Base):
     __tablename__ = "subscriptions"
@@ -54,10 +63,12 @@ class Subscription(Base):
     status = Column(String)  # active, expired, cancelled
     payment_id = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
     user = relationship("User", back_populates="active_subscription")
     plan = relationship("SubscriptionPlan", back_populates="subscriptions")
+
 
 class Project(Base):
     __tablename__ = "projects"
@@ -68,13 +79,16 @@ class Project(Base):
     description = Column(Text, nullable=True)
     is_public = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
     owner = relationship("User", back_populates="projects")
     shared_users = relationship("ProjectShare", back_populates="project")
     midi_files = relationship("MidiFile", back_populates="project")
-    
+
     likes = relationship("ProjectLike", back_populates="project")
+    comments = relationship("Comment", back_populates="project")
+
 
 class ProjectShare(Base):
     __tablename__ = "project_shares"
@@ -85,9 +99,11 @@ class ProjectShare(Base):
     access_token = Column(String, unique=True)
     is_accepted = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
     project = relationship("Project", back_populates="shared_users")
+
 
 class Notification(Base):
     __tablename__ = "notifications"
@@ -99,9 +115,12 @@ class Notification(Base):
     content = Column(Text)
     is_read = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
     user = relationship("User", back_populates="notifications")
+
+
 class ProjectLike(Base):
     __tablename__ = "project_likes"
 
@@ -113,6 +132,7 @@ class ProjectLike(Base):
     project = relationship("Project", back_populates="likes")
     user = relationship("User", back_populates="liked_projects")
 
+
 class UserFollow(Base):
     __tablename__ = "user_follows"
 
@@ -121,8 +141,10 @@ class UserFollow(Base):
     followed_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    follower = relationship("User", foreign_keys=[follower_id], back_populates="following")
-    followed = relationship("User", foreign_keys=[followed_id], back_populates="followers")
+    follower = relationship("User", foreign_keys=[
+                            follower_id], back_populates="following")
+    followed = relationship("User", foreign_keys=[
+                            followed_id], back_populates="followers")
 
 
 class MidiFile(Base):
@@ -135,7 +157,8 @@ class MidiFile(Base):
     file_path = Column(String)  # путь к файлу MIDI
     midi_data = Column(JSON, nullable=True)  # данные о нотах, аккордах и т.д.
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
     project = relationship("Project", back_populates="midi_files")
     tablatures = relationship("Tablature", back_populates="midi_file")
@@ -147,10 +170,29 @@ class Tablature(Base):
     id = Column(Integer, primary_key=True, index=True)
     midi_file_id = Column(Integer, ForeignKey("midi_files.id"))
     tab_data = Column(JSON, nullable=False)  # Данные табулатуры в JSON формате
-    tab_text = Column(Text, nullable=True)  # Текстовое представление табулатуры
-    is_edited = Column(Boolean, default=False)  # Была ли табулатура отредактирована
-    last_edited_at = Column(DateTime, nullable=True)  # Время последнего редактирования
+    # Текстовое представление табулатуры
+    tab_text = Column(Text, nullable=True)
+    # Была ли табулатура отредактирована
+    is_edited = Column(Boolean, default=False)
+    # Время последнего редактирования
+    last_edited_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
 
     midi_file = relationship("MidiFile", back_populates="tablatures")
+
+
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    project_id = Column(Integer, ForeignKey("projects.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
+
+    project = relationship("Project", back_populates="comments")
+    user = relationship("User", back_populates="comments")
