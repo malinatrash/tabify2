@@ -12790,3 +12790,497 @@ WHERE projects.id = %(id_1)s
 2025-05-11 21:23:17,722 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 3.0ms
 2025-05-11 21:23:17,722 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 3.0}
 2025-05-11 21:23:17,722 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.71ms
+2025-05-11 21:29:58,806 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:29:58,817 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:29:58,818 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 35030}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:29:58,818 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067884944)", "db": "Session(id=281473058409296)"}
+2025-05-11 21:29:58,818 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:29:58,818 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067884944)", "db": "Session(id=281473058409296)", "allow_public": true}
+2025-05-11 21:29:58,818 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:29:58,818 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.49ms: user_id=6 has access to project_id=1
+2025-05-11 21:29:58,818 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 0.6ms
+2025-05-11 21:29:58,820 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 2.42ms
+2025-05-11 21:29:58,820 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 2.42}
+2025-05-11 21:29:58,820 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 13.74ms
+2025-05-11 21:29:58,844 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:29:58,844 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/render-tab.js from 192.168.148.1
+2025-05-11 21:29:58,846 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/render-tab.js - Status: 304 - Time: 1.46ms
+2025-05-11 21:29:58,847 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 200 - Time: 3.53ms
+2025-05-11 21:29:58,885 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:29:58,886 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.63ms
+2025-05-11 21:29:58,889 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:29:58,893 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 3.19ms
+2025-05-11 21:29:58,894 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:29:58,898 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 3.8ms
+2025-05-11 21:29:58,984 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:29:58,987 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:29:58,987 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 35030}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:29:58,987 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473058440592)", "db": "Session(id=281473058422480)"}
+2025-05-11 21:29:58,987 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:29:58,987 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473058440592)", "db": "Session(id=281473058422480)", "allow_public": true}
+2025-05-11 21:29:58,987 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:29:58,988 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.09ms: user_id=6 has access to project_id=1
+2025-05-11 21:29:58,989 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.39ms
+2025-05-11 21:29:58,989 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 2.83ms
+2025-05-11 21:29:58,990 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 2.83}
+2025-05-11 21:29:58,990 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.69ms
+2025-05-11 21:30:01,356 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:30:01,360 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:30:01,360 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 35030}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:30:01,360 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067335440)", "db": "Session(id=281473058480080)"}
+2025-05-11 21:30:01,360 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:30:01,360 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067335440)", "db": "Session(id=281473058480080)", "allow_public": true}
+2025-05-11 21:30:01,360 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:30:01,362 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.2ms: user_id=6 has access to project_id=1
+2025-05-11 21:30:01,362 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.54ms
+2025-05-11 21:30:01,365 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 5.33ms
+2025-05-11 21:30:01,365 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 5.33}
+2025-05-11 21:30:01,365 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 9.02ms
+2025-05-11 21:30:01,377 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:30:01,379 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 0.81ms
+2025-05-11 21:30:01,404 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:30:01,405 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:30:01,405 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 1.43ms
+2025-05-11 21:30:01,411 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 5.86ms
+2025-05-11 21:30:01,413 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:30:01,421 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 8.04ms
+2025-05-11 21:30:01,506 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:30:01,508 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:30:01,508 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 35030}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:30:01,509 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067884944)", "db": "Session(id=281473059832848)"}
+2025-05-11 21:30:01,509 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:30:01,509 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067884944)", "db": "Session(id=281473059832848)", "allow_public": true}
+2025-05-11 21:30:01,509 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:30:01,510 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.01ms: user_id=6 has access to project_id=1
+2025-05-11 21:30:01,510 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.28ms
+2025-05-11 21:30:01,511 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 2.59ms
+2025-05-11 21:30:01,511 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 2.59}
+2025-05-11 21:30:01,511 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.17ms
+2025-05-11 21:31:21,954 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:31:21,956 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:31:21,957 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 47212}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:31:21,957 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067883856)", "db": "Session(id=281473067353680)"}
+2025-05-11 21:31:21,957 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:31:21,957 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067883856)", "db": "Session(id=281473067353680)", "allow_public": true}
+2025-05-11 21:31:21,957 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:31:21,957 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.5ms: user_id=6 has access to project_id=1
+2025-05-11 21:31:21,957 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 0.7ms
+2025-05-11 21:31:21,972 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 16.18ms
+2025-05-11 21:31:21,973 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 16.18}
+2025-05-11 21:31:21,973 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 18.39ms
+2025-05-11 21:31:21,998 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:31:21,999 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 0.29ms
+2025-05-11 21:31:22,018 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:31:22,018 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.21ms
+2025-05-11 21:31:22,027 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:31:22,028 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 1.4ms
+2025-05-11 21:31:22,031 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:31:22,034 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 2.43ms
+2025-05-11 21:31:22,119 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:31:22,121 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:31:22,122 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 47212}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:31:22,122 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067881104)", "db": "Session(id=281473067370512)"}
+2025-05-11 21:31:22,122 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:31:22,122 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067881104)", "db": "Session(id=281473067370512)", "allow_public": true}
+2025-05-11 21:31:22,122 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:31:22,123 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.71ms: user_id=6 has access to project_id=1
+2025-05-11 21:31:22,123 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 0.96ms
+2025-05-11 21:31:22,124 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 2.27ms
+2025-05-11 21:31:22,124 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 2.27}
+2025-05-11 21:31:22,124 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.09ms
+2025-05-11 21:31:22,966 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:31:22,968 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:31:22,969 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 47212}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:31:22,969 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067891024)", "db": "Session(id=281473067401872)"}
+2025-05-11 21:31:22,969 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:31:22,969 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067891024)", "db": "Session(id=281473067401872)", "allow_public": true}
+2025-05-11 21:31:22,970 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:31:22,971 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.62ms: user_id=6 has access to project_id=1
+2025-05-11 21:31:22,972 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 2.26ms
+2025-05-11 21:31:22,975 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 6.85ms
+2025-05-11 21:31:22,975 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 6.85}
+2025-05-11 21:31:22,976 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 9.86ms
+2025-05-11 21:31:23,016 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:31:23,017 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.38ms
+2025-05-11 21:31:23,018 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:31:23,024 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:31:23,026 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 7.67ms
+2025-05-11 21:31:23,034 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 9.29ms
+2025-05-11 21:31:23,117 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:31:23,120 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:31:23,120 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 47212}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:31:23,120 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473058418192)", "db": "Session(id=281473077038288)"}
+2025-05-11 21:31:23,120 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:31:23,120 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473058418192)", "db": "Session(id=281473077038288)", "allow_public": true}
+2025-05-11 21:31:23,120 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:31:23,121 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.92ms: user_id=6 has access to project_id=1
+2025-05-11 21:31:23,121 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.18ms
+2025-05-11 21:31:23,122 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 2.57ms
+2025-05-11 21:31:23,122 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 2.57}
+2025-05-11 21:31:23,122 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.41ms
+2025-05-11 21:31:25,105 - tabify2 - INFO - main.py:37 - REQUEST START: GET /users/profile/6 from 192.168.148.1
+2025-05-11 21:31:25,115 - tabify2 - INFO - main.py:46 - REQUEST END: GET /users/profile/6 - Status: 200 - Time: 9.17ms
+2025-05-11 21:31:25,149 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:31:25,150 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:31:25,151 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 1.34ms
+2025-05-11 21:31:25,155 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 4.04ms
+2025-05-11 21:31:25,158 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:31:25,165 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 6.78ms
+2025-05-11 21:31:26,228 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:31:26,234 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:31:26,234 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 47212}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:31:26,234 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067462608)", "db": "Session(id=281473058572432)"}
+2025-05-11 21:31:26,235 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:31:26,235 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067462608)", "db": "Session(id=281473058572432)", "allow_public": true}
+2025-05-11 21:31:26,235 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:31:26,236 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.42ms: user_id=6 has access to project_id=1
+2025-05-11 21:31:26,236 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.82ms
+2025-05-11 21:31:26,237 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 4.03ms
+2025-05-11 21:31:26,238 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 4.03}
+2025-05-11 21:31:26,238 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 9.71ms
+2025-05-11 21:32:15,887 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:32:15,892 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:32:15,892 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 44932}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:15,892 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473058484432)", "db": "Session(id=281473058767952)"}
+2025-05-11 21:32:15,893 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:15,893 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473058484432)", "db": "Session(id=281473058767952)", "allow_public": true}
+2025-05-11 21:32:15,893 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:15,894 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.23ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:15,895 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 2.0ms
+2025-05-11 21:32:15,900 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 8.27ms
+2025-05-11 21:32:15,900 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 8.27}
+2025-05-11 21:32:15,900 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 13.05ms
+2025-05-11 21:32:15,919 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:32:15,921 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 200 - Time: 1.11ms
+2025-05-11 21:32:15,966 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:32:15,966 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:32:15,967 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.88ms
+2025-05-11 21:32:15,973 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 7.22ms
+2025-05-11 21:32:15,975 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:32:15,989 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 14.07ms
+2025-05-11 21:32:16,066 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:32:16,069 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:32:16,069 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 44932}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:16,069 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473058769872)", "db": "Session(id=281473067456336)"}
+2025-05-11 21:32:16,070 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:16,070 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473058769872)", "db": "Session(id=281473067456336)", "allow_public": true}
+2025-05-11 21:32:16,070 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:16,071 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.3ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:16,071 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.73ms
+2025-05-11 21:32:16,072 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 3.6ms
+2025-05-11 21:32:16,073 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 3.6}
+2025-05-11 21:32:16,073 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 6.47ms
+2025-05-11 21:32:38,325 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:32:38,329 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:32:38,329 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 59288}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:38,329 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473058767248)", "db": "Session(id=281473067453200)"}
+2025-05-11 21:32:38,330 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:38,330 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473058767248)", "db": "Session(id=281473067453200)", "allow_public": true}
+2025-05-11 21:32:38,330 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:38,331 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.25ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:38,331 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.68ms
+2025-05-11 21:32:38,355 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 25.84ms
+2025-05-11 21:32:38,355 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 25.84}
+2025-05-11 21:32:38,355 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 29.44ms
+2025-05-11 21:32:38,368 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:32:38,368 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 0.61ms
+2025-05-11 21:32:38,427 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:32:38,429 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 1.24ms
+2025-05-11 21:32:38,431 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:32:38,439 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 6.93ms
+2025-05-11 21:32:38,440 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:32:38,447 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 6.54ms
+2025-05-11 21:32:38,528 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:32:38,531 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:32:38,531 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 59288}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:38,531 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067360144)", "db": "Session(id=281473058171984)"}
+2025-05-11 21:32:38,531 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:38,531 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067360144)", "db": "Session(id=281473058171984)", "allow_public": true}
+2025-05-11 21:32:38,531 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:38,532 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.68ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:38,532 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 0.92ms
+2025-05-11 21:32:38,533 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 2.3ms
+2025-05-11 21:32:38,533 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 2.3}
+2025-05-11 21:32:38,533 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.27ms
+2025-05-11 21:32:39,863 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:32:39,869 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:32:39,869 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 59288}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:39,869 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067357136)", "db": "Session(id=281473058302928)"}
+2025-05-11 21:32:39,869 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:39,870 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067357136)", "db": "Session(id=281473058302928)", "allow_public": true}
+2025-05-11 21:32:39,870 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:39,871 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.78ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:39,872 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 2.19ms
+2025-05-11 21:32:39,876 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 7.26ms
+2025-05-11 21:32:39,876 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 7.26}
+2025-05-11 21:32:39,877 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 13.25ms
+2025-05-11 21:32:39,891 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:32:39,893 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 0.76ms
+2025-05-11 21:32:39,910 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:32:39,911 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:32:39,912 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.68ms
+2025-05-11 21:32:39,915 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 4.87ms
+2025-05-11 21:32:39,922 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:32:39,930 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 8.09ms
+2025-05-11 21:32:40,011 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:32:40,014 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:32:40,014 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 59302}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:40,014 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067888848)", "db": "Session(id=281473058498000)"}
+2025-05-11 21:32:40,014 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:40,014 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067888848)", "db": "Session(id=281473058498000)", "allow_public": true}
+2025-05-11 21:32:40,014 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:40,016 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.23ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:40,016 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.65ms
+2025-05-11 21:32:40,017 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 3.26ms
+2025-05-11 21:32:40,017 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 3.26}
+2025-05-11 21:32:40,017 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 6.5ms
+2025-05-11 21:32:49,545 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:32:49,548 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:32:49,548 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 55642}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:49,548 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067884752)", "db": "Session(id=281473058494864)"}
+2025-05-11 21:32:49,549 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:49,549 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067884752)", "db": "Session(id=281473058494864)", "allow_public": true}
+2025-05-11 21:32:49,549 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:49,550 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.11ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:49,550 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.6ms
+2025-05-11 21:32:49,554 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 6.61ms
+2025-05-11 21:32:49,555 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 6.61}
+2025-05-11 21:32:49,555 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 10.01ms
+2025-05-11 21:32:49,569 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:32:49,570 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 1.32ms
+2025-05-11 21:32:49,624 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:32:49,626 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:32:49,628 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 1.39ms
+2025-05-11 21:32:49,638 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 12.96ms
+2025-05-11 21:32:49,640 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:32:49,647 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 6.33ms
+2025-05-11 21:32:49,725 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:32:49,728 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:32:49,728 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 55642}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:49,728 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473058781584)", "db": "Session(id=281473058481424)"}
+2025-05-11 21:32:49,728 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:49,728 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473058781584)", "db": "Session(id=281473058481424)", "allow_public": true}
+2025-05-11 21:32:49,728 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:49,730 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.14ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:49,730 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.46ms
+2025-05-11 21:32:49,731 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 2.93ms
+2025-05-11 21:32:49,731 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 2.93}
+2025-05-11 21:32:49,731 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 6.11ms
+2025-05-11 21:32:50,267 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:32:50,269 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:32:50,270 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 55642}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:50,270 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067356624)", "db": "Session(id=281473067372112)"}
+2025-05-11 21:32:50,270 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:50,270 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067356624)", "db": "Session(id=281473067372112)", "allow_public": true}
+2025-05-11 21:32:50,270 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:50,271 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.32ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:50,271 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.79ms
+2025-05-11 21:32:50,274 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 5.29ms
+2025-05-11 21:32:50,275 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 5.29}
+2025-05-11 21:32:50,275 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 8.15ms
+2025-05-11 21:32:50,311 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:32:50,312 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.61ms
+2025-05-11 21:32:50,313 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:32:50,321 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:32:50,321 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 7.3ms
+2025-05-11 21:32:50,329 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 8.11ms
+2025-05-11 21:32:50,415 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:32:50,417 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:32:50,418 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 55642}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:32:50,418 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067473808)", "db": "Session(id=281473058585360)"}
+2025-05-11 21:32:50,418 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:32:50,418 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067473808)", "db": "Session(id=281473058585360)", "allow_public": true}
+2025-05-11 21:32:50,418 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:32:50,419 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.8ms: user_id=6 has access to project_id=1
+2025-05-11 21:32:50,419 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.04ms
+2025-05-11 21:32:50,420 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 2.57ms
+2025-05-11 21:32:50,420 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 2.57}
+2025-05-11 21:32:50,420 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.31ms
+2025-05-11 21:33:24,232 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:33:24,236 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:33:24,236 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 36220}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:24,236 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067479312)", "db": "Session(id=281473058772240)"}
+2025-05-11 21:33:24,236 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:24,237 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067479312)", "db": "Session(id=281473058772240)", "allow_public": true}
+2025-05-11 21:33:24,237 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:24,238 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.25ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:24,238 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.8ms
+2025-05-11 21:33:24,261 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 25.65ms
+2025-05-11 21:33:24,261 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 25.65}
+2025-05-11 21:33:24,262 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 29.15ms
+2025-05-11 21:33:24,275 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:33:24,276 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 0.58ms
+2025-05-11 21:33:24,301 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:33:24,303 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:33:24,305 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 3.06ms
+2025-05-11 21:33:24,316 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:33:24,316 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 12.43ms
+2025-05-11 21:33:24,319 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 3.11ms
+2025-05-11 21:33:24,401 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:33:24,404 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:33:24,404 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 36220}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:24,404 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067489808)", "db": "Session(id=281473067468560)"}
+2025-05-11 21:33:24,404 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:24,404 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067489808)", "db": "Session(id=281473067468560)", "allow_public": true}
+2025-05-11 21:33:24,404 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:24,406 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.26ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:24,406 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.67ms
+2025-05-11 21:33:24,407 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 3.43ms
+2025-05-11 21:33:24,407 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 3.43}
+2025-05-11 21:33:24,408 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 7.07ms
+2025-05-11 21:33:24,920 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:33:24,923 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:33:24,923 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 36220}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:24,923 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067490768)", "db": "Session(id=281473078437520)"}
+2025-05-11 21:33:24,923 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:24,923 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067490768)", "db": "Session(id=281473078437520)", "allow_public": true}
+2025-05-11 21:33:24,923 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:24,924 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.73ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:24,924 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 0.99ms
+2025-05-11 21:33:24,929 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 6.04ms
+2025-05-11 21:33:24,929 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 6.04}
+2025-05-11 21:33:24,929 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 8.98ms
+2025-05-11 21:33:24,969 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:33:24,969 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.36ms
+2025-05-11 21:33:24,971 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:33:24,976 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 5.41ms
+2025-05-11 21:33:24,978 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:33:24,985 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 7.63ms
+2025-05-11 21:33:25,070 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:33:25,077 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:33:25,078 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 36220}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:25,080 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067485392)", "db": "Session(id=281473059668816)"}
+2025-05-11 21:33:25,080 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:25,080 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067485392)", "db": "Session(id=281473059668816)", "allow_public": true}
+2025-05-11 21:33:25,080 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:25,082 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.82ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:25,085 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 4.88ms
+2025-05-11 21:33:25,087 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 11.46ms
+2025-05-11 21:33:25,089 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 11.46}
+2025-05-11 21:33:25,090 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 19.01ms
+2025-05-11 21:33:30,401 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:33:30,405 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:33:30,405 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 38948}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:30,405 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067474000)", "db": "Session(id=281473058157712)"}
+2025-05-11 21:33:30,405 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:30,405 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067474000)", "db": "Session(id=281473058157712)", "allow_public": true}
+2025-05-11 21:33:30,406 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:30,407 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.4ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:30,407 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.97ms
+2025-05-11 21:33:30,431 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 27.06ms
+2025-05-11 21:33:30,433 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 27.06}
+2025-05-11 21:33:30,433 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 31.95ms
+2025-05-11 21:33:30,447 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:33:30,448 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 0.71ms
+2025-05-11 21:33:30,476 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:33:30,477 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.43ms
+2025-05-11 21:33:30,484 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:33:30,485 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:33:30,494 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 8.63ms
+2025-05-11 21:33:30,494 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 9.91ms
+2025-05-11 21:33:30,579 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:33:30,581 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:33:30,581 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 38964}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:30,581 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473058580688)", "db": "Session(id=281473059784528)"}
+2025-05-11 21:33:30,581 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:30,581 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473058580688)", "db": "Session(id=281473059784528)", "allow_public": true}
+2025-05-11 21:33:30,582 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:30,583 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.18ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:30,583 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.58ms
+2025-05-11 21:33:30,584 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 3.27ms
+2025-05-11 21:33:30,584 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 3.27}
+2025-05-11 21:33:30,584 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.65ms
+2025-05-11 21:33:31,503 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:33:31,506 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:33:31,507 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 38964}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:31,507 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067498896)", "db": "Session(id=281473058611088)"}
+2025-05-11 21:33:31,507 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:31,507 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067498896)", "db": "Session(id=281473058611088)", "allow_public": true}
+2025-05-11 21:33:31,507 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:31,508 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.98ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:31,508 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.29ms
+2025-05-11 21:33:31,511 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 4.92ms
+2025-05-11 21:33:31,512 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 4.92}
+2025-05-11 21:33:31,512 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 8.31ms
+2025-05-11 21:33:31,556 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:33:31,556 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.4ms
+2025-05-11 21:33:31,557 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:33:31,564 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:33:31,564 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 6.87ms
+2025-05-11 21:33:31,572 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 7.79ms
+2025-05-11 21:33:31,657 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:33:31,660 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:33:31,661 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 38964}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:31,661 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473058419408)", "db": "Session(id=281473059832848)"}
+2025-05-11 21:33:31,661 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:31,661 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473058419408)", "db": "Session(id=281473059832848)", "allow_public": true}
+2025-05-11 21:33:31,661 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:31,662 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.16ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:31,662 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.45ms
+2025-05-11 21:33:31,663 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 3.0ms
+2025-05-11 21:33:31,663 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 3.0}
+2025-05-11 21:33:31,663 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 5.99ms
+2025-05-11 21:33:56,482 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:33:56,488 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:33:56,488 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 47788}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:56,488 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067356688)", "db": "Session(id=281473058185296)"}
+2025-05-11 21:33:56,488 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:56,488 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067356688)", "db": "Session(id=281473058185296)", "allow_public": true}
+2025-05-11 21:33:56,489 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:56,490 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.35ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:56,490 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.78ms
+2025-05-11 21:33:56,510 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 22.48ms
+2025-05-11 21:33:56,510 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 22.48}
+2025-05-11 21:33:56,510 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 27.67ms
+2025-05-11 21:33:56,525 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:33:56,526 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 0.41ms
+2025-05-11 21:33:56,556 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:33:56,557 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.75ms
+2025-05-11 21:33:56,559 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:33:56,564 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 5.22ms
+2025-05-11 21:33:56,565 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:33:56,570 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 5.12ms
+2025-05-11 21:33:56,657 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:33:56,660 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:33:56,660 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 47788}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:33:56,661 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067885008)", "db": "Session(id=281473058442960)"}
+2025-05-11 21:33:56,661 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:33:56,661 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067885008)", "db": "Session(id=281473058442960)", "allow_public": true}
+2025-05-11 21:33:56,661 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:33:56,662 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.27ms: user_id=6 has access to project_id=1
+2025-05-11 21:33:56,662 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 1.63ms
+2025-05-11 21:33:56,663 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 3.01ms
+2025-05-11 21:33:56,663 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 3.01}
+2025-05-11 21:33:56,663 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 6.23ms
+2025-05-11 21:34:08,684 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1 from 192.168.148.1
+2025-05-11 21:34:08,689 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.project_detail
+2025-05-11 21:34:08,689 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1", "client": {"host": "192.168.148.1", "port": 39228}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "upgrade-insecure-requests": "1", "dnt": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "same-origin", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "referer": "http://localhost:8000/home", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:34:08,689 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067364944)", "db": "Session(id=281473058174544)"}
+2025-05-11 21:34:08,689 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:34:08,689 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067364944)", "db": "Session(id=281473058174544)", "allow_public": true}
+2025-05-11 21:34:08,689 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:34:08,691 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 1.97ms: user_id=6 has access to project_id=1
+2025-05-11 21:34:08,692 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 2.38ms
+2025-05-11 21:34:08,713 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.project_detail - Time: 24.97ms
+2025-05-11 21:34:08,713 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 24.97}
+2025-05-11 21:34:08,714 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1 - Status: 200 - Time: 29.15ms
+2025-05-11 21:34:08,725 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/js/tab-player.js from 192.168.148.1
+2025-05-11 21:34:08,726 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/js/tab-player.js - Status: 304 - Time: 0.31ms
+2025-05-11 21:34:08,786 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-11 21:34:08,787 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-11 21:34:08,788 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 1.91ms
+2025-05-11 21:34:08,794 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 6.86ms
+2025-05-11 21:34:08,800 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications/ from 192.168.148.1
+2025-05-11 21:34:08,807 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications/ - Status: 200 - Time: 7.3ms
+2025-05-11 21:34:08,874 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/1/comments from 192.168.148.1
+2025-05-11 21:34:08,875 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.routers.projects.get_project_comments
+2025-05-11 21:34:08,875 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/projects/1/comments", "client": {"host": "192.168.148.1", "port": 39230}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua-platform": "\"macOS\"", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "dnt": "1", "sec-ch-ua-mobile": "?0", "accept": "*/*", "sec-fetch-site": "same-origin", "sec-fetch-mode": "cors", "sec-fetch-dest": "empty", "referer": "http://localhost:8000/projects/1", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {"project_id": "1"}}
+2025-05-11 21:34:08,875 - tabify2 - DEBUG - logger.py:107 - Parameters: {"project_id": 1, "current_user": "User(id=281473067885584)", "db": "Session(id=281473059841680)"}
+2025-05-11 21:34:08,875 - tabify2 - DEBUG - logger.py:212 - FUNCTION CALL START: app.routers.projects.get_project_with_access_check
+2025-05-11 21:34:08,875 - tabify2 - DEBUG - logger.py:213 - Parameters: {"project_id": 1, "current_user": "User(id=281473067885584)", "db": "Session(id=281473059841680)", "allow_public": true}
+2025-05-11 21:34:08,875 - tabify2.projects - DEBUG - projects.py:46 - Checking access for project_id=1, user_id=6, allow_public=True
+2025-05-11 21:34:08,876 - tabify2.projects - DEBUG - projects.py:72 - Access check completed in 0.46ms: user_id=6 has access to project_id=1
+2025-05-11 21:34:08,876 - tabify2 - DEBUG - logger.py:223 - FUNCTION CALL END: app.routers.projects.get_project_with_access_check - Time: 0.62ms
+2025-05-11 21:34:08,876 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.routers.projects.get_project_comments - Time: 1.31ms
+2025-05-11 21:34:08,876 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "JSONResponse", "execution_time_ms": 1.31}
+2025-05-11 21:34:08,876 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/1/comments - Status: 200 - Time: 2.55ms

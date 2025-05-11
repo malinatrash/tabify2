@@ -5,29 +5,42 @@
     <div class="row">
         <!-- Project Header -->
         <div class="col-12 mb-4">
-            <div class="vision-glass-card project-header-card fade-in">
-                <div class="project-header-top">
-                    <div class="header-main-row d-flex justify-content-between align-items-center">
+            <div class="vision-glass-card fade-in">
+                <!-- Top section with title and controls -->
+                <div class="project-header-content">
+                    <div class="project-title-section">
                         <h1 class="project-title">{{ project.title }}</h1>
+                        <div class="project-author">
+                            <i class="fas fa-user-edit"></i>
+                            <span>Created by <a href="/users/profile/{{ project.owner.id }}">{{ project.owner.full_name
+                                    }}</a></span>
+                            <span class="project-date"><i class="far fa-calendar-alt"></i> {{
+                                project.created_at.strftime('%B %d, %Y') }}</span>
+                        </div>
                     </div>
-                    <div class="project-meta">
-                        <span>Created by <a href="/users/profile/{{ project.owner.id }}">{{ project.owner.full_name
-                                }}</a> on {{ project.created_at.strftime('%B %d, %Y') }}</span>
-                        <div class="project-tempo">
-                            <i class="fas fa-drum"></i> Tempo: <span id="project-tempo-value">{{ project.tempo
-                                }}</span>
-                            BPM
+
+                    <!-- Project controls section -->
+                    <div class="project-controls">
+                        <!-- Tempo control -->
+                        <div class="control-item project-tempo">
+                            <i class="fas fa-drum"></i>
+                            <span>Tempo: <span id="project-tempo-value">{{ project.tempo }}</span> BPM</span>
                             {% if current_user.id == project.owner_id %}
                             <button id="edit-tempo-btn" class="vision-btn vision-btn-sm" title="Edit tempo">
                                 <i class="fas fa-edit"></i>
                             </button>
                             {% endif %}
-                            <button id="like-button" class="vision-btn {% if is_liked %}liked{% endif %}"
-                                title="{% if is_liked %}Unlike{% else %}Like{% endif %}">
-                                <i class="fas {% if is_liked %}fa-heart{% else %}fa-heart{% endif %}"></i>
-                                <span id="likes-count">{{ project.likes|length }}</span>
-                            </button>
                         </div>
+
+                        <!-- Like button -->
+                        <button id="like-button" class="vision-btn {% if is_liked %}liked{% endif %}"
+                            title="{% if is_liked %}Unlike{% else %}Like{% endif %}">
+                            <i class="fas {% if is_liked %}fa-heart{% else %}fa-heart{% endif %}"></i>
+                            <span id="likes-count">{{ project.likes|length }}</span>
+                        </button>
+
+                        <!-- Play button will be dynamically added here by JavaScript -->
+                        <div class="" id="play-button-container"></div>
                     </div>
                 </div>
             </div>
@@ -218,7 +231,71 @@
 
 
 <style>
-    /* Выравнивание карточек */
+    /* Project header styling */
+    .project-header-card {
+        padding: 1.5rem;
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(12px);
+        margin-bottom: 1.5rem;
+    }
+
+    .project-header-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .project-title-section {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .project-title {
+        margin: 0 0 0.5rem 0;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .project-author {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .project-date {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .project-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .control-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(0, 0, 0, 0.1);
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+    }
+
+    .project-tempo {
+        font-weight: 500;
+    }
+
+    /* Base card styling */
     .vision-glass-card {
         height: 100%;
         display: flex;
@@ -1451,8 +1528,8 @@
 </style>
 
 <!-- Tone.js для синтеза звуков -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js" crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
 
 <script src="/static/js/sequencer.js"></script>
 <script src="/static/js/render-tab.js"></script>
@@ -1633,8 +1710,8 @@
         // Загрузка необходимых библиотек для работы с MIDI
         const loadScripts = async () => {
             // Create a global object for Midi to prevent exports error
-            window.globalThis = window;
-            
+            window.globalThis = window
+
             try {
                 // Use a modified version that's browser compatible
                 await new Promise((resolve, reject) => {
@@ -1645,7 +1722,7 @@
                     document.head.appendChild(script)
                 })
                 console.log('MIDI library loaded successfully')
-                
+
                 // Initialize Tone.js after a user interaction to avoid warnings
                 const initAudio = async () => {
                     try {
@@ -1655,14 +1732,14 @@
                         console.error('Error starting audio context:', error)
                     }
                 }
-                
+
                 // Add a listener to the whole document for the first click
                 const startAudio = () => {
                     initAudio()
                     document.removeEventListener('click', startAudio)
                 }
                 document.addEventListener('click', startAudio)
-                
+
             } catch (error) {
                 console.error('Error loading MIDI library:', error)
             }
@@ -2168,59 +2245,59 @@
             })
         }
     }
-    
+
     // Function to handle MIDI file actions (delete, play, etc)
     function setupMidiFileActions() {
         // Get all delete MIDI buttons
-        const deleteButtons = document.querySelectorAll('.btn-delete-midi');
-        
+        const deleteButtons = document.querySelectorAll('.btn-delete-midi')
+
         deleteButtons.forEach(button => {
-            button.addEventListener('click', async function() {
-                const midiId = this.getAttribute('data-midi-id');
-                const projectId = this.getAttribute('data-project-id');
-                
+            button.addEventListener('click', async function () {
+                const midiId = this.getAttribute('data-midi-id')
+                const projectId = this.getAttribute('data-project-id')
+
                 if (!confirm('Вы уверены, что хотите удалить этот MIDI файл и связанную табулатуру?')) {
-                    return;
+                    return
                 }
-                
+
                 try {
                     const response = await fetch(`/projects/${projectId}/midi/${midiId}`, {
                         method: 'DELETE'
-                    });
-                    
+                    })
+
                     if (response.ok) {
                         // Remove the track from DOM or reload page
-                        const trackItem = this.closest('.track-item');
+                        const trackItem = this.closest('.track-item')
                         if (trackItem) {
-                            trackItem.remove();
-                            
+                            trackItem.remove()
+
                             // Also remove related tablature
-                            const tablature = document.querySelector(`.track-row[data-midi-id="${midiId}"]`);
+                            const tablature = document.querySelector(`.track-row[data-midi-id="${midiId}"]`)
                             if (tablature) {
-                                tablature.remove();
+                                tablature.remove()
                             }
-                            
+
                             // Show success message
                             window.toast.success('MIDI файл успешно удален', {
                                 duration: 3000
-                            });
+                            })
                         } else {
                             // If DOM element not found, reload the page
-                            window.location.reload();
+                            window.location.reload()
                         }
                     } else {
-                        throw new Error('Failed to delete MIDI file');
+                        throw new Error('Failed to delete MIDI file')
                     }
                 } catch (error) {
-                    console.error('Error deleting MIDI file:', error);
+                    console.error('Error deleting MIDI file:', error)
                     window.toast.error('Ошибка при удалении MIDI файла', {
                         duration: 3000
-                    });
+                    })
                 }
-            });
-        });
+            })
+        })
     }
-    
+
     // Initialization when page loads
     document.addEventListener('DOMContentLoaded', function () {
         // Setup file input display
