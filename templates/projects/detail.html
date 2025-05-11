@@ -9,31 +9,24 @@
                 <div class="project-header-top">
                     <div class="header-main-row d-flex justify-content-between align-items-center">
                         <h1 class="project-title">{{ project.title }}</h1>
-                        <div class="project-actions">
-                            <div class="likes-section">
-                                <button id="like-button" class="vision-btn {% if is_liked %}liked{% endif %}"
-                                    title="{% if is_liked %}Unlike{% else %}Like{% endif %}">
-                                    <i class="fas {% if is_liked %}fa-heart{% else %}fa-heart{% endif %}"></i>
-                                    <span id="likes-count">{{ project.likes|length }}</span>
-                                </button>
-                                <a href="/projects/{{ project.id }}/likes"
-                                    class="vision-btn vision-btn-sm view-likes-btn" title="View who liked this project">
-                                    <i class="fas fa-users"></i> <span class="view-likes-text">Likes</span>
-                                </a>
-                            </div>
-                        </div>
                     </div>
                     <div class="project-meta">
                         <span>Created by <a href="/users/profile/{{ project.owner.id }}">{{ project.owner.full_name
                                 }}</a> on {{ project.created_at.strftime('%B %d, %Y') }}</span>
                         <div class="project-tempo">
-                            <i class="fas fa-drum"></i> Tempo: <span id="project-tempo-value">{{ project.tempo }}</span>
+                            <i class="fas fa-drum"></i> Tempo: <span id="project-tempo-value">{{ project.tempo
+                                }}</span>
                             BPM
                             {% if current_user.id == project.owner_id %}
                             <button id="edit-tempo-btn" class="vision-btn vision-btn-sm" title="Edit tempo">
                                 <i class="fas fa-edit"></i>
                             </button>
                             {% endif %}
+                            <button id="like-button" class="vision-btn {% if is_liked %}liked{% endif %}"
+                                title="{% if is_liked %}Unlike{% else %}Like{% endif %}">
+                                <i class="fas {% if is_liked %}fa-heart{% else %}fa-heart{% endif %}"></i>
+                                <span id="likes-count">{{ project.likes|length }}</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -154,7 +147,9 @@
                             <div class="track-length">
                                 <span class="track-duration">{{ midi.created_at.strftime('%H:%M') }}</span>
                             </div>
+
                         </div>
+
                         <div class="track-actions">
                             <a href="/projects/{{ project.id }}/midi/{{ midi.id }}"
                                 class="vision-btn vision-btn-sm vision-btn-secondary">
@@ -1039,17 +1034,17 @@
         display: flex;
         margin-bottom: 1.5rem;
         gap: 1rem;
-        height: 520px;
+        height: 420px;
         /* Фиксированная высота для обоих фреймов */
     }
 
     .upload-section {
-        width: 55%;
+        width: 35%;
         height: 100%;
     }
 
     .comments-section {
-        width: 45%;
+        width: 65%;
         height: 100%;
     }
 
@@ -1076,8 +1071,7 @@
 
     .file-input-wrapper {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
         gap: 10px;
         height: 100%;
     }
@@ -1456,9 +1450,14 @@
     }
 </style>
 
+<!-- Tone.js для синтеза звуков -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script src="/static/js/sequencer.js"></script>
 <script src="/static/js/render-tab.js"></script>
 <script src="/static/js/tab-websocket.js"></script>
+<script src="/static/js/tab-player.js"></script>
 <script>
     // Функция для работы с комментариями
     function setupComments() {
@@ -1633,19 +1632,39 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Загрузка необходимых библиотек для работы с MIDI
         const loadScripts = async () => {
-            const scripts = [
-                'https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js',
-                'https://cdn.jsdelivr.net/npm/@tonejs/midi@2.0.28/dist/Midi.min.js'
-            ]
-
-            for (const src of scripts) {
+            // Create a global object for Midi to prevent exports error
+            window.globalThis = window;
+            
+            try {
+                // Use a modified version that's browser compatible
                 await new Promise((resolve, reject) => {
                     const script = document.createElement('script')
-                    script.src = src
+                    script.src = 'https://cdn.jsdelivr.net/npm/@tonejs/midi@2.0.28/dist/Midi.js'
                     script.onload = resolve
                     script.onerror = reject
                     document.head.appendChild(script)
                 })
+                console.log('MIDI library loaded successfully')
+                
+                // Initialize Tone.js after a user interaction to avoid warnings
+                const initAudio = async () => {
+                    try {
+                        await Tone.start()
+                        console.log('Audio context started successfully')
+                    } catch (error) {
+                        console.error('Error starting audio context:', error)
+                    }
+                }
+                
+                // Add a listener to the whole document for the first click
+                const startAudio = () => {
+                    initAudio()
+                    document.removeEventListener('click', startAudio)
+                }
+                document.addEventListener('click', startAudio)
+                
+            } catch (error) {
+                console.error('Error loading MIDI library:', error)
             }
         }
 
@@ -2093,14 +2112,125 @@
         })
     }
 
+    // Add the missing setupAudioUpload function
+    function setupAudioUpload() {
+        const audioForm = document.getElementById('audio-upload-form')
+        if (audioForm) {
+            audioForm.addEventListener('submit', async function (e) {
+                e.preventDefault()
+
+                const fileInput = document.getElementById('audio-file')
+                const file = fileInput.files[0]
+
+                if (!file) {
+                    showUploadMessage('Пожалуйста, выберите аудиофайл', 'danger')
+                    return
+                }
+
+                // Показать индикатор прогресса
+                const progressBar = document.querySelector('#upload-progress')
+                progressBar.classList.remove('d-none')
+                progressBar.querySelector('.progress-bar').style.width = '0%'
+
+                showUploadMessage('Загрузка и обработка аудиофайла...', 'info')
+
+                const formData = new FormData()
+                formData.append('file', file)
+
+                try {
+                    const projectId = window.location.pathname.split('/')[2]
+                    // Отправляем запрос на преобразование аудио в MIDI
+                    const response = await fetch(`/projects/${projectId}/upload-audio`, {
+                        method: 'POST',
+                        body: formData
+                    })
+
+                    progressBar.querySelector('.progress-bar').style.width = '100%'
+
+                    if (!response.ok) {
+                        const errorData = await response.json()
+                        throw new Error(errorData.error || 'Ошибка при обработке файла')
+                    }
+
+                    const data = await response.json()
+
+                    // Обновляем список MIDI-файлов
+                    showUploadMessage('MIDI-файл успешно создан!', 'success')
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1500)
+
+                } catch (error) {
+                    console.error('Ошибка:', error)
+                    showUploadMessage(`Ошибка: ${error.message}`, 'danger')
+                    progressBar.classList.add('d-none')
+                }
+            })
+        }
+    }
+    
+    // Function to handle MIDI file actions (delete, play, etc)
+    function setupMidiFileActions() {
+        // Get all delete MIDI buttons
+        const deleteButtons = document.querySelectorAll('.btn-delete-midi');
+        
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async function() {
+                const midiId = this.getAttribute('data-midi-id');
+                const projectId = this.getAttribute('data-project-id');
+                
+                if (!confirm('Вы уверены, что хотите удалить этот MIDI файл и связанную табулатуру?')) {
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(`/projects/${projectId}/midi/${midiId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        // Remove the track from DOM or reload page
+                        const trackItem = this.closest('.track-item');
+                        if (trackItem) {
+                            trackItem.remove();
+                            
+                            // Also remove related tablature
+                            const tablature = document.querySelector(`.track-row[data-midi-id="${midiId}"]`);
+                            if (tablature) {
+                                tablature.remove();
+                            }
+                            
+                            // Show success message
+                            window.toast.success('MIDI файл успешно удален', {
+                                duration: 3000
+                            });
+                        } else {
+                            // If DOM element not found, reload the page
+                            window.location.reload();
+                        }
+                    } else {
+                        throw new Error('Failed to delete MIDI file');
+                    }
+                } catch (error) {
+                    console.error('Error deleting MIDI file:', error);
+                    window.toast.error('Ошибка при удалении MIDI файла', {
+                        duration: 3000
+                    });
+                }
+            });
+        });
+    }
+    
     // Initialization when page loads
     document.addEventListener('DOMContentLoaded', function () {
         // Setup file input display
         setupFileInput()
+        // Initialize audio upload functionality
+        setupAudioUpload()
         // Setup tempo editing
         setupTempoEdit()
 
-        setupAudioUpload()
+        // Define the missing setupMidiFileActions function
         setupMidiFileActions()
         setupLikeButton()
         setupComments() // Инициализация комментариев
