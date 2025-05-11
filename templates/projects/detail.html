@@ -26,6 +26,15 @@
                     <div class="project-meta">
                         <span>Created by <a href="/users/profile/{{ project.owner.id }}">{{ project.owner.full_name
                                 }}</a> on {{ project.created_at.strftime('%B %d, %Y') }}</span>
+                        <div class="project-tempo">
+                            <i class="fas fa-drum"></i> Tempo: <span id="project-tempo-value">{{ project.tempo }}</span>
+                            BPM
+                            {% if current_user.id == project.owner_id %}
+                            <button id="edit-tempo-btn" class="vision-btn vision-btn-sm" title="Edit tempo">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,43 +72,20 @@
                                     </div>
                                 </div>
 
-                                <!-- Filters Group -->
-                                <div class="filters-area">
-                                    <div class="filters-section">
-                                        <h5 class="filter-heading">Audio Filters</h5>
-                                        <!-- Pitch Range Filter -->
-                                        <div class="filter-group mb-2">
-                                            <label for="pitch-filter" class="filter-label">Pitch:</label>
-                                            <div class="slider-container">
-                                                <input type="range" id="pitch-min" name="pitch-min" class="form-range"
-                                                    min="0" max="127" step="1" value="0">
-                                                <span class="range-separator">to</span>
-                                                <input type="range" id="pitch-max" name="pitch-max" class="form-range"
-                                                    min="0" max="127" step="1" value="127">
-                                            </div>
-                                            <div class="range-values">
-                                                <span id="pitch-min-value">0</span>
-                                                <span id="pitch-max-value">127</span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Duration Filter -->
-                                        <div class="filter-group">
-                                            <label for="duration-filter" class="filter-label">Duration:</label>
-                                            <div class="slider-container">
-                                                <input type="range" id="duration-min" name="duration-min"
-                                                    class="form-range" min="0" max="2000" step="10" value="0">
-                                                <span class="range-separator">to</span>
-                                                <input type="range" id="duration-max" name="duration-max"
-                                                    class="form-range" min="0" max="2000" step="10" value="2000">
-                                            </div>
-                                            <div class="range-values">
-                                                <span id="duration-min-value">0</span>
-                                                <span id="duration-max-value">2000</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <!-- Разделитель между загрузкой и созданием пустой табы -->
+                                <div class="separator">
+                                    <span>OR</span>
                                 </div>
+
+                                <!-- Кнопка для создания пустой табулатуры -->
+                                <div class="create-empty-tab-area">
+                                    <button id="create-empty-tab-btn" type="button"
+                                        class="vision-btn vision-btn-secondary">
+                                        <i class="fas fa-file-alt"></i> Create Empty Tab
+                                    </button>
+                                </div>
+
+
                             </div>
                         </form>
                     </div>
@@ -195,7 +181,7 @@
         <div class="col-9 col-sm-9 col-md-9 workspace-column">
             <div class="vision-glass-card workspace-panel fade-in">
                 <div class="panel-header workspace-header">
-                    <h3>Tabulatur</h3>
+                    <h3>Tabulature</h3>
                 </div>
 
                 <!-- Удалено пустое пространство -->
@@ -210,8 +196,8 @@
                         <div class="track-row" data-midi-id="{{ midi.id }}">
 
                             <div class="track-tablature" id="track-tablature-{{ midi.id }}">
-                                {% if midi.tablatures and midi.tablatures[0].tab_data %}
-                                <div class="tablature-content" data-tab-data='{{ midi.tablatures[0].tab_data|tojson }}'>
+                                {% if midi.tablatures and midi.tablatures[0].tab_text %}
+                                <div class="tablature-content" data-tab-text='{{ midi.tablatures[0].tab_text }}'>
                                 </div>
                                 {% else %}
                                 <div class="empty-tablature">No tablature available</div>
@@ -226,20 +212,7 @@
                         </div>
                         {% endif %}
                     </div>
-
-                    <div class="view-controls">
-                        <div class="zoom-controls">
-                            <button id="zoom-out" class="vision-btn vision-btn-circle">
-                                <i class="fas fa-search-minus"></i>
-                            </button>
-                            <button id="reset-view" class="vision-btn vision-btn-circle">
-                                <i class="fas fa-sync"></i>
-                            </button>
-                            <button id="zoom-in" class="vision-btn vision-btn-circle">
-                                <i class="fas fa-search-plus"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <!-- Элементы управления зумом удалены -->
                 </div>
             </div>
         </div>
@@ -250,6 +223,24 @@
 
 
 <style>
+    /* Выравнивание карточек */
+    .vision-glass-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tracks-column,
+    .workspace-column {
+        margin-bottom: 20px;
+    }
+
+    .sequencer-row,
+    .comments-section {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
     /* Project Header Styles */
     .project-header-card {
         padding: 20px 30px;
@@ -471,6 +462,50 @@
         color: var(--text-secondary);
     }
 
+    /* Стили для отображения темпа */
+    .project-tempo {
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: inline-flex;
+    }
+
+    .project-tempo i {
+        color: var(--accent-color);
+    }
+
+    #project-tempo-value {
+        font-weight: bold;
+        color: var(--primary-text-color);
+    }
+
+    #edit-tempo-btn {
+        padding: 2px 6px;
+        font-size: 0.8rem;
+        margin-left: 8px;
+    }
+
+    .tempo-edit-form {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .tempo-edit-form input {
+        width: 60px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--primary-text-color);
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
     .comment-content {
         color: var(--text-color);
         word-break: break-word;
@@ -545,7 +580,8 @@
 
     /* Связываем скроллинг дорожек и табулатур */
     .tracks-display {
-        overflow-y: auto;
+        overflow-y: hidden;
+        overflow-x: hidden;
         scrollbar-width: thin;
     }
 
@@ -722,13 +758,6 @@
         font-family: monospace;
     }
 
-    .tracks-display {
-        flex: 1;
-        overflow-x: auto;
-        overflow-y: auto;
-        position: relative;
-    }
-
     .track-row {
         display: flex;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -778,7 +807,7 @@
         overflow-x: auto;
         overflow-y: hidden;
         position: relative;
-        max-width: calc(56vw);
+        max-width: 100%;
         display: flex;
         align-items: center;
         height: 100%;
@@ -1317,6 +1346,94 @@
         color: var(--secondary-text-color);
     }
 
+    /* Стили для разделителя */
+    .separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 15px 0;
+        color: var(--text-secondary);
+    }
+
+    .separator::before,
+    .separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .separator::before {
+        margin-right: 10px;
+    }
+
+    .separator::after {
+        margin-left: 10px;
+    }
+
+    .create-empty-tab-area {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    /* Стили для модального окна */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal.show {
+        display: flex;
+    }
+
+    .modal-content {
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        padding: 20px;
+        width: 400px;
+        max-width: 90%;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        position: relative;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        color: var(--text-primary);
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    .modal-body {
+        margin-bottom: 20px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
     .midi-actions {
         display: flex;
         gap: 5px;
@@ -1339,8 +1456,9 @@
     }
 </style>
 
-<script src="/static/js/render-tab.js"></script>
 <script src="/static/js/sequencer.js"></script>
+<script src="/static/js/render-tab.js"></script>
+<script src="/static/js/tab-websocket.js"></script>
 <script>
     // Функция для работы с комментариями
     function setupComments() {
@@ -1701,7 +1819,9 @@
 
                     // Удаляем элемент из DOM
                     const midiItem = this.closest('.midi-file-item')
-                    midiItem.remove()
+                    if (midiItem) {
+                        midiItem.remove()
+                    }
 
                     // Если файлов не осталось, показываем сообщение
                     const midiList = document.getElementById('midi-files-list')
@@ -1906,10 +2026,79 @@
         }
     }
 
+    // Функция для редактирования темпа проекта
+    function setupTempoEdit() {
+        const editBtn = document.getElementById('edit-tempo-btn')
+        if (!editBtn) return
+
+        const tempoContainer = document.querySelector('.project-tempo')
+        const tempoValueElement = document.getElementById('project-tempo-value')
+        const projectId = window.location.pathname.split('/').pop()
+
+        editBtn.addEventListener('click', function () {
+            const currentTempo = tempoValueElement.textContent.trim()
+
+            // Создаем форму редактирования
+            const form = document.createElement('form')
+            form.className = 'tempo-edit-form'
+            form.innerHTML = `
+                <input type="number" id="tempo-input" value="${currentTempo}" min="20" max="300" required>
+                <button type="submit" class="vision-btn vision-btn-sm"><i class="fas fa-check"></i></button>
+                <button type="button" class="vision-btn vision-btn-sm" id="cancel-tempo-edit"><i class="fas fa-times"></i></button>
+            `
+
+            // Заменяем отображение темпа на форму
+            const oldContent = tempoContainer.innerHTML
+            tempoContainer.innerHTML = ''
+            tempoContainer.appendChild(form)
+            document.getElementById('tempo-input').focus()
+
+            // Обработчик отмены редактирования
+            document.getElementById('cancel-tempo-edit').addEventListener('click', function () {
+                tempoContainer.innerHTML = oldContent
+            })
+
+            // Обработчик отправки формы
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault()
+                const newTempo = document.getElementById('tempo-input').value
+
+                try {
+                    const response = await fetch(`/projects/${projectId}/update-tempo`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ tempo: newTempo })
+                    })
+
+                    if (response.ok) {
+                        const result = await response.json()
+
+                        // Обновляем отображение
+                        tempoContainer.innerHTML = oldContent
+                        tempoValueElement.textContent = newTempo
+
+                        // Уведомляем пользователя
+                        showUploadMessage('Темп проекта успешно обновлен', 'success')
+                    } else {
+                        throw new Error('Ошибка при обновлении темпа')
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error)
+                    showUploadMessage('Не удалось обновить темп проекта', 'error')
+                    tempoContainer.innerHTML = oldContent
+                }
+            })
+        })
+    }
+
     // Initialization when page loads
     document.addEventListener('DOMContentLoaded', function () {
         // Setup file input display
         setupFileInput()
+        // Setup tempo editing
+        setupTempoEdit()
 
         setupAudioUpload()
         setupMidiFileActions()
@@ -1920,5 +2109,123 @@
     // Вызываем setupComments сразу, чтобы не ждать загрузки DOM
     // Это нужно, если скрипт загружается после формирования DOM
     setTimeout(setupComments, 100)
+
+    // Функция для работы с пустыми табулатурами
+    function setupEmptyTabCreation() {
+        const createEmptyTabBtn = document.getElementById('create-empty-tab-btn')
+        const modal = document.getElementById('empty-tab-modal')
+        const closeBtn = modal.querySelector('.close-modal')
+        const cancelBtn = document.getElementById('cancel-create-tab')
+        const confirmBtn = document.getElementById('confirm-create-tab')
+        const form = document.getElementById('empty-tab-form')
+
+        // Открыть модальное окно
+        createEmptyTabBtn.addEventListener('click', function () {
+            modal.classList.add('show')
+        })
+
+        // Закрыть модальное окно (разные способы)
+        function closeModal() {
+            modal.classList.remove('show')
+        }
+
+        closeBtn.addEventListener('click', closeModal)
+        cancelBtn.addEventListener('click', closeModal)
+
+        // Обработка подтверждения создания табулатуры
+        confirmBtn.addEventListener('click', async function () {
+            // Проверка валидности формы
+            const tabName = document.getElementById('tab-name').value
+            const tabWidth = document.getElementById('tab-width').value
+
+            if (!tabName) {
+                showUploadMessage('Please enter a name for your tab', 'error')
+                return
+            }
+
+            // Показываем индикатор загрузки
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...'
+            confirmBtn.disabled = true
+
+            try {
+                // Получаем данные формы
+                const formData = new FormData()
+                formData.append('midi_name', tabName)
+                formData.append('tab_width', tabWidth)
+
+                // Отправляем запрос на создание пустой табулатуры
+                const projectId = window.location.pathname.split('/').pop()
+                const response = await fetch(`/projects/${projectId}/create-empty-tab`, {
+                    method: 'POST',
+                    body: formData
+                })
+
+                if (response.ok) {
+                    // Успешно создана табулатура
+                    showUploadMessage('Empty tab created successfully!', 'success')
+                    // Перезагружаем страницу для отображения новой табулатуры
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1000)
+                } else {
+                    // Ошибка при создании
+                    const result = await response.json()
+                    showUploadMessage(`Error: ${result.error || 'Could not create empty tab'}`, 'error')
+                }
+            } catch (error) {
+                showUploadMessage(`Error: ${error.message}`, 'error')
+            } finally {
+                // Восстанавливаем кнопку
+                confirmBtn.innerHTML = 'Create Tab'
+                confirmBtn.disabled = false
+                // Закрываем модальное окно
+                closeModal()
+            }
+        })
+    }
+
+    // Инициализируем функционал создания пустой табулатуры
+    document.addEventListener('DOMContentLoaded', function () {
+        if (document.getElementById('create-empty-tab-btn')) {
+            console.log('Initializing empty tab creation...')
+            setupEmptyTabCreation()
+        }
+    })
+
+    // Для уверенности добавляем обработчик напрямую
+    document.querySelector('#create-empty-tab-btn')?.addEventListener('click', function () {
+        console.log('Create empty tab button clicked')
+        document.getElementById('empty-tab-modal').classList.add('show')
+    });
 </script>
+
+<!-- Модальное окно для создания пустой табулатуры -->
+<div id="empty-tab-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Create Empty Tab</h3>
+            <button type="button" class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="empty-tab-form">
+                <div class="form-group mb-3">
+                    <label for="tab-name">Tab Name</label>
+                    <input type="text" id="tab-name" name="midi_name" class="vision-input" placeholder="My Tab"
+                        required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="tab-width">Tab Width</label>
+                    <input type="number" id="tab-width" name="tab_width" class="vision-input" min="40" max="200"
+                        value="80" required>
+                    <small class="text-muted">Number of characters (40-200)</small>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="vision-btn vision-btn-secondary" id="cancel-create-tab">Cancel</button>
+            <button type="button" class="vision-btn vision-btn-primary" id="confirm-create-tab">Create Tab</button>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

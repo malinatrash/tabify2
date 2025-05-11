@@ -1,0 +1,165 @@
+2025-05-05 12:57:21,601 - tabify2 - INFO - main.py:20 - Loading environment variables
+2025-05-05 12:57:21,601 - tabify2 - INFO - main.py:23 - Creating database tables
+2025-05-05 12:57:21,608 - tabify2 - INFO - main.py:25 - Database tables created successfully
+2025-05-05 12:57:21,608 - tabify2 - INFO - main.py:59 - Tabify application starting up
+2025-05-05 12:57:34,192 - tabify2 - INFO - main.py:20 - Loading environment variables
+2025-05-05 12:57:34,192 - tabify2 - INFO - main.py:23 - Creating database tables
+2025-05-05 12:57:34,200 - tabify2 - INFO - main.py:25 - Database tables created successfully
+2025-05-05 12:57:34,200 - tabify2 - INFO - main.py:59 - Tabify application starting up
+2025-05-05 12:58:16,170 - tabify2 - INFO - main.py:20 - Loading environment variables
+2025-05-05 12:58:16,170 - tabify2 - INFO - main.py:23 - Creating database tables
+2025-05-05 12:58:16,176 - tabify2 - INFO - main.py:25 - Database tables created successfully
+2025-05-05 12:58:16,176 - tabify2 - INFO - main.py:76 - Tabify application starting up
+2025-05-05 12:58:31,699 - tabify2 - INFO - main.py:37 - REQUEST START: GET /projects/10/comments from 192.168.148.1
+2025-05-05 12:58:31,717 - tabify2 - INFO - main.py:46 - REQUEST END: GET /projects/10/comments - Status: 200 - Time: 18.03ms
+2025-05-05 12:58:33,105 - tabify2 - INFO - main.py:37 - REQUEST START: GET / from 192.168.148.1
+2025-05-05 12:58:33,106 - tabify2 - INFO - logger.py:98 - ENDPOINT CALL START: app.main.landing_page
+2025-05-05 12:58:33,106 - tabify2 - DEBUG - logger.py:99 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/", "client": {"host": "192.168.148.1", "port": 36411}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=0, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/projects/10", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "same-origin", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-05 12:58:33,106 - tabify2 - DEBUG - logger.py:100 - Parameters: {"db": "Session(id=281472908574800)"}
+2025-05-05 12:58:33,106 - tabify2 - DEBUG - main.py:108 - Landing page accessed from 192.168.148.1 with session: 6
+2025-05-05 12:58:33,107 - tabify2 - INFO - main.py:114 - User 6 redirected to home page
+2025-05-05 12:58:33,107 - tabify2 - INFO - logger.py:115 - ENDPOINT CALL END: app.main.landing_page - Time: 1.64ms
+2025-05-05 12:58:33,107 - tabify2 - DEBUG - logger.py:116 - Response summary: {"type": "RedirectResponse", "execution_time_ms": 1.64}
+2025-05-05 12:58:33,107 - tabify2 - INFO - main.py:46 - REQUEST END: GET / - Status: 307 - Time: 2.21ms
+2025-05-05 12:58:33,805 - tabify2 - INFO - main.py:37 - REQUEST START: GET /home from 192.168.148.1
+2025-05-05 12:58:33,806 - tabify2 - INFO - logger.py:98 - ENDPOINT CALL START: app.main.home_page
+2025-05-05 12:58:33,806 - tabify2 - DEBUG - logger.py:99 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/home", "client": {"host": "192.168.148.1", "port": 36411}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=0, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/projects/10", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "same-origin", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-05 12:58:33,806 - tabify2 - DEBUG - logger.py:100 - Parameters: {"db": "Session(id=281472923263696)"}
+2025-05-05 12:58:33,806 - tabify2 - DEBUG - main.py:139 - Home page accessed from 192.168.148.1 with session: 6
+2025-05-05 12:58:33,807 - tabify2 - DEBUG - main.py:154 - Retrieved 1 projects for user 6 in 0.56ms
+2025-05-05 12:58:33,809 - tabify2 - DEBUG - main.py:164 - Retrieved 2 popular projects in 1.72ms
+2025-05-05 12:58:33,810 - tabify2 - DEBUG - main.py:173 - Retrieved 2 users and selected top 2 popular users in 1.18ms
+2025-05-05 12:58:33,810 - tabify2 - INFO - main.py:176 - Home page rendered for user 6 in 4.26ms
+2025-05-05 12:58:33,823 - tabify2 - INFO - logger.py:115 - ENDPOINT CALL END: app.main.home_page - Time: 17.4ms
+2025-05-05 12:58:33,823 - tabify2 - DEBUG - logger.py:116 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 17.4}
+2025-05-05 12:58:33,823 - tabify2 - INFO - main.py:46 - REQUEST END: GET /home - Status: 200 - Time: 17.97ms
+2025-05-05 12:58:35,177 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-05 12:58:35,181 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 3.27ms
+2025-05-05 12:58:35,187 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-05 12:58:35,187 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.22ms
+2025-05-05 12:59:03,676 - tabify2 - INFO - main.py:20 - Loading environment variables
+2025-05-05 12:59:03,676 - tabify2 - INFO - main.py:23 - Creating database tables
+2025-05-05 12:59:03,683 - tabify2 - INFO - main.py:25 - Database tables created successfully
+2025-05-05 12:59:03,684 - tabify2 - INFO - main.py:76 - Tabify application starting up
+2025-05-05 13:00:21,813 - tabify2 - INFO - main.py:20 - Loading environment variables
+2025-05-05 13:00:21,813 - tabify2 - INFO - main.py:23 - Creating database tables
+2025-05-05 13:00:21,822 - tabify2 - INFO - main.py:25 - Database tables created successfully
+2025-05-05 13:00:21,822 - tabify2 - INFO - main.py:76 - Tabify application starting up
+2025-05-05 13:01:32,762 - tabify2 - INFO - main.py:20 - Loading environment variables
+2025-05-05 13:01:32,762 - tabify2 - INFO - main.py:23 - Creating database tables
+2025-05-05 13:01:32,772 - tabify2 - INFO - main.py:25 - Database tables created successfully
+2025-05-05 13:01:32,772 - tabify2 - INFO - main.py:76 - Tabify application starting up
+2025-05-05 13:01:46,874 - tabify2 - INFO - main.py:37 - REQUEST START: GET /home from 192.168.148.1
+2025-05-05 13:01:46,875 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.home_page
+2025-05-05 13:01:46,875 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/home", "client": {"host": "192.168.148.1", "port": 19021}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cache-control": "max-age=0", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=0, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/projects/10", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "same-origin", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-05 13:01:46,875 - tabify2 - DEBUG - logger.py:107 - Parameters: {"db": "Session(id=281472955687888)"}
+2025-05-05 13:01:46,875 - tabify2 - DEBUG - main.py:139 - Home page accessed from 192.168.148.1 with session: 6
+2025-05-05 13:01:46,890 - tabify2 - DEBUG - main.py:154 - Retrieved 1 projects for user 6 in 0.69ms
+2025-05-05 13:01:46,892 - tabify2 - DEBUG - main.py:164 - Retrieved 2 popular projects in 1.48ms
+2025-05-05 13:01:46,893 - tabify2 - DEBUG - main.py:173 - Retrieved 2 users and selected top 2 popular users in 1.17ms
+2025-05-05 13:01:46,893 - tabify2 - INFO - main.py:176 - Home page rendered for user 6 in 17.95ms
+2025-05-05 13:01:46,907 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.home_page - Time: 32.13ms
+2025-05-05 13:01:46,907 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 32.13}
+2025-05-05 13:01:46,907 - tabify2 - INFO - main.py:46 - REQUEST END: GET /home - Status: 200 - Time: 33.36ms
+2025-05-05 13:01:50,686 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-05 13:01:50,687 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.78ms
+2025-05-05 13:01:50,688 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-05 13:01:50,695 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 200 - Time: 6.84ms
+2025-05-05 18:59:07,486 - tabify2 - INFO - main.py:37 - REQUEST START: GET /home from 192.168.148.1
+2025-05-05 18:59:07,491 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.home_page
+2025-05-05 18:59:07,491 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/home", "client": {"host": "192.168.148.1", "port": 57166}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cache-control": "max-age=0", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=0, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/projects/10", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "same-origin", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1", "x-forwarded-for": "81.200.155.237", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-05 18:59:07,491 - tabify2 - DEBUG - logger.py:107 - Parameters: {"db": "Session(id=281472946298256)"}
+2025-05-05 18:59:07,491 - tabify2 - DEBUG - main.py:139 - Home page accessed from 192.168.148.1 with session: 6
+2025-05-05 18:59:07,505 - tabify2 - DEBUG - main.py:154 - Retrieved 1 projects for user 6 in 0.62ms
+2025-05-05 18:59:07,506 - tabify2 - DEBUG - main.py:164 - Retrieved 2 popular projects in 1.38ms
+2025-05-05 18:59:07,507 - tabify2 - DEBUG - main.py:173 - Retrieved 2 users and selected top 2 popular users in 0.74ms
+2025-05-05 18:59:07,507 - tabify2 - INFO - main.py:176 - Home page rendered for user 6 in 16.13ms
+2025-05-05 18:59:07,510 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.home_page - Time: 19.42ms
+2025-05-05 18:59:07,510 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 19.42}
+2025-05-05 18:59:07,510 - tabify2 - INFO - main.py:46 - REQUEST END: GET /home - Status: 200 - Time: 23.98ms
+2025-05-05 18:59:07,958 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/avatars/avatar_6_20250505_114815.jpg from 192.168.148.1
+2025-05-05 18:59:07,959 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/avatars/avatar_6_20250505_114815.jpg - Status: 304 - Time: 0.87ms
+2025-05-05 18:59:08,066 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-05 18:59:08,074 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-05 18:59:08,076 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 1.95ms
+2025-05-05 18:59:08,077 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.unauthorized_handler
+2025-05-05 18:59:08,077 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/premium/status", "client": {"host": "192.168.148.1", "port": 60934}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "*/*", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=1, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/home", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "empty", "sec-fetch-mode": "cors", "sec-fetch-site": "same-origin", "x-forwarded-for": "81.200.155.237", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-05 18:59:08,077 - tabify2 - DEBUG - logger.py:107 - Parameters: {"exc": "HTTPException(id=281472946474720)"}
+2025-05-05 18:59:08,077 - tabify2 - WARNING - main.py:211 - 401 Unauthorized: GET /premium/status from 192.168.148.1
+2025-05-05 18:59:08,079 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.unauthorized_handler - Time: 2.48ms
+2025-05-05 18:59:08,079 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 2.48}
+2025-05-05 18:59:08,079 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 401 - Time: 13.24ms
+2025-05-06 07:39:04,158 - tabify2 - INFO - main.py:37 - REQUEST START: GET / from 192.168.148.1
+2025-05-06 07:39:04,159 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.landing_page
+2025-05-06 07:39:04,159 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/", "client": {"host": "192.168.148.1", "port": 17498}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=0, i", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "none", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-06 07:39:04,159 - tabify2 - DEBUG - logger.py:107 - Parameters: {"db": "Session(id=281472946234576)"}
+2025-05-06 07:39:04,159 - tabify2 - DEBUG - main.py:108 - Landing page accessed from 192.168.148.1 with session: 6
+2025-05-06 07:39:04,163 - tabify2 - INFO - main.py:114 - User 6 redirected to home page
+2025-05-06 07:39:04,163 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.landing_page - Time: 4.35ms
+2025-05-06 07:39:04,163 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "RedirectResponse", "execution_time_ms": 4.35}
+2025-05-06 07:39:04,164 - tabify2 - INFO - main.py:46 - REQUEST END: GET / - Status: 307 - Time: 4.92ms
+2025-05-06 07:39:04,853 - tabify2 - INFO - main.py:37 - REQUEST START: GET /home from 192.168.148.1
+2025-05-06 07:39:04,854 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.home_page
+2025-05-06 07:39:04,854 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/home", "client": {"host": "192.168.148.1", "port": 17498}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=0, i", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "none", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-06 07:39:04,854 - tabify2 - DEBUG - logger.py:107 - Parameters: {"db": "Session(id=281472956999632)"}
+2025-05-06 07:39:04,854 - tabify2 - DEBUG - main.py:139 - Home page accessed from 192.168.148.1 with session: 6
+2025-05-06 07:39:04,855 - tabify2 - DEBUG - main.py:154 - Retrieved 1 projects for user 6 in 0.21ms
+2025-05-06 07:39:04,855 - tabify2 - DEBUG - main.py:164 - Retrieved 2 popular projects in 0.48ms
+2025-05-06 07:39:04,856 - tabify2 - DEBUG - main.py:173 - Retrieved 2 users and selected top 2 popular users in 0.47ms
+2025-05-06 07:39:04,856 - tabify2 - INFO - main.py:176 - Home page rendered for user 6 in 1.88ms
+2025-05-06 07:39:04,857 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.home_page - Time: 3.17ms
+2025-05-06 07:39:04,857 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 3.17}
+2025-05-06 07:39:04,857 - tabify2 - INFO - main.py:46 - REQUEST END: GET /home - Status: 200 - Time: 3.7ms
+2025-05-06 07:39:06,221 - tabify2 - INFO - main.py:37 - REQUEST START: GET /static/avatars/avatar_6_20250505_114815.jpg from 192.168.148.1
+2025-05-06 07:39:06,222 - tabify2 - INFO - main.py:46 - REQUEST END: GET /static/avatars/avatar_6_20250505_114815.jpg - Status: 304 - Time: 0.43ms
+2025-05-06 07:39:06,558 - tabify2 - INFO - main.py:37 - REQUEST START: GET /notifications from 192.168.148.1
+2025-05-06 07:39:06,558 - tabify2 - INFO - main.py:46 - REQUEST END: GET /notifications - Status: 307 - Time: 0.16ms
+2025-05-06 07:39:06,559 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-06 07:39:06,568 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.unauthorized_handler
+2025-05-06 07:39:06,569 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/premium/status", "client": {"host": "192.168.148.1", "port": 31461}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "*/*", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=1, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/home", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "empty", "sec-fetch-mode": "cors", "sec-fetch-site": "same-origin", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-06 07:39:06,569 - tabify2 - DEBUG - logger.py:107 - Parameters: {"exc": "HTTPException(id=281472946473184)"}
+2025-05-06 07:39:06,569 - tabify2 - WARNING - main.py:211 - 401 Unauthorized: GET /premium/status from 192.168.148.1
+2025-05-06 07:39:06,569 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.unauthorized_handler - Time: 0.4ms
+2025-05-06 07:39:06,569 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 0.4}
+2025-05-06 07:39:06,569 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 401 - Time: 6.59ms
+2025-05-06 07:39:24,653 - tabify2 - INFO - main.py:37 - REQUEST START: GET /privacy from 192.168.148.1
+2025-05-06 07:39:24,654 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.not_found_handler
+2025-05-06 07:39:24,654 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/privacy", "client": {"host": "192.168.148.1", "port": 24913}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=0, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/home", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "same-origin", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-06 07:39:24,654 - tabify2 - DEBUG - logger.py:107 - Parameters: {"exc": "HTTPException(id=281472955998624)"}
+2025-05-06 07:39:24,654 - tabify2 - WARNING - main.py:195 - 404 Not Found: GET /privacy from 192.168.148.1
+2025-05-06 07:39:24,654 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.not_found_handler - Time: 0.27ms
+2025-05-06 07:39:24,654 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 0.27}
+2025-05-06 07:39:24,654 - tabify2 - INFO - main.py:46 - REQUEST END: GET /privacy - Status: 404 - Time: 0.66ms
+2025-05-06 07:39:26,613 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-06 07:39:26,615 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.unauthorized_handler
+2025-05-06 07:39:26,615 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/premium/status", "client": {"host": "192.168.148.1", "port": 24913}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "*/*", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=1, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/home", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "empty", "sec-fetch-mode": "cors", "sec-fetch-site": "same-origin", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-06 07:39:26,615 - tabify2 - DEBUG - logger.py:107 - Parameters: {"exc": "HTTPException(id=281472955609152)"}
+2025-05-06 07:39:26,615 - tabify2 - WARNING - main.py:211 - 401 Unauthorized: GET /premium/status from 192.168.148.1
+2025-05-06 07:39:26,615 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.unauthorized_handler - Time: 0.54ms
+2025-05-06 07:39:26,615 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 0.54}
+2025-05-06 07:39:26,615 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 401 - Time: 1.87ms
+2025-05-06 07:39:27,766 - tabify2 - INFO - main.py:37 - REQUEST START: GET /users/profile from 192.168.148.1
+2025-05-06 07:39:27,767 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.unauthorized_handler
+2025-05-06 07:39:27,767 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/users/profile", "client": {"host": "192.168.148.1", "port": 24913}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=0, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/home", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "same-origin", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-06 07:39:27,767 - tabify2 - DEBUG - logger.py:107 - Parameters: {"exc": "HTTPException(id=281472946475488)"}
+2025-05-06 07:39:27,767 - tabify2 - WARNING - main.py:211 - 401 Unauthorized: GET /users/profile from 192.168.148.1
+2025-05-06 07:39:27,767 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.unauthorized_handler - Time: 0.37ms
+2025-05-06 07:39:27,767 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 0.37}
+2025-05-06 07:39:27,767 - tabify2 - INFO - main.py:46 - REQUEST END: GET /users/profile - Status: 401 - Time: 1.11ms
+2025-05-06 07:39:29,250 - tabify2 - INFO - main.py:37 - REQUEST START: GET /premium/status from 192.168.148.1
+2025-05-06 07:39:29,251 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.unauthorized_handler
+2025-05-06 07:39:29,251 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://071d-5-35-106-176.ngrok-free.app/premium/status", "client": {"host": "192.168.148.1", "port": 24913}, "headers": {"host": "071d-5-35-106-176.ngrok-free.app", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "*/*", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]", "dnt": "1", "priority": "u=1, i", "referer": "https://071d-5-35-106-176.ngrok-free.app/home", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "sec-fetch-dest": "empty", "sec-fetch-mode": "cors", "sec-fetch-site": "same-origin", "x-forwarded-for": "5.35.106.176", "x-forwarded-host": "071d-5-35-106-176.ngrok-free.app", "x-forwarded-proto": "https"}, "query_params": {}, "path_params": {}}
+2025-05-06 07:39:29,251 - tabify2 - DEBUG - logger.py:107 - Parameters: {"exc": "HTTPException(id=281472946474528)"}
+2025-05-06 07:39:29,251 - tabify2 - WARNING - main.py:211 - 401 Unauthorized: GET /premium/status from 192.168.148.1
+2025-05-06 07:39:29,251 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.unauthorized_handler - Time: 0.54ms
+2025-05-06 07:39:29,251 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 0.54}
+2025-05-06 07:39:29,251 - tabify2 - INFO - main.py:46 - REQUEST END: GET /premium/status - Status: 401 - Time: 1.63ms
+2025-05-06 18:42:07,860 - tabify2 - INFO - main.py:37 - REQUEST START: GET / from 192.168.148.1
+2025-05-06 18:42:07,864 - tabify2 - INFO - logger.py:105 - ENDPOINT CALL START: app.main.landing_page
+2025-05-06 18:42:07,864 - tabify2 - DEBUG - logger.py:106 - Request: {"method": "GET", "url": "http://localhost:8000/", "client": {"host": "192.168.148.1", "port": 47152}, "headers": {"host": "localhost:8000", "connection": "keep-alive", "sec-ch-ua": "\"Chromium\";v=\"135\", \"Not-A.Brand\";v=\"8\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"macOS\"", "dnt": "1", "upgrade-insecure-requests": "1", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7", "sec-fetch-site": "none", "sec-fetch-mode": "navigate", "sec-fetch-user": "?1", "sec-fetch-dest": "document", "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7", "cookie": "[REDACTED]"}, "query_params": {}, "path_params": {}}
+2025-05-06 18:42:07,864 - tabify2 - DEBUG - logger.py:107 - Parameters: {"db": "Session(id=281472946616464)"}
+2025-05-06 18:42:07,864 - tabify2 - DEBUG - main.py:108 - Landing page accessed from 192.168.148.1 with session: 5
+2025-05-06 18:42:07,880 - tabify2 - DEBUG - main.py:118 - Landing page rendered in 15.04ms
+2025-05-06 18:42:07,883 - tabify2 - INFO - logger.py:122 - ENDPOINT CALL END: app.main.landing_page - Time: 19.36ms
+2025-05-06 18:42:07,883 - tabify2 - DEBUG - logger.py:124 - Response summary: {"type": "_TemplateResponse", "execution_time_ms": 19.36}
+2025-05-06 18:42:07,884 - tabify2 - INFO - main.py:46 - REQUEST END: GET / - Status: 200 - Time: 22.59ms

@@ -1,0 +1,103 @@
+@startuml Tabify Site Map
+
+skinparam backgroundColor #fff
+skinparam classFontColor white
+skinparam classFontSize 14
+skinparam classFontName Arial
+skinparam arrowColor #00a896
+skinparam classBackgroundColor #006657
+skinparam classBorderColor #00a896
+skinparam stereotypeCBackgroundColor #017e5d
+skinparam stereotypeABackgroundColor #ff6b6b
+
+title Tabify - Диаграмма переходов по страницам
+
+' Главные узлы
+[*] --> Landing
+Landing : landing.html
+Landing : Начальная страница системы
+
+' Авторизация
+state "Авторизация" as Auth {
+  Login : auth/login.html
+  Register : auth/register.html
+  
+  Login --> Register : Ссылка регистрации
+  Register --> Login : Ссылка входа
+}
+
+' Основные страницы для авторизованных пользователей
+state "Основная система" as MainSystem {
+  Home : home.html
+  Projects : projects/list.html
+  Profile : users/profile.html
+  Premium : premium/index.html
+  
+  ' Работа с проектами
+  state "Проекты" as ProjectsModule {
+    ProjectsList : projects/list.html
+    ProjectDetails : projects/detail.html
+    NewProject : projects/new.html
+    ProjectLikes : projects/likes_list.html
+    
+    ProjectsList --> ProjectDetails : Просмотр проекта
+    ProjectsList --> NewProject : Создание нового
+    ProjectsList --> ProjectLikes : Понравившиеся
+    ProjectDetails --> ProjectDetails : Редактирование
+  }
+  
+  ' Работа с пользователями
+  state "Пользователи" as UsersModule {
+    UserProfile : users/profile.html
+    UsersList : users/users_list.html
+    UserLikes : users/likes_list.html
+    
+    UserProfile --> UsersList : Просмотр пользователей
+    UserProfile --> UserLikes : Понравившиеся проекты
+    UsersList --> UserProfile : Профиль другого пользователя
+  }
+  
+  ' Уведомления
+  state "Уведомления" as NotificationsModule {
+    NotificationsMenu : "Выпадающее меню"
+    NotificationsPage : "/notifications"
+    
+    NotificationsMenu --> NotificationsPage : "Просмотр всех"
+  }
+  
+  Home --> ProjectsModule : Переход к проектам
+  Home --> UsersModule : Переход к профилю
+  Home --> Premium : Переход к премиум
+  Home --> NotificationsModule : Просмотр уведомлений
+}
+
+' Дополнительные страницы
+state "Дополнительные страницы" as ExtraPages {
+  About : /about
+  Contact : /contact
+  Careers : /careers
+  Privacy : /privacy
+  Terms : /terms
+  Cookies : /cookies
+  Help : /help
+  FAQ : /faq
+  Community : /community
+}
+
+' Страницы ошибок
+state "Ошибки" as ErrorPages {
+  Error404 : 404.html
+  ErrorServer : error.html
+}
+
+' Связи между основными блоками
+Landing --> Auth : Вход/Регистрация
+Auth --> MainSystem : Успешная авторизация
+MainSystem --> [*] : Выход (auth/logout)
+MainSystem --> ExtraPages : Ссылки из футера
+MainSystem --> ErrorPages : При ошибках
+
+' Обратные связи
+ExtraPages --> MainSystem : Возврат в систему
+
+@enduml

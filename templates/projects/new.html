@@ -3,31 +3,135 @@
 {% block content %}
 <div class="container mt-5">
     <div class="vision-glass-card fade-in">
-        <h2 class="vision-card-title">Создать новый проект</h2>
+        <h2 class="vision-card-title">Create Project</h2>
         <form action="/projects/create" method="POST" class="vision-form">
             <div class="form-group">
-                <label for="title">Название проекта</label>
+                <label for="title">Title</label>
                 <input type="text" id="title" name="title" class="vision-input" required>
             </div>
 
             <div class="form-group">
-                <label for="description">Описание</label>
+                <label for="description">Description</label>
                 <textarea id="description" name="description" class="vision-input" rows="4"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="tempo">Project Tempo (BPM)</label>
+                <div class="tempo-input-container">
+                    <input type="number" id="tempo" name="tempo" class="vision-input" value="120" min="20" max="300" required>
+                    <div class="tempo-controls">
+                        <button type="button" class="tempo-btn" id="tempo-decrease"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="tempo-btn" id="tempo-increase"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <small class="form-text text-muted">Sets the default tempo for all tabs in this project (20-300 BPM)</small>
             </div>
 
             <div class="form-group checkbox-group">
                 <label class="checkbox-container">
                     <input type="checkbox" name="is_public" checked>
                     <span class="checkmark"></span>
-                    Сделать этот проект публичным
+                    Make public
                 </label>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="vision-btn vision-btn-primary">Создать проект</button>
-                <a href="/projects" class="vision-btn vision-btn-secondary">Отмена</a>
+                <button type="submit" class="vision-btn vision-btn-primary">Create</button>
+                <a href="/projects" class="vision-btn vision-btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
 </div>
+<style>
+    /* Стили для контейнера с выбором темпа */
+    .tempo-input-container {
+        display: flex;
+        align-items: center;
+    }
+    
+    .tempo-controls {
+        display: flex;
+        margin-left: 10px;
+    }
+    
+    .tempo-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin: 0 2px;
+        transition: all 0.2s ease;
+    }
+    
+    .tempo-btn:hover {
+        background: var(--accent-color-hover);
+        transform: scale(1.05);
+    }
+    
+    /* Стили для числового поля */
+    input[type="number"] {
+        -webkit-appearance: textfield;
+        -moz-appearance: textfield; /* Firefox */
+        appearance: textfield;
+    }
+    
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    #tempo {
+        width: 100px;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    /* Адаптация текстовой подсказки */
+    .form-text.text-muted {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Получаем элементы управления темпом
+        const tempoInput = document.getElementById('tempo');
+        const decreaseBtn = document.getElementById('tempo-decrease');
+        const increaseBtn = document.getElementById('tempo-increase');
+        
+        // Функция для проверки диапазона значений
+        function validateTempoValue() {
+            let value = parseInt(tempoInput.value);
+            if (isNaN(value)) value = 120;
+            value = Math.max(20, Math.min(300, value));
+            tempoInput.value = value;
+            return value;
+        }
+        
+        // Обработчики нажатия кнопок
+        decreaseBtn.addEventListener('click', function() {
+            let value = validateTempoValue();
+            tempoInput.value = Math.max(20, value - 1);
+        });
+        
+        increaseBtn.addEventListener('click', function() {
+            let value = validateTempoValue();
+            tempoInput.value = Math.min(300, value + 1);
+        });
+        
+        // Валидация при изменении значения вручную
+        tempoInput.addEventListener('change', validateTempoValue);
+        tempoInput.addEventListener('blur', validateTempoValue);
+    });
+</script>
+
 {% endblock %}

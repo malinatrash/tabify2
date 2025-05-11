@@ -1,110 +1,102 @@
-
 from typing import Dict, List, Tuple, Optional
 import mido
 from music21 import converter, note, chord, stream, pitch
 
-# Словарь соответствия MIDI-нот струнам гитары и позициям ладов
-# Формат: {midi_note: (string_number, fret_position)}
-# Струны нумеруются сверху вниз от 1 до 6 (от высокой E до низкой E)
 GUITAR_MAPPING = {
-    # Струна 1 (высокая E / E4)
-    64: (1, 0),  # E4 (открытая 1-я струна)
-    65: (1, 1),  # F4
-    66: (1, 2),  # F#4
-    67: (1, 3),  # G4
-    68: (1, 4),  # G#4
-    69: (1, 5),  # A4
-    70: (1, 6),  # A#4
-    71: (1, 7),  # B4
-    72: (1, 8),  # C5
-    73: (1, 9),  # C#5
-    74: (1, 10), # D5
-    75: (1, 11), # D#5
-    76: (1, 12), # E5
-    
-    # Струна 2 (B / B3)
-    59: (2, 0),  # B3 (открытая 2-я струна)
-    60: (2, 1),  # C4
-    61: (2, 2),  # C#4
-    62: (2, 3),  # D4
-    63: (2, 4),  # D#4
-    64: (2, 5),  # E4 (также может быть сыграна на 1-й струне)
-    65: (2, 6),  # F4
-    66: (2, 7),  # F#4
-    67: (2, 8),  # G4
-    68: (2, 9),  # G#4
-    69: (2, 10), # A4
-    70: (2, 11), # A#4
-    71: (2, 12), # B4
-    
-    # Струна 3 (G / G3)
-    55: (3, 0),  # G3 (открытая 3-я струна)
-    56: (3, 1),  # G#3
-    57: (3, 2),  # A3
-    58: (3, 3),  # A#3
-    59: (3, 4),  # B3
-    60: (3, 5),  # C4
-    61: (3, 6),  # C#4
-    62: (3, 7),  # D4
-    63: (3, 8),  # D#4
-    64: (3, 9),  # E4
-    65: (3, 10), # F4
-    66: (3, 11), # F#4
-    67: (3, 12), # G4
-    
-    # Струна 4 (D / D3)
-    50: (4, 0),  # D3 (открытая 4-я струна)
-    51: (4, 1),  # D#3
-    52: (4, 2),  # E3
-    53: (4, 3),  # F3
-    54: (4, 4),  # F#3
-    55: (4, 5),  # G3
-    56: (4, 6),  # G#3
-    57: (4, 7),  # A3
-    58: (4, 8),  # A#3
-    59: (4, 9),  # B3
-    60: (4, 10), # C4
-    61: (4, 11), # C#4
-    62: (4, 12), # D4
-    
-    # Струна 5 (A / A2)
-    45: (5, 0),  # A2 (открытая 5-я струна)
-    46: (5, 1),  # A#2
-    47: (5, 2),  # B2
-    48: (5, 3),  # C3
-    49: (5, 4),  # C#3
-    50: (5, 5),  # D3
-    51: (5, 6),  # D#3
-    52: (5, 7),  # E3
-    53: (5, 8),  # F3
-    54: (5, 9),  # F#3
-    55: (5, 10), # G3
-    56: (5, 11), # G#3
-    57: (5, 12), # A3
-    
-    # Струна 6 (низкая E / E2)
-    40: (6, 0),  # E2 (открытая 6-я струна)
-    41: (6, 1),  # F2
-    42: (6, 2),  # F#2
-    43: (6, 3),  # G2
-    44: (6, 4),  # G#2
-    45: (6, 5),  # A2
-    46: (6, 6),  # A#2
-    47: (6, 7),  # B2
-    48: (6, 8),  # C3
-    49: (6, 9),  # C#3
-    50: (6, 10), # D3
-    51: (6, 11), # D#3
-    52: (6, 12), # E3
+
+    64: (1, 0),
+    65: (1, 1),
+    66: (1, 2),
+    67: (1, 3),
+    68: (1, 4),
+    69: (1, 5),
+    70: (1, 6),
+    71: (1, 7),
+    72: (1, 8),
+    73: (1, 9),
+    74: (1, 10),
+    75: (1, 11),
+    76: (1, 12),
+
+    59: (2, 0),
+    60: (2, 1),
+    61: (2, 2),
+    62: (2, 3),
+    63: (2, 4),
+    64: (2, 5),
+    65: (2, 6),
+    66: (2, 7),
+    67: (2, 8),
+    68: (2, 9),
+    69: (2, 10),
+    70: (2, 11),
+    71: (2, 12),
+
+    55: (3, 0),
+    56: (3, 1),
+    57: (3, 2),
+    58: (3, 3),
+    59: (3, 4),
+    60: (3, 5),
+    61: (3, 6),
+    62: (3, 7),
+    63: (3, 8),
+    64: (3, 9),
+    65: (3, 10),
+    66: (3, 11),
+    67: (3, 12),
+
+    50: (4, 0),
+    51: (4, 1),
+    52: (4, 2),
+    53: (4, 3),
+    54: (4, 4),
+    55: (4, 5),
+    56: (4, 6),
+    57: (4, 7),
+    58: (4, 8),
+    59: (4, 9),
+    60: (4, 10),
+    61: (4, 11),
+    62: (4, 12),
+
+    45: (5, 0),
+    46: (5, 1),
+    47: (5, 2),
+    48: (5, 3),
+    49: (5, 4),
+    50: (5, 5),
+    51: (5, 6),
+    52: (5, 7),
+    53: (5, 8),
+    54: (5, 9),
+    55: (5, 10),
+    56: (5, 11),
+    57: (5, 12),
+
+    40: (6, 0),
+    41: (6, 1),
+    42: (6, 2),
+    43: (6, 3),
+    44: (6, 4),
+    45: (6, 5),
+    46: (6, 6),
+    47: (6, 7),
+    48: (6, 8),
+    49: (6, 9),
+    50: (6, 10),
+    51: (6, 11),
+    52: (6, 12),
 }
+
 
 class TabNote:
     """Класс для представления ноты в табулатуре."""
-    
-    def __init__(self, string: int, fret: int, duration: float, start_time: float):
+
+    def __init__(self, string: int, fret: int, duration: float, start_time: float, tempo=120):
         """
         Инициализация ноты табулатуры.
-        
+
         Args:
             string: Номер струны (1-6, от высокой E до низкой E)
             fret: Позиция лада
@@ -115,20 +107,22 @@ class TabNote:
         self.fret = fret
         self.duration = duration
         self.start_time = start_time
-    
+        self.tempo = tempo
+
     def __repr__(self) -> str:
         return f"TabNote(string={self.string}, fret={self.fret}, duration={self.duration}, start_time={self.start_time})"
 
+
 class Tablature:
     """Класс для представления гитарной табулатуры."""
-    
+
     def __init__(self):
         """Инициализация пустой табулатуры."""
         self.measures = []
         self.current_measure = []
-        self.measure_duration = 4.0  # По умолчанию 4/4
+        self.measure_duration = 4.0
         self.current_time = 0.0
-    
+
     def add_note(self, tab_note: TabNote):
         """Добавить ноту в табулатуру."""
         if tab_note.start_time >= self.current_time + self.measure_duration:
@@ -136,51 +130,153 @@ class Tablature:
                 self.measures.append(self.current_measure)
                 self.current_measure = []
             self.current_time += self.measure_duration
-        
+
         self.current_measure.append(tab_note)
-    
+
     def finalize(self):
         """Завершить создание табулатуры."""
         if self.current_measure:
             self.measures.append(self.current_measure)
             self.current_measure = []
-    
-    def to_json(self) -> dict:
-        """Преобразовать табулатуру в JSON формат для отображения."""
-        self.finalize()
+
+    def to_text(self):
+        """
+        Преобразует табулатуру в текстовое представление с точным расположением нот по времени
+        """
+        all_notes = []
+        for measure in self.measures:
+            all_notes.extend(measure)
+
+        if not all_notes:
+            return ""
+
+        # Сортируем ноты по времени начала
+        all_notes.sort(key=lambda x: x.start_time)
+
+        # Получаем временные границы
+        start_time = all_notes[0].start_time
+        end_time = all_notes[-1].start_time
+        duration = end_time - start_time
         
-        tab_data = {
-            "title": "Guitar Tab",
-            "strings": [
-                {"name": "e", "notes": []},  # 1-я струна (высокая E)
-                {"name": "B", "notes": []},  # 2-я струна
-                {"name": "G", "notes": []},  # 3-я струна
-                {"name": "D", "notes": []},  # 4-я струна
-                {"name": "A", "notes": []},  # 5-я струна
-                {"name": "E", "notes": []}   # 6-я струна (низкая E)
-            ]
-        }
+        # Получаем темп
+        tempo = all_notes[0].tempo if hasattr(all_notes[0], 'tempo') else 120
         
-        # Группируем ноты по тактам для более компактного отображения
-        for measure_idx, measure in enumerate(self.measures):
-            if not measure:
+        # Анализируем временные интервалы между нотами
+        time_gaps = []
+        for i in range(1, len(all_notes)):
+            time_gap = all_notes[i].start_time - all_notes[i-1].start_time
+            time_gaps.append(time_gap)
+        
+        # Если есть временные интервалы, находим минимальный и средний
+        min_gap = min(time_gaps) if time_gaps else duration
+        avg_gap = sum(time_gaps) / len(time_gaps) if time_gaps else duration
+        
+        # Вычисляем количество символов для минимального интервала
+        # Минимальный интервал между нотами должен быть не менее 3 символов
+        # Это позволит разместить двухзначные числа (например, 10, 11) и оставить пробел
+        min_symbols_per_gap = 3
+        
+        # Вычисляем масштабный коэффициент - сколько символов на единицу времени
+        # Начинаем с оценки необходимой длины
+        total_notes = len(all_notes)
+        scale_factor = (total_notes * min_symbols_per_gap) / duration
+        
+        # Не создаем слишком длинные табулатуры, но без искусственных ограничений
+        display_length = int(duration * scale_factor)
+        if display_length > 5000:  # Только очень большие файлы ограничиваем
+            display_length = 5000
+        
+        # Минимальная длина табулатуры - 80 символов
+        display_length = max(80, display_length)
+
+        # Создаем пустые строки для каждой струны
+        string_content = ["-" * display_length for _ in range(6)]
+
+        # Для каждой струны создаем список занятых позиций и значений ладов
+        # Отслеживаем позиции и двухзначные числа
+        occupied_positions = {i: {} for i in range(1, 7)}
+
+        # Размещаем каждую ноту в соответствии с её временем
+        for note in all_notes:
+            # Проверяем, что струна в допустимом диапазоне (1-6)
+            if not (1 <= note.string <= 6):
                 continue
                 
-            measure.sort(key=lambda x: x.start_time)
-            base_position = measure_idx * 12  # Уменьшенная фиксированная длина такта
+            # Вычисляем позицию ноты на основе времени
+            position = int((note.start_time - start_time) * scale_factor)
             
-            for note in measure:
-                # Вычисляем относительную позицию внутри такта
-                relative_pos = int((note.start_time - measure[0].start_time) * 8 / self.measure_duration)
-                position = base_position + relative_pos
+            # Убедимся, что позиция в допустимых пределах
+            if not (0 <= position < display_length - 2):  # Оставляем место для краев
+                continue
                 
-                # Добавляем ноту в соответствующую струну
-                tab_data["strings"][note.string - 1]["notes"].append({
-                    "position": position,
-                    "fret": note.fret
-                })
+            string_idx = note.string - 1
+            fret_num = note.fret
+            fret_str = str(fret_num)
+            
+            # Проверяем занятость позиций
+            # Ищем свободное место поблизости
+            original_position = position
+            max_offset = 5  # Максимально допустимое смещение
+            
+            # Проверяем, сколько позиций нам нужно
+            positions_needed = len(fret_str)
+            
+            # Пробуем найти подходящее место для ноты
+            found_position = False
+            
+            for offset in range(0, max_offset + 1):
+                # Пробуем смещение вправо
+                right_pos = original_position + offset
+                if right_pos + positions_needed <= display_length and self._is_position_free(occupied_positions, note.string, right_pos, positions_needed):
+                    position = right_pos
+                    found_position = True
+                    break
+                    
+                # Пробуем смещение влево
+                left_pos = original_position - offset
+                if left_pos >= 0 and self._is_position_free(occupied_positions, note.string, left_pos, positions_needed):
+                    position = left_pos
+                    found_position = True
+                    break
+            
+            # Если не нашли места, пропускаем ноту
+            if not found_position:
+                continue
+            
+            # Отмечаем позиции как занятые
+            for i in range(positions_needed):
+                occupied_positions[note.string][position + i] = fret_num
+            
+            # Записываем значение лада в табулатуру
+            s = list(string_content[string_idx])
+            
+            # Размещаем цифры в табулатуре
+            for i, digit in enumerate(fret_str):
+                s[position + i] = digit
+                
+            string_content[string_idx] = ''.join(s)
         
-        return tab_data
+        string_names = ['e', 'B', 'G', 'D', 'A', 'E']
+        
+        # Инициализируем список для результата
+        result = []
+        
+        for i in range(6):
+            result.append(f"{string_names[i]}|{string_content[i]}|")
+
+        return "\n".join(result)
+            
+    def _is_position_free(self, occupied_positions, string, start_pos, positions_needed):
+        """Проверяет, свободны ли позиции в табулатуре"""
+        if start_pos < 0:
+            return False
+            
+        for i in range(positions_needed):
+            if start_pos + i in occupied_positions[string]:
+                return False
+                
+        return True
+
 
 def convert_midi_to_tab(midi_file_path: str) -> Tablature:
     """Конвертировать MIDI-файл в табулатуру."""
@@ -188,40 +284,87 @@ def convert_midi_to_tab(midi_file_path: str) -> Tablature:
     tablature = Tablature()
     current_time = 0.0
     ticks_per_beat = midi_file.ticks_per_beat
-    
+
+    tempo = 120
+
+    for track in midi_file.tracks:
+        for msg in track:
+            if msg.type == 'set_tempo':
+                tempo = round(60000000 / msg.tempo)
+                break
+
     for track in midi_file.tracks:
         for msg in track:
             current_time += msg.time / ticks_per_beat
-            
+
             if msg.type == 'note_on' and msg.velocity > 0:
                 if msg.note in GUITAR_MAPPING:
                     string, fret = GUITAR_MAPPING[msg.note]
-                    duration = 0.25  # Фиксированная длительность для упрощения
-                    tab_note = TabNote(string, fret, duration, current_time)
+                    duration = 0.25
+
+                    tab_note = TabNote(string, fret, duration,
+                                       current_time, tempo=tempo)
                     tablature.add_note(tab_note)
-    
+
     return tablature
+
 
 """Модуль для конвертации MIDI-файлов в табулатуры."""
 
-def midi_to_tablature(midi_file_path: str) -> Tablature:
-    """Конвертировать MIDI-файл в табулатуру.
-    
+
+def midi_to_tablature(midi_file_path: str, project_tempo: int = 120) -> Tablature:
+    """Конвертировать MIDI-файл в табулатуру с учетом темпа проекта.
+
     Args:
         midi_file_path: Путь к MIDI-файлу
-        
+        project_tempo: Темп проекта (BPM)
+
     Returns:
         Tablature: Объект табулатуры
     """
-    return convert_midi_to_tab(midi_file_path)
+    tablature = convert_midi_to_tab(midi_file_path)
 
-def save_tablature(tablature: Tablature, output_path: str) -> None:
-    """Сохранить табулатуру в JSON-файл.
-    
+    # Устанавливаем темп проекта для всех нот в табулатуре
+    for measure in tablature.measures:
+        for note in measure:
+            note.tempo = project_tempo
+
+    return tablature
+
+
+def get_text(tablature: Tablature) -> str:
+    """Получить текстовое представление табулатуры.
+
     Args:
         tablature: Объект табулатуры
-        output_path: Путь для сохранения JSON-файла
+
+    Returns:
+        str: Текстовое представление табулатуры
     """
-    import json
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(tablature.to_json(), f, ensure_ascii=False, indent=2)
+    return tablature.to_text()
+
+
+def create_empty_tablature(width: int = 80) -> str:
+    """Создает пустую табулатуру заданной ширины.
+    
+    Args:
+        width: Ширина табулатуры в символах
+        
+    Returns:
+        str: Текстовое представление пустой табулатуры
+    """
+    # Ограничиваем ширину, чтобы избежать слишком длинных или коротких табулатур
+    width = max(40, min(width, 200))
+    
+    # Создаем пустые строки для каждой струны
+    string_content = ["-" * width for _ in range(6)]
+    
+    # Добавляем названия струн
+    string_names = ['e', 'B', 'G', 'D', 'A', 'E']
+    
+    # Создаем форматированную табулатуру
+    result = []
+    for i in range(6):
+        result.append(f"{string_names[i]}|{string_content[i]}|")
+    
+    return "\n".join(result)

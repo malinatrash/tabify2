@@ -78,6 +78,7 @@ class Project(Base):
     title = Column(String)
     description = Column(Text, nullable=True)
     is_public = Column(Boolean, default=False)
+    tempo = Column(Integer, default=120)  # Единый темп для всего проекта (BPM)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
